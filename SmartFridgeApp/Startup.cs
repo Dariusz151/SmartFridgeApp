@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SmartFridgeApp
 {
@@ -26,6 +27,20 @@ namespace SmartFridgeApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info {
+                    Version = "v1",
+                    Title = "Smart Fridge App API",
+                    Description = "A simple app to manage your food items",
+                    Contact = new Contact
+                    {
+                        Name = "Dariusz Koziol",
+                        Email = "dariusz151.developer@gmail.com"
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +55,13 @@ namespace SmartFridgeApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Fridge App API");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
