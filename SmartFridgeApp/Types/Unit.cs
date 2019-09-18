@@ -5,5 +5,6 @@
         Pieces,
         Grams,
         Mililiter,
+        NotAssigned
     }
 }

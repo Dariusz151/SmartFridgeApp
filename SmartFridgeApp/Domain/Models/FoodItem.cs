@@ -1,9 +1,6 @@
 ﻿using SmartFridgeApp.Domain.Exceptions;
 using SmartFridgeApp.Types;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmartFridgeApp.Domain.Models
 {
@@ -23,10 +20,27 @@ namespace SmartFridgeApp.Domain.Models
 
         }
 
-        public FoodItem(string name, int amount, Unit unit, DateTime expirationDate, Category category)
+        public FoodItem(string name, int amount, Unit unit)
         {
-            if (DateTime.Compare(DateTime.UtcNow,expirationDate) > 0)
+            CreateFoodItem(name, amount, unit, DateTime.UtcNow.AddYears(1), Category.NotAssigned);
+        }
+        
+        public FoodItem(string name, int amount, Unit unit, DateTime expirationDate)
+        {
+            CreateFoodItem(name, amount, unit, expirationDate, Category.NotAssigned);
+        }
+
+        public FoodItem(string name, int amount, DateTime expirationDate, Category category)
+        {
+            CreateFoodItem(name, amount, Unit.NotAssigned, expirationDate, category);
+        }
+
+        private void CreateFoodItem (string name, int amount, Unit unit, DateTime expirationDate, Category category)
+        {
+            if (DateTime.Compare(DateTime.UtcNow, expirationDate) > 0)
                 throw new InvalidFoodItemException($"This food product is expired!");
+            if (unit.Equals(Unit.NotAssigned))
+                throw new InvalidFoodItemException($"Food item must have any unit of measure.");
             Id = new Guid();
             Name = name;
             Amount = amount;
