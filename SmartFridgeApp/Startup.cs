@@ -6,19 +6,28 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmartFridgeApp.Persistence;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace SmartFridgeApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            configuration = builder.Build();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -27,6 +36,10 @@ namespace SmartFridgeApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors();
+
+            services.AddDbContext<SmartFridgeContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:SmartFridgeDB"]));
 
             services.AddSwaggerGen(c =>
             {
@@ -56,8 +69,14 @@ namespace SmartFridgeApp
                 app.UseHsts();
             }
 
-            app.UseSwagger();
 
+            app.UseCors(builder => builder
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+
+            app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Fridge App API");
