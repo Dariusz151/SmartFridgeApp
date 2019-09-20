@@ -30,14 +30,14 @@ namespace SmartFridgeApp.Domain.Models
             CreateFoodItem(name, amount, unit, expirationDate, Category.NotAssigned);
         }
 
-        public FoodItem(string name, int amount, DateTime expirationDate, Category category)
+        public FoodItem(string name, int amount, Unit unit, DateTime expirationDate, Category category)
         {
-            CreateFoodItem(name, amount, Unit.NotAssigned, expirationDate, category);
+            CreateFoodItem(name, amount, unit, expirationDate, category);
         }
 
         private void CreateFoodItem (string name, int amount, Unit unit, DateTime expirationDate, Category category)
         {
-            if (DateTime.Compare(DateTime.UtcNow, expirationDate) > 0)
+            if (DateTime.Compare(DateTime.UtcNow.Date, expirationDate.Date) >= 0)
                 throw new InvalidFoodItemException($"This food product is expired!");
             if (unit.Equals(Unit.NotAssigned))
                 throw new InvalidFoodItemException($"Food item must have any unit of measure.");

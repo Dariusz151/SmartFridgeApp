@@ -43,8 +43,8 @@ namespace SmartFridgeApp.UnitTests.FoodItemTests
         public void CreatedFoodItemWithDateTimeNowShouldThrowException()
         {
             var actualExpirationDate = DateTime.Now;
-
-            Assert.DoesNotThrow(() => new FoodItem(
+            
+            Assert.Throws<InvalidFoodItemException>(() => new FoodItem(
                "foodItem",
                10,
                Unit.Pieces,

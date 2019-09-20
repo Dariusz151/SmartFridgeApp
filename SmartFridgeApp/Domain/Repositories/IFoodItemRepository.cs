@@ -7,5 +7,6 @@ namespace SmartFridgeApp.Domain.Repositories
 {
     public interface IFoodItemRepository
     {
+
     }
 }
