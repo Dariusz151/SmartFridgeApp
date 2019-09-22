@@ -13,5 +13,6 @@ namespace SmartFridgeApp.Persistence
 
         public DbSet<FoodItem> FoodItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; }
     }
 }
