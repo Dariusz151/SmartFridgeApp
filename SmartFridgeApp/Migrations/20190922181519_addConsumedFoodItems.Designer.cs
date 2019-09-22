@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Persistence;
 
 namespace SmartFridgeApp.Migrations
 {
     [DbContext(typeof(SmartFridgeContext))]
-    partial class SmartFridgeContextModelSnapshot : ModelSnapshot
+    [Migration("20190922181519_addConsumedFoodItems")]
+    partial class addConsumedFoodItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

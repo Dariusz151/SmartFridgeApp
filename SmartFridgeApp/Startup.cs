@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmartFridgeApp.Domain.Repositories;
+using SmartFridgeApp.Domain.Services;
+using SmartFridgeApp.Infrastructe.Services;
+using SmartFridgeApp.Infrastructure.Repositories;
 using SmartFridgeApp.Persistence;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -18,6 +22,8 @@ namespace SmartFridgeApp
 {
     public class Startup
     {
+        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
@@ -36,10 +42,26 @@ namespace SmartFridgeApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:30010",
+                                        "http://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowAnyOrigin();
+                });
+            });
 
-            services.AddCors();
 
             services.AddDbContext<SmartFridgeContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:SmartFridgeDB"]));
+
+            services.AddScoped<IFoodItemService, FoodItemService>();
+            services.AddScoped<IFoodItemRepository, FoodItemRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddSwaggerGen(c =>
             {

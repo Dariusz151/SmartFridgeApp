@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Persistence;
 
 namespace SmartFridgeApp.Migrations
 {
     [DbContext(typeof(SmartFridgeContext))]
-    partial class SmartFridgeContextModelSnapshot : ModelSnapshot
+    [Migration("20190922152102_addedUserGroups")]
+    partial class addedUserGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,15 +30,11 @@ namespace SmartFridgeApp.Migrations
 
                     b.Property<int>("Category");
 
-                    b.Property<DateTime>("EnteredAt");
-
-                    b.Property<DateTime>("ExpirationDate");
-
                     b.Property<string>("Name");
 
                     b.Property<int>("Unit");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid?>("UserId");
 
                     b.HasKey("Id");
 
@@ -81,29 +79,11 @@ namespace SmartFridgeApp.Migrations
                     b.ToTable("UserGroups");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Persistence.ConsumedFoodItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ConsumedAt");
-
-                    b.Property<string>("FoodItemName");
-
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConsumedFoodItems");
-                });
-
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodItem", b =>
                 {
-                    b.HasOne("SmartFridgeApp.Domain.Models.User")
+                    b.HasOne("SmartFridgeApp.Domain.Models.User", "User")
                         .WithMany("FoodItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.User", b =>

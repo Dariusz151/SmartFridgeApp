@@ -12,12 +12,12 @@ namespace SmartFridgeApp.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; private set; }
 
-        public User User { get; set; }
+        public Guid UserId { get; private set; }
         public string Name { get; private set; }
         public int Amount { get; private set; }
         public Unit Unit { get; private set; }
-        public DateTime EnteredAt { private get; set; }
-        public DateTime ExpirationDate { private get; set; }
+        public DateTime EnteredAt { get; private set; }
+        public DateTime ExpirationDate { get; private set; }
         public Category Category { get; private set; }
         public bool IsOutdated() => DateTime.Compare(ExpirationDate, DateTime.UtcNow) > 1;
 
@@ -51,6 +51,11 @@ namespace SmartFridgeApp.Domain.Models
             EnteredAt = DateTime.UtcNow;
             ExpirationDate = expirationDate;
             Category = Category;
+        }
+
+        public void AssignToUser(Guid userId)
+        {
+            UserId = userId;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SmartFridgeApp.Commands
+﻿namespace SmartFridgeApp.Domain.Requests.Commands
 {
     public interface ICommand
     {

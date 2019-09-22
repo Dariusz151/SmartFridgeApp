@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartFridgeApp.Domain.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -23,12 +24,7 @@ namespace SmartFridgeApp.Domain.Models
         {
 
         }
-
-        public void AddUserToGroup(User user)
-        {
-            _users.Add(user);
-        }
-
+        
         public UserGroup(string name)
             : this(name, "Default group")
         {
@@ -40,6 +36,23 @@ namespace SmartFridgeApp.Domain.Models
             Name = name;
             Description = desc;
             CreatedAt = DateTime.UtcNow;
+        }
+
+        public void AddUserToGroup(User user)
+        {
+            if (_users.Contains(user))
+                throw new DuplicateUserInGroupException("User group already contains this user.");
+            _users.Add(user);
+        }
+
+        public void DeleteUserFromGroup(User user)
+        {
+            if (_users.Count == 0)
+                throw new UserGroupException("This group is empty.");
+            if (!_users.Contains(user))
+                throw new UserGroupException("This user doesn't belong to this group.");
+
+            _users.Remove(user);
         }
     }
 }
