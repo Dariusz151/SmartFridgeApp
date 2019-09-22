@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartFridgeApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class FoodItemController : ControllerBase
     {
@@ -20,12 +20,14 @@ namespace SmartFridgeApp.Controllers
         }
 
         [HttpGet]
+        [ActionName("Ping")]
         public ActionResult<IEnumerable<string>> Ping()
         {
             return new string[] { "FoodItemController"};
         }
         
         [HttpPost]
+        [ActionName("Consume")]
         public async Task<IActionResult> ConsumeFoodItem([FromBody] ConsumeFoodItemRequest request)
         {
             var userId = new Guid("48577875-4D33-4543-8440-8321EB4BAAA3");
@@ -38,6 +40,7 @@ namespace SmartFridgeApp.Controllers
         }
 
         [HttpPost]
+        [ActionName("Add")]
         public async Task<IActionResult> AddFoodItem([FromBody] AddFoodItemRequest request)
         {
             var userId = new Guid("48577875-4D33-4543-8440-8321EB4BAAA3");
@@ -55,6 +58,7 @@ namespace SmartFridgeApp.Controllers
         }
 
         [HttpDelete]
+        [ActionName("Delete")]
         public async Task<IActionResult> DeleteFoodItem([FromBody] DeleteFoodItemRequest request)
         {
             var userId = new Guid("48577875-4D33-4543-8440-8321EB4BAAA3");
