@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Models;
 
 namespace SmartFridgeApp.Persistence
@@ -11,8 +12,11 @@ namespace SmartFridgeApp.Persistence
 
         }
 
+        public DbSet<Role> Roles{get;set;}
+        public DbSet<User> Users{ get;set;}
+        public DbSet<UserRole> UserRoles{ get;set;}
+
         public DbSet<FoodItem> FoodItems { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<ConsumedFoodItem> ConsumedFoodItems { get; set; }
     }

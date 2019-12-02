@@ -9,16 +9,17 @@ namespace SmartFridgeApp.Domain.Models
 {
     public class UserGroup
     {
-        private List<User> _users = new List<User>();
+        //private List<User> _users = new List<User>();
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; private set; }
 
+        //public ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public ReadOnlyCollection<User> Users { get { return _users.AsReadOnly(); } }
+        //public ReadOnlyCollection<User> Users { get { return _users.AsReadOnly(); } }
 
         private UserGroup()
         {
@@ -40,19 +41,19 @@ namespace SmartFridgeApp.Domain.Models
 
         public void AddUserToGroup(User user)
         {
-            if (_users.Contains(user))
-                throw new DuplicateUserInGroupException("User group already contains this user.");
-            _users.Add(user);
+            //if (_users.Contains(user))
+            //    throw new DuplicateUserInGroupException("User group already contains this user.");
+            //_users.Add(user);
         }
 
         public void DeleteUserFromGroup(User user)
         {
-            if (_users.Count == 0)
-                throw new UserGroupException("This group is empty.");
-            if (!_users.Contains(user))
-                throw new UserGroupException("This user doesn't belong to this group.");
+            //if (_users.Count == 0)
+            //    throw new UserGroupException("This group is empty.");
+            //if (!_users.Contains(user))
+            //    throw new UserGroupException("This user doesn't belong to this group.");
 
-            _users.Remove(user);
+            //_users.Remove(user);
         }
     }
 }

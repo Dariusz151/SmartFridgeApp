@@ -19,9 +19,9 @@ namespace SmartFridgeApp.Infrastructure.Repositories
         {
             User user = null;
 
-            user = await _context.Users.FindAsync(userId);
-            if (user is null)
-                return null;
+            //user = await _context.Users.FindAsync(userId);
+            //if (user is null)
+            //    return null;
 
             return user;
         }

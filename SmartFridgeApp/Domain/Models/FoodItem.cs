@@ -12,7 +12,7 @@ namespace SmartFridgeApp.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; private set; }
 
-        public Guid UserId { get; private set; }
+        //public Guid ApplicationUserId { get; private set; }
         public string Name { get; private set; }
         public int Amount { get; private set; }
         public Unit Unit { get; private set; }
@@ -55,7 +55,7 @@ namespace SmartFridgeApp.Domain.Models
 
         public void AssignToUser(Guid userId)
         {
-            UserId = userId;
+            //ApplicationUserId = userId;
         }
     }
 }

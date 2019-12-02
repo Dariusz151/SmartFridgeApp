@@ -1,8 +1,8 @@
-﻿namespace SmartFridgeApp.Types
-{
-    public enum UserRole
-    {
-        Admininstrator,
-        User
-    }
-}
+﻿//namespace SmartFridgeApp.Types
+//{
+//    public enum UserRole
+//    {
+//        Admininstrator,
+//        User
+//    }
+//}

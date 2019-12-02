@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Persistence;
 
 namespace SmartFridgeApp.Migrations
 {
     [DbContext(typeof(SmartFridgeContext))]
-    partial class SmartFridgeContextModelSnapshot : ModelSnapshot
+    [Migration("20190924170332_identity")]
+    partial class identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,55 +38,33 @@ namespace SmartFridgeApp.Migrations
 
                     b.Property<int>("Unit");
 
+                    b.Property<Guid>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("FoodItems");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
-                });
-
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(128);
+                    b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(32);
+                    b.Property<string>("Login");
 
-                    b.Property<string>("LastName")
-                        .HasMaxLength(32);
+                    b.Property<int>("Role");
 
-                    b.Property<string>("MiddleInitial")
-                        .HasMaxLength(1);
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(128);
+                    b.Property<Guid?>("UserGroupId");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("UserGroupId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.UserGroup", b =>
@@ -101,25 +81,6 @@ namespace SmartFridgeApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserGroups");
-                });
-
-            modelBuilder.Entity("SmartFridgeApp.Domain.Models.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RoleId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Persistence.ConsumedFoodItem", b =>
@@ -143,17 +104,19 @@ namespace SmartFridgeApp.Migrations
                     b.ToTable("ConsumedFoodItems");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.Models.UserRole", b =>
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodItem", b =>
                 {
-                    b.HasOne("SmartFridgeApp.Domain.Models.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SmartFridgeApp.Domain.Models.User", "User")
-                        .WithMany("UserRoles")
+                    b.HasOne("SmartFridgeApp.Domain.Models.User")
+                        .WithMany("FoodItems")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.User", b =>
+                {
+                    b.HasOne("SmartFridgeApp.Domain.Models.UserGroup")
+                        .WithMany("Users")
+                        .HasForeignKey("UserGroupId");
                 });
 #pragma warning restore 612, 618
         }
