@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -22,6 +23,7 @@ using SmartFridgeApp.Infrastructure.Repositories;
 using SmartFridgeApp.Persistence;
 using Swashbuckle.AspNetCore.Swagger;
 
+[assembly: UserSecretsId("7703d083-bc08-4e1d-a5d5-06f0518e04ef")]
 namespace SmartFridgeApp
 {
     public class Startup
@@ -35,7 +37,9 @@ namespace SmartFridgeApp
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddUserSecrets<Startup>()
                 .AddEnvironmentVariables();
+                
             configuration = builder.Build();
 
         }
@@ -95,7 +99,7 @@ namespace SmartFridgeApp
                 options.LogoutPath = "/Logout";
             });
            
-            services.AddDbContext<SmartFridgeContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:SmartFridgeDB"]));
+            services.AddDbContext<SmartFridgeContext>(opts => opts.UseSqlServer(Configuration["SmartFridgeDB"]));
             
             services.AddSwaggerGen(c =>
             {
