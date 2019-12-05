@@ -6,10 +6,14 @@ namespace SmartFridgeApp.Domain.Shared
     public class AmountValue
     {
         public float Value { get; private set; }
-        public Unit Unit { get; }
+        public Unit Unit { get; private set; }
 
         public AmountValue(float value, Unit unit)
         {
+            if (value <= 0)
+            {
+                throw new DomainException("Value of FridgeItem must be > 0");
+            }
             this.Value = value;
             this.Unit = unit;
         }

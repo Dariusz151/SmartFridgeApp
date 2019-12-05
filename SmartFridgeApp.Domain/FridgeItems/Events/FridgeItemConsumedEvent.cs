@@ -1,5 +1,4 @@
-﻿using SmartFridgeApp.Domain.Fridges.FridgeItems;
-using SmartFridgeApp.Domain.SeedWork;
+﻿using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.FridgeItems.Events
 {
