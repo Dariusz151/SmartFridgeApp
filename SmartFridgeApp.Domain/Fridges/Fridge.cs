@@ -1,7 +1,6 @@
-﻿using SmartFridgeApp.Domain.Fridges.Events;
-using SmartFridgeApp.Domain.Fridges.FridgeItems;
+﻿using SmartFridgeApp.Domain.FridgeItems;
+using SmartFridgeApp.Domain.Fridges.Events;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Shared;
 using SmartFridgeApp.Domain.Users;
 using SmartFridgeApp.Domain.Users.Events;
 using System;
@@ -24,7 +23,7 @@ namespace SmartFridgeApp.Domain.Fridges
 
         private Fridge()
         {
-            this._users = new List<User>();
+            
         }
         
         public Fridge(string name, string address, string desc)
@@ -33,6 +32,8 @@ namespace SmartFridgeApp.Domain.Fridges
             Address = address;
             Name = name;
             Desc = desc;
+
+            this._users = new List<User>();
 
             this.AddDomainEvent(new FridgeCreatedEvent(this));
         }
@@ -57,11 +58,17 @@ namespace SmartFridgeApp.Domain.Fridges
             this.AddDomainEvent(new UserRemovedEvent(user));
         }
         
-        public List<FridgeItem> GetFridgeItems(UserId userId)
+        public List<FridgeItemId> GetFridgeItems(UserId userId)
         {
             var user = _users.Single(u => u.Id == userId);
 
-            return user.GetFridgeItems();
+            return user.GetFridgeItemIds();
+        }
+
+        public List<UserId> GetFridgeUsers()
+        {
+            var userIds = _users.Select(x => x.Id).ToList();
+            return userIds;
         }
 
         //public void AddFridgeItem(FridgeItem item)

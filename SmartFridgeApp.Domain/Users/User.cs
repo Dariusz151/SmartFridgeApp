@@ -1,6 +1,5 @@
 ﻿using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
-using SmartFridgeApp.Domain.Fridges.FridgeItems;
 using SmartFridgeApp.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
