@@ -2,6 +2,7 @@
 {
     public enum Category
     {
+        NotAssigned,
         Liquid,
         Meat,
         Vegatables,
@@ -9,7 +10,6 @@
         Dairy,
         Sweets,
         Nuts,
-        Other,
-        NotAssigned
+        Other
     }
 }

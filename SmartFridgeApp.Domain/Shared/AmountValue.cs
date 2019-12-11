@@ -8,6 +8,17 @@ namespace SmartFridgeApp.Domain.Shared
         public float Value { get; private set; }
         public Unit Unit { get; private set; }
 
+        private AmountValue()
+        {
+
+        }
+
+        public AmountValue(float value)
+            :this(value, Unit.NotAssigned)
+        {
+
+        }
+
         public AmountValue(float value, Unit unit)
         {
             if (value <= 0)

@@ -24,15 +24,20 @@ namespace SmartFridgeApp.UnitTests.Domain
             _fridge = new Fridge(fridgeName, fridgeAddress, fridgeDesc);
         } 
 
-        [Test]
-        public void AddUserToFridgeShouldHaveOneUser()
+        [TestCase(1)]
+        [TestCase(5)]
+        [TestCase(55)]
+        public void AddUsersToFridgeShouldHaveAmountOfUsersInList(int count)
         {
-            _user = new User(userName, userEmail);
-            _fridge.AddUser(_user);
-
+            for (int i = 0; i < count; i++)
+            {
+                _user = new User(userName, userEmail);
+                _fridge.AddUser(_user);
+            }
+            
             var countUsers = _fridge.GetFridgeUsers().Count;
 
-            Assert.AreEqual(1, countUsers);
+            Assert.AreEqual(count, countUsers);
         }
 
         [Test]
@@ -45,9 +50,33 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void CreateFridgeShouldAddOneDomainEvent()
+        public void CreateNewFridgeShouldAddOneDomainEvent()
         {
             Assert.AreEqual(1, _fridge.DomainEvents.Count);
+        }
+
+        [Test]
+        public void RemoveUserFromFridgeShouldDeleteFromList()
+        {
+            _user = new User(userName, userEmail);
+            _fridge.AddUser(_user);
+            _fridge.RemoveUser(_user.Id);
+
+            var usersCounts = _fridge.GetFridgeUsers().Count;
+
+            Assert.AreEqual(3, _fridge.DomainEvents.Count);
+            Assert.AreEqual(0, usersCounts);
+        }
+
+        [Test]
+        public void RemoveUserThatNotExistShould()
+        {
+            _user = new User(userName, userEmail);
+            
+            var usersCounts = _fridge.GetFridgeUsers().Count;
+
+            Assert.AreEqual(1, _fridge.DomainEvents.Count);
+            Assert.Throws(typeof(DomainException), () => _fridge.RemoveUser(_user.Id));
         }
     }
 }

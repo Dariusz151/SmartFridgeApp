@@ -20,14 +20,14 @@ namespace SmartFridgeApp.Domain.FridgeItems
         public Category Category { get; set; }
 
         public DateTime EnteredAt { get; private set; }
-        
+
         public bool IsConsumed { get; private set; }
 
         public bool IsOutdated() => DateTime.Compare(ExpirationDate, DateTime.UtcNow) > 1;
 
         private FridgeItem()
         {
-            IsConsumed = false;
+
         }
 
         public FridgeItem(string name, string desc, AmountValue amountValue, Guid userId)
@@ -35,6 +35,7 @@ namespace SmartFridgeApp.Domain.FridgeItems
             Id = new FridgeItemId(Guid.NewGuid());
             EnteredAt = DateTime.Now;
             AmountValue = amountValue;
+            IsConsumed = false;
 
             SetFridgeItemDetails(name, desc);
         }
@@ -46,12 +47,18 @@ namespace SmartFridgeApp.Domain.FridgeItems
 
         public void UpdateFridgeItemDetails(string name, string desc)
         {
+            if (IsConsumed)
+                throw new DomainException("This item is consumed! Cant update details.");
+
             SetFridgeItemDetails(name, desc);
         }
-        
+
         public void ConsumeFridgeItem(AmountValue amountValue)
         {
-            if (this.AmountValue.CompareTo(amountValue) > 0)
+            if (IsConsumed)
+                throw new DomainException("This item is consumed! Cant consume again.");
+
+            if (this.AmountValue.CompareTo(amountValue) <= 0)
             {
                 IsConsumed = true;
                 this.AddDomainEvent(new FridgeItemConsumedEvent(this));

@@ -52,10 +52,17 @@ namespace SmartFridgeApp.Domain.Fridges
 
         public void RemoveUser(UserId userId)
         {
-            var user = _users.Single(u => u.Id == userId);
-            _users.Remove(user);
+            try
+            {
+                var user = _users.Single(u => u.Id == userId);
+                _users.Remove(user);
 
-            this.AddDomainEvent(new UserRemovedEvent(user));
+                this.AddDomainEvent(new UserRemovedEvent(user));
+            }
+            catch (InvalidOperationException)
+            {
+                throw new DomainException("Can't remove user that doesn't exist.");
+            }
         }
         
         public List<FridgeItemId> GetFridgeItems(UserId userId)
