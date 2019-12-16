@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Fridges.AddFridge;
 using System.Net;
 using System.Threading.Tasks;
+using SmartFridgeApp.Domain.Fridges;
 
 namespace SmartFridgeApp.API.Fridges
 {
@@ -16,7 +17,7 @@ namespace SmartFridgeApp.API.Fridges
         {
             _mediator = mediator;
         }
-
+        
         /// <summary>
         /// Register fridge.
         /// </summary>
@@ -26,7 +27,7 @@ namespace SmartFridgeApp.API.Fridges
         public async Task<IActionResult> AddFridge([FromBody]AddFridgeRequest request)
         {
             var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
-
+            
             return Created(string.Empty, fridge);
         }
     }

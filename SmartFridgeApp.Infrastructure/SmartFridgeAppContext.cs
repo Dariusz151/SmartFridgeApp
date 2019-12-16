@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Fridges;
+using SmartFridgeApp.Infrastructure.Fridges;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -14,7 +15,7 @@ namespace SmartFridgeApp.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration(TypeConfiguration);
+            modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
         }
     }
 }

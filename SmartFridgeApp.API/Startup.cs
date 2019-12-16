@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
+using MediatR;
+using Autofac.Builder;
+using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmartFridgeApp.API.Modules;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API
@@ -30,19 +38,20 @@ namespace SmartFridgeApp.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services
                .AddEntityFrameworkSqlServer()
-
                .AddDbContext<SmartFridgeAppContext>(options =>
                {
                    options
                        .UseSqlServer(this.Configuration[SmartFridgeAppConnectionString]);
                });
-
+            
+            return CreateAutofacServiceProvider(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,9 +66,24 @@ namespace SmartFridgeApp.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
+        {
+            var container = new ContainerBuilder();
+
+            container.Populate(services);
+
+            container.RegisterModule(new InfrastructureModule());
+
+            var buildContainer = container.Build();
+
+            //ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
+
+            return new AutofacServiceProvider(buildContainer);
         }
     }
 }

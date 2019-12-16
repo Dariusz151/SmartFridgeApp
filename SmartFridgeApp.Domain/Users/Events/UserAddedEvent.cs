@@ -1,12 +1,13 @@
-﻿using SmartFridgeApp.Domain.SeedWork;
+﻿using System;
+using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.Users.Events
 {
     public class UserAddedEvent : DomainEventBase
     {
-        public UserId UserId { get; }
+        public Guid UserId { get; }
 
-        public UserAddedEvent(UserId userId)
+        public UserAddedEvent(Guid userId)
         {
             UserId = UserId;
         }

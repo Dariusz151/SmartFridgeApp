@@ -3,9 +3,9 @@ using System;
 
 namespace SmartFridgeApp.Domain.FridgeItems
 {
-    public class FridgeItemId : TypedIdValueBase
+    public class FridgeItemId 
     {
-        public FridgeItemId(Guid value):base(value)
+        public FridgeItemId(Guid value) //:base(value)
         {
 
         }

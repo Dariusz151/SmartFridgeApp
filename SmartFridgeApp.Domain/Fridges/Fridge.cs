@@ -11,7 +11,7 @@ namespace SmartFridgeApp.Domain.Fridges
 {
     public class Fridge : Entity, IAggregateRoot
     {
-        public FridgeId Id { get; private set; }
+        public Guid Id { get; private set; }
 
         public string Name { get; private set; }
 
@@ -28,14 +28,14 @@ namespace SmartFridgeApp.Domain.Fridges
         
         public Fridge(string name, string address, string desc)
         {
-            Id = new FridgeId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             Address = address;
             Name = name;
             Desc = desc;
 
-            this._users = new List<User>();
+            _users = new List<User>();
 
-            this.AddDomainEvent(new FridgeCreatedEvent(this));
+            AddDomainEvent(new FridgeCreatedEvent(this));
         }
 
         public void AddUser(User user)
@@ -50,7 +50,7 @@ namespace SmartFridgeApp.Domain.Fridges
             this.AddDomainEvent(new UserAddedEvent(user.Id));
         }
 
-        public void RemoveUser(UserId userId)
+        public void RemoveUser(Guid userId)
         {
             try
             {
@@ -65,14 +65,14 @@ namespace SmartFridgeApp.Domain.Fridges
             }
         }
         
-        public List<FridgeItemId> GetFridgeItems(UserId userId)
+        public List<FridgeItemId> GetFridgeItems(Guid userId)
         {
             var user = _users.Single(u => u.Id == userId);
 
             return user.GetFridgeItemIds();
         }
 
-        public List<UserId> GetFridgeUsers()
+        public List<Guid> GetFridgeUsers()
         {
             var userIds = _users.Select(x => x.Id).ToList();
             return userIds;

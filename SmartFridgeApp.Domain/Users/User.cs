@@ -9,7 +9,7 @@ namespace SmartFridgeApp.Domain.Users
 {
     public class User : Entity
     {
-        public UserId Id { get; private set; }
+        public Guid Id { get; private set; }
 
         public string Name { get; private set; }
 
@@ -29,7 +29,7 @@ namespace SmartFridgeApp.Domain.Users
 
         public User(string name, string email)
         {
-            Id = new UserId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             _createdAt = DateTime.Now;
