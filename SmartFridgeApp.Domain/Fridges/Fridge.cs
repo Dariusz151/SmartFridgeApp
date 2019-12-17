@@ -65,12 +65,12 @@ namespace SmartFridgeApp.Domain.Fridges
             }
         }
         
-        public List<FridgeItemId> GetFridgeItems(Guid userId)
-        {
-            var user = _users.Single(u => u.Id == userId);
+        //public List<FridgeItemId> GetFridgeItems(Guid userId)
+        //{
+        //    var user = _users.Single(u => u.Id == userId);
 
-            return user.GetFridgeItemIds();
-        }
+        //    return user.GetFridgeItemIds();
+        //}
 
         public List<Guid> GetFridgeUsers()
         {

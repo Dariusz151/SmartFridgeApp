@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.Users.AddFridgeUser;
+using SmartFridgeApp.API.Users.GetFridgeUsers;
 
 namespace SmartFridgeApp.API.Users
 {
     [Route("api/users")]
     [ApiController]
-    public class FridgeUsersController
+    public class FridgeUsersController : Controller
     {
         private readonly IMediator _mediator;
 
@@ -18,10 +21,26 @@ namespace SmartFridgeApp.API.Users
             _mediator = mediator;
         }
 
+        [Route("{fridgeId}/users")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<FridgeUserDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFridgeUsers(Guid fridgeId)
         {
             var users = await _mediator.Send(new GetFridgeUsersQuery(fridgeId));
+            return Ok(users);
         }
 
+        [Route("{fridgeId}/users")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> AddFridgeUser(
+            [FromRoute]Guid fridgeId,
+            [FromBody]FridgeUserRequest request)
+        {
+            await _mediator.Send(new AddFridgeUserCommand(fridgeId, request.User));
+
+            //return userId ?
+            return Created(string.Empty, null);
+        }
     }
 }

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace SmartFridgeApp.API.Users.GetFridgeUsers
 {
-    internal class GetFridgeUsersQuery : IRequest<List<UserDto>>
+    internal class GetFridgeUsersQuery : IRequest<List<FridgeUserDto>>
     {
         public Guid FridgeId { get; }
 
