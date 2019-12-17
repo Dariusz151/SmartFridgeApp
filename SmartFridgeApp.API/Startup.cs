@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -42,6 +43,8 @@ namespace SmartFridgeApp.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            
+            this.AddSwagger(services);
 
             services
                .AddEntityFrameworkSqlServer()
@@ -69,6 +72,8 @@ namespace SmartFridgeApp.API
             
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            ConfigureSwagger(app);
         }
 
         private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
@@ -76,7 +81,6 @@ namespace SmartFridgeApp.API
             var container = new ContainerBuilder();
 
             container.Populate(services);
-
             container.RegisterModule(new InfrastructureModule());
 
             var buildContainer = container.Build();
@@ -84,6 +88,30 @@ namespace SmartFridgeApp.API
             //ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
 
             return new AutofacServiceProvider(buildContainer);
+        }
+
+        private static void ConfigureSwagger(IApplicationBuilder app)
+        {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartFridgeApp API V1");
+            });
+        }
+
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "SmartFridgeApp",
+                    Version = "v1",
+                    Description = "Smart Fridge Application.",
+                });
+            });
         }
     }
 }
