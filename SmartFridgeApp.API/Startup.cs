@@ -81,7 +81,7 @@ namespace SmartFridgeApp.API
             var container = new ContainerBuilder();
 
             container.Populate(services);
-            container.RegisterModule(new InfrastructureModule());
+            container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
 
             var buildContainer = container.Build();
 

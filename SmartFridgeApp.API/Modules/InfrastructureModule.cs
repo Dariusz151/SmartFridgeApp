@@ -15,13 +15,20 @@ namespace SmartFridgeApp.API.Modules
 {
     public class InfrastructureModule : Autofac.Module
     {
-        public InfrastructureModule()
+        private readonly string _dbConnectionString;
+
+        public InfrastructureModule(string dbConnectionString)
         {
-                
+            this._dbConnectionString = dbConnectionString;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<SqlConnectionFactory>()
+                .As<ISqlConnectionFactory>()
+                .WithParameter("connectionString", _dbConnectionString)
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<FridgeRepository>()
                 .As<IFridgeRepository>()
                 .InstancePerLifetimeScope();
