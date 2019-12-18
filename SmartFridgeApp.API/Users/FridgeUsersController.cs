@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Users.AddFridgeUser;
 using SmartFridgeApp.API.Users.GetFridgeUsers;
+using SmartFridgeApp.API.Users.RemoveFridgeUser;
 
 namespace SmartFridgeApp.API.Users
 {
@@ -41,6 +42,18 @@ namespace SmartFridgeApp.API.Users
 
             //return userId ?
             return Created(string.Empty, null);
+        }
+
+        [Route("{fridgeId}/users")]
+        [HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> RemoveFridgeUser(
+            [FromRoute]Guid fridgeId,
+            [FromBody]RemoveFridgeUserRequest request)
+        {
+            await _mediator.Send(new RemoveFridgeUserCommand(fridgeId, request.UserId));
+            
+            return NoContent();
         }
     }
 }
