@@ -7,7 +7,7 @@ namespace SmartFridgeApp.Domain.FridgeItems
 {
     public class FridgeItem : Entity
     {
-        public FridgeItemId Id { get; private set; }
+        public Guid Id { get; private set; }
 
         public string Name { get; private set; }
 
@@ -32,7 +32,7 @@ namespace SmartFridgeApp.Domain.FridgeItems
 
         public FridgeItem(string name, string desc, AmountValue amountValue, Guid userId)
         {
-            Id = new FridgeItemId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             EnteredAt = DateTime.Now;
             AmountValue = amountValue;
             IsConsumed = false;

@@ -10,7 +10,7 @@ using SmartFridgeApp.API.Fridges.AddFridge;
 
 namespace SmartFridgeApp.API.FridgeItems
 {
-    [Route("api/fridgeitems")]
+    [Route("api/fridgeItems")]
     [ApiController]
     public class FridgeItemsController : Controller
     {
@@ -21,14 +21,45 @@ namespace SmartFridgeApp.API.FridgeItems
             _mediator = mediator;
         }
 
-        [Route("")]
-        [HttpPost]
-        [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> AddFridge([FromBody]AddFridgeRequest request)
-        {
-            var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
+        //[Route("")]
+        //[HttpPost]
+        //[ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
+        //public async Task<IActionResult> AddFridge([FromBody]AddFridgeRequest request)
+        //{
+        //    var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
 
-            return Created(string.Empty, fridge);
-        }
+        //    return Created(string.Empty, fridge);
+        //}
+
+        /// <summary>
+        /// Add FridgeItem to fridge (for user).
+        /// </summary>
+        //[Route("{fridgeId}/add")]
+        //[HttpPost]
+        //[ProducesResponseType((int)HttpStatusCode.Created)]
+        //public async Task<IActionResult> AddFridgeItem(
+        //    [FromRoute]Guid fridgeId,
+        //    [FromBody]FridgeUserRequest request)
+        //{
+        //    await _mediator.Send(new AddFridgeUserCommand(fridgeId, request.User));
+
+        //    //return userId ?
+        //    return Created(string.Empty, null);
+        //}
+
+        ///// <summary>
+        ///// Remove user from fridge.
+        ///// </summary>
+        //[Route("{fridgeId}/remove")]
+        //[HttpDelete]
+        //[ProducesResponseType((int)HttpStatusCode.NoContent)]
+        //public async Task<IActionResult> RemoveFridgeUser(
+        //    [FromRoute]Guid fridgeId,
+        //    [FromBody]RemoveFridgeUserRequest request)
+        //{
+        //    await _mediator.Send(new RemoveFridgeUserCommand(fridgeId, request.UserId));
+
+        //    return NoContent();
+        //}
     }
 }

@@ -15,7 +15,7 @@ namespace SmartFridgeApp.Domain.Users
 
         public string Email { get; private set; }
 
-        //private List<FridgeItem> _fridgeItems;
+        private List<FridgeItem> _fridgeItems;
 
         private DateTime _createdAt;
 
@@ -33,7 +33,7 @@ namespace SmartFridgeApp.Domain.Users
             Email = email;
             _createdAt = DateTime.Now;
 
-            //this._fridgeItems = new List<FridgeItem>();
+            this._fridgeItems = new List<FridgeItem>();
             _welcomeEmailWasSent = false;
         }
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
+using SmartFridgeApp.Domain.Shared;
 using SmartFridgeApp.Domain.Users;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
@@ -16,6 +18,19 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 x.HasForeignKey("FridgeId");
 
                 x.HasKey(u => u.Id);
+
+                x.OwnsMany<FridgeItem>("_fridgeItems", f =>
+                {
+                    f.ToTable("FridgeItems");
+                    f.HasForeignKey("UserId");
+                    f.HasKey(k => k.Id);
+
+                    f.OwnsOne<AmountValue>("AmountValue", av =>
+                    {
+                        av.Property(p => p.Value).HasColumnName("Value");
+                        av.Property(p => p.Unit).HasColumnName("Unit");
+                    });
+                });
             });
 
         }
