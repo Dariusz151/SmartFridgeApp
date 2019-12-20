@@ -24,16 +24,13 @@ namespace SmartFridgeApp.API.Users.RemoveFridgeUser
 
         public async Task<Unit> Handle(RemoveFridgeUserCommand request, CancellationToken cancellationToken)
         {
-            //var fridge = await _fridgeRepository.GetByIdAsync(request.FridgeId);
+            var fridge = await _fridgeRepository.GetByIdAsync(request.FridgeId);
 
-            //var user = new User(request.User.Name, request.User.Email);
-            //var userId = user.Id;
+            fridge.RemoveUser(request.UserId);
 
-            //fridge.AddUser(user);
-
-            //await _unitOfWork.CommitAsync(cancellationToken);
-
-            //return Unit.Value;
+            await _unitOfWork.CommitAsync(cancellationToken);
+            
+            return Unit.Value;
         }
     }
 }
