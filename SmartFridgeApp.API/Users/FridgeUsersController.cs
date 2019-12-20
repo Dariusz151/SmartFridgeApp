@@ -11,7 +11,7 @@ using SmartFridgeApp.API.Users.RemoveFridgeUser;
 
 namespace SmartFridgeApp.API.Users
 {
-    [Route("api/users")]
+    [Route("api/fridgeUsers")]
     [ApiController]
     public class FridgeUsersController : Controller
     {
@@ -22,7 +22,10 @@ namespace SmartFridgeApp.API.Users
             _mediator = mediator;
         }
 
-        [Route("{fridgeId}/users")]
+        /// <summary>
+        /// Get list of users from given fridge
+        /// </summary>
+        [Route("{fridgeId}")]
         [HttpGet]
         [ProducesResponseType(typeof(List<FridgeUserDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFridgeUsers(Guid fridgeId)
@@ -31,7 +34,10 @@ namespace SmartFridgeApp.API.Users
             return Ok(users);
         }
 
-        [Route("{fridgeId}/users")]
+        /// <summary>
+        /// Add user to fridge.
+        /// </summary>
+        [Route("{fridgeId}/add")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFridgeUser(
@@ -44,7 +50,10 @@ namespace SmartFridgeApp.API.Users
             return Created(string.Empty, null);
         }
 
-        [Route("{fridgeId}/users")]
+        /// <summary>
+        /// Remove user from fridge.
+        /// </summary>
+        [Route("{fridgeId}/remove")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveFridgeUser(
