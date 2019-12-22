@@ -23,12 +23,11 @@ namespace SmartFridgeApp.API.Users.GetFridgeUsers
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
-                               "[Order].[Id], " +
-                               "[Order].[IsRemoved], " +
-                               "[Order].[Value], " +
-                               "[Order].[Currency] " +
-                               "FROM orders.v_Orders AS [Order] " +
-                               "WHERE [Order].CustomerId = @CustomerId";
+                               "[Id], " +
+                               "[Name], " +
+                               "[Email] " +
+                               "FROM [dbo].[v_FridgeUsers] " +
+                               "WHERE [FridgeId] = @FridgeId";
             var users = await connection.QueryAsync<FridgeUserDto>(sql, new { request.FridgeId });
 
             return users.AsList();
