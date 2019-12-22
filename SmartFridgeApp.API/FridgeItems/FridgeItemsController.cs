@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
+using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
-using SmartFridgeApp.API.Fridges;
-using SmartFridgeApp.API.Fridges.AddFridge;
-using SmartFridgeApp.API.Users.AddFridgeUser;
 
 namespace SmartFridgeApp.API.FridgeItems
 {
@@ -24,15 +21,17 @@ namespace SmartFridgeApp.API.FridgeItems
             _mediator = mediator;
         }
 
-        //[Route("")]
-        //[HttpPost]
-        //[ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
-        //public async Task<IActionResult> AddFridge([FromBody]AddFridgeRequest request)
-        //{
-        //    var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
+        [Route("{fridgeId}/{userId}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetFridgeItemsByUser(
+            [FromRoute]Guid fridgeId, 
+            [FromRoute]Guid userId)
+        {
+            var fridges = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
 
-        //    return Created(string.Empty, fridge);
-        //}
+            return Ok(fridges);
+        }
 
         /// <summary>
         /// Add FridgeItem to fridge (for user).

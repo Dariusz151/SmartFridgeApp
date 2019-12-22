@@ -30,8 +30,8 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
                 command.FridgeItemDto.Name,
                 command.FridgeItemDto.Desc,
                 new AmountValue(
-                    command.FridgeItemDto.AmountValue.Value,
-                    command.FridgeItemDto.AmountValue.Unit)
+                    command.FridgeItemDto.Value,
+                    command.FridgeItemDto.Unit)
             );
 
             fridgeItem.Category = command.FridgeItemDto.Category;

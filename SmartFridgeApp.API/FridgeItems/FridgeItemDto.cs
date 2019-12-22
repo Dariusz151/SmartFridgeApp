@@ -7,7 +7,8 @@ namespace SmartFridgeApp.API.FridgeItems
     {
         public string Name { get; set; }
         public string Desc { get; set; }
-        public AmountValueDto AmountValue { get; set; }
         public Category Category { get; set; }
+        public float Value { get; set; }
+        public Unit Unit { get; set; }
     }
 }
