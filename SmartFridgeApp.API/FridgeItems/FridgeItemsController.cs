@@ -58,7 +58,7 @@ namespace SmartFridgeApp.API.FridgeItems
             [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeItemRequest request)
         {
-            await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId,request.UserId, fridgeId));
+            await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
 
             return NoContent();
         }

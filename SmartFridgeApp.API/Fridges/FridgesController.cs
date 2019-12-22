@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Fridges.AddFridge;
 using System.Net;
 using System.Threading.Tasks;
+using SmartFridgeApp.API.Fridges.DeleteFridge;
 using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.Domain.Fridges;
 
@@ -19,19 +20,6 @@ namespace SmartFridgeApp.API.Fridges
         {
             _mediator = mediator;
         }
-        
-        /// <summary>
-        /// Register fridge.
-        /// </summary>
-        [Route("")]
-        [HttpPost]
-        [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> AddFridge([FromBody]AddFridgeRequest request)
-        {
-            var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
-            
-            return Created(string.Empty, fridge);
-        }
 
         /// <summary>
         /// Get all available fridges.
@@ -44,6 +32,32 @@ namespace SmartFridgeApp.API.Fridges
             var fridges = await _mediator.Send(new GetFridgesQuery());
 
             return Ok(fridges);
+        }
+
+        /// <summary>
+        /// Register fridge.
+        /// </summary>
+        [Route("")]
+        [HttpPost]
+        [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> AddFridgeAsync([FromBody]AddFridgeRequest request)
+        {
+            var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
+            
+            return Created(string.Empty, fridge);
+        }
+
+        /// <summary>
+        /// Delete fridge.
+        /// </summary>
+        [Route("")]
+        [HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> DeleteFridgeAsync([FromBody]DeleteFridgeRequest request)
+        {
+            await _mediator.Send(new DeleteFridgeCommand(request.FridgeId));
+
+            return NoContent();
         }
     }
 }

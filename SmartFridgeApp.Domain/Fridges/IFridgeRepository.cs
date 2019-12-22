@@ -7,5 +7,6 @@ namespace SmartFridgeApp.Domain.Fridges
     {
         Task<Fridge> GetByIdAsync(Guid id);
         Task AddAsync(Fridge fridge);
+        Task DeleteAsync(Guid fridgeId);
     }
 }

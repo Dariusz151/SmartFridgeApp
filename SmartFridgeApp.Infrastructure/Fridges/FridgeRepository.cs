@@ -24,5 +24,12 @@ namespace SmartFridgeApp.Infrastructure.Fridges
         {
             return await _context.Fridges.SingleAsync(x => x.Id == id);
         }
+
+        public async Task DeleteAsync(Guid fridgeId)
+        {
+            var fridge = await _context.Fridges.SingleOrDefaultAsync(f => f.Id == fridgeId);
+
+            _context.Fridges.Remove(fridge);
+        }
     }
 }
