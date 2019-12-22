@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Fridges.AddFridge;
 using System.Net;
 using System.Threading.Tasks;
+using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.Domain.Fridges;
 
 namespace SmartFridgeApp.API.Fridges
@@ -29,6 +31,19 @@ namespace SmartFridgeApp.API.Fridges
             var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
             
             return Created(string.Empty, fridge);
+        }
+
+        /// <summary>
+        /// Get all available fridges.
+        /// </summary>
+        [Route("")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<FridgeDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllFridges()
+        {
+            var fridges = await _mediator.Send(new GetFridgesQuery());
+
+            return Ok(fridges);
         }
     }
 }
