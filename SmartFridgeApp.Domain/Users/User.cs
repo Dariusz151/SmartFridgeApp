@@ -45,6 +45,14 @@ namespace SmartFridgeApp.Domain.Users
             this.AddDomainEvent(new FridgeItemAdded(item));
         }
 
+        public void RemoveFridgeItem(Guid fridgeItemId)
+        {
+            var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
+            _fridgeItems.Remove(fridgeItem);
+
+            this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
+        }
+
         //public List<FridgeItemId> GetFridgeItemIds()
         //{
         //    return this._fridgeItems.Select(x => x.Id).ToList();
