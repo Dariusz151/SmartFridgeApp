@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
@@ -24,6 +25,9 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.ToTable("FridgeItems");
                     f.HasForeignKey("UserId");
                     f.HasKey(k => k.Id);
+                    
+                    f.Property(cat=>cat.Category).HasConversion(conv => conv.ToString(),
+                        c => (Category)Enum.Parse(typeof(Category), c));
 
                     f.OwnsOne<AmountValue>("AmountValue", av =>
                     {
