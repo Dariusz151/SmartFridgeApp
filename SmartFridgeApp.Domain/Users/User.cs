@@ -4,6 +4,7 @@ using SmartFridgeApp.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartFridgeApp.Domain.Users.Events;
 
 namespace SmartFridgeApp.Domain.Users
 {
@@ -35,6 +36,13 @@ namespace SmartFridgeApp.Domain.Users
 
             this._fridgeItems = new List<FridgeItem>();
             _welcomeEmailWasSent = false;
+        }
+
+        public void AddFridgeItem(FridgeItem item)
+        {
+            _fridgeItems.Add(item);
+
+            this.AddDomainEvent(new FridgeItemAdded(item));
         }
 
         //public List<FridgeItemId> GetFridgeItemIds()

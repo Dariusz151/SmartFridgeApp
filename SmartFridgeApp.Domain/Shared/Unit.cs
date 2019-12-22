@@ -2,9 +2,9 @@
 {
     public enum Unit
     {
+        NotAssigned,
         Pieces,
         Grams,
-        Mililiter,
-        NotAssigned
+        Mililiter
     }
 }

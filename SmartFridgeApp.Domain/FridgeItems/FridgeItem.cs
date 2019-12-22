@@ -30,7 +30,7 @@ namespace SmartFridgeApp.Domain.FridgeItems
 
         }
 
-        public FridgeItem(string name, string desc, AmountValue amountValue, Guid userId)
+        public FridgeItem(string name, string desc, AmountValue amountValue)
         {
             Id = Guid.NewGuid();
             EnteredAt = DateTime.Now;

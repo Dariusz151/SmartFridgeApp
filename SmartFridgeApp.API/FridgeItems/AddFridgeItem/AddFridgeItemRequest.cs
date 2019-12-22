@@ -1,14 +1,10 @@
-﻿using SmartFridgeApp.Domain.Shared;
+﻿using System;
 
 namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
 {
     public class AddFridgeItemRequest
     {
-        public string Name { get; set; }
-
-        public string Desc { get; set; }
-
-        public AmountValue AmountValue { get; set; }
-
+        public FridgeItemDto FridgeItem { get; set; }
+        public Guid UserId { get; set; }
     }
 }

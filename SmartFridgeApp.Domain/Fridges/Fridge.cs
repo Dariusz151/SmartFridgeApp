@@ -78,6 +78,11 @@ namespace SmartFridgeApp.Domain.Fridges
             return userIds;
         }
 
+        public User GetFridgeUser(Guid userId)
+        {
+            return _users.Single(u => u.Id == userId);
+        }
+
         //public void AddFridgeItem(FridgeItem item)
         //{
         //    // check if item is valid. domain exception if not

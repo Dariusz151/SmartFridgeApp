@@ -5,8 +5,10 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.Fridges;
 using SmartFridgeApp.API.Fridges.AddFridge;
+using SmartFridgeApp.API.Users.AddFridgeUser;
 
 namespace SmartFridgeApp.API.FridgeItems
 {
@@ -34,18 +36,17 @@ namespace SmartFridgeApp.API.FridgeItems
         /// <summary>
         /// Add FridgeItem to fridge (for user).
         /// </summary>
-        //[Route("{fridgeId}/add")]
-        //[HttpPost]
-        //[ProducesResponseType((int)HttpStatusCode.Created)]
-        //public async Task<IActionResult> AddFridgeItem(
-        //    [FromRoute]Guid fridgeId,
-        //    [FromBody]FridgeUserRequest request)
-        //{
-        //    await _mediator.Send(new AddFridgeUserCommand(fridgeId, request.User));
-
-        //    //return userId ?
-        //    return Created(string.Empty, null);
-        //}
+        [Route("{fridgeId}/add")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> AddFridgeItem(
+            [FromRoute]Guid fridgeId,
+            [FromBody]AddFridgeItemRequest request)
+        {
+            await _mediator.Send(new AddFridgeItemCommand(fridgeId, request.FridgeItem, request.UserId));
+            
+            return Created(string.Empty, null);
+        }
 
         ///// <summary>
         ///// Remove user from fridge.
