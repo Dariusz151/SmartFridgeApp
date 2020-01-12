@@ -3,6 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
+using SmartFridgeApp.API.FoodProducts.GetFoodProducts;
 using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.Domain.FoodProducts;
 
@@ -27,9 +29,22 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType(typeof(List<FoodProduct>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllFoodProducts()
         {
-            var foodProducts = await _mediator.Send(new GetFridgesQuery());
+            var foodProducts = await _mediator.Send(new GetFoodProductsQuery());
 
             return Ok(foodProducts);
+        }
+
+        /// <summary>
+        /// Create new foodProduct.
+        /// </summary>
+        [Route("")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddFoodProduct([FromBody]AddFoodProductRequest request)
+        {
+            await _mediator.Send(new AddFoodProductCommand(request.Name));
+
+            return Ok();
         }
     }
 }
