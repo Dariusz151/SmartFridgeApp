@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.API.Users;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.Fridges.GetFridges

@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.FoodProducts;
 using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.Users;
+using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
 
 namespace SmartFridgeApp.Infrastructure
@@ -24,6 +24,7 @@ namespace SmartFridgeApp.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
         }
     }
 }
