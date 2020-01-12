@@ -31,7 +31,10 @@ namespace SmartFridgeApp.API
         public Startup(IHostingEnvironment env)
         {
             this.Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .SetBasePath((env.ContentRootPath))
+                .AddJsonFile("appsettings.json", optional:false, reloadOnChange:true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables()
                 .AddUserSecrets<Startup>()
                 .Build();
         }

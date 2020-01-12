@@ -21,7 +21,8 @@ namespace SmartFridgeApp.IntegrationTests
             foreach (var fridge in allFridges)
                 await repository.DeleteAsync(fridge.Id);
             var response = await client.GetAsync("/api/fridges");
-            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.NotFound);
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.OK);
         }
     }
 }

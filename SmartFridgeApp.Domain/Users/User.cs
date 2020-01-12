@@ -4,6 +4,7 @@ using SmartFridgeApp.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartFridgeApp.Domain.Shared;
 using SmartFridgeApp.Domain.Users.Events;
 
 namespace SmartFridgeApp.Domain.Users
@@ -47,10 +48,24 @@ namespace SmartFridgeApp.Domain.Users
 
         public void RemoveFridgeItem(Guid fridgeItemId)
         {
-            var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
+            var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
 
             this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
+        }
+        
+        public void ConsumeFridgeItem(Guid fridgeItemId, AmountValue amountValue)
+        {
+            var fridgeItem = this.GetFridgeItem(fridgeItemId);
+            fridgeItem.ConsumeFridgeItem(amountValue);
+
+            this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
+        }
+        
+        private FridgeItem GetFridgeItem(Guid fridgeItemId)
+        {
+            var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
+            return fridgeItem;
         }
 
         //public List<FridgeItemId> GetFridgeItemIds()
