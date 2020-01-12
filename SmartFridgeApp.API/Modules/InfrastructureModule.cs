@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Autofac;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SmartFridgeApp.Domain.FoodProducts;
 using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
 
 namespace SmartFridgeApp.API.Modules
@@ -31,6 +33,10 @@ namespace SmartFridgeApp.API.Modules
 
             builder.RegisterType<FridgeRepository>()
                 .As<IFridgeRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<FoodProductRepository>()
+                .As<IFoodProductRepository>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<UnitOfWork>()
