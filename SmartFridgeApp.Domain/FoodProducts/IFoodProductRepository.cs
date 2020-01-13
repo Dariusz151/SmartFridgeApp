@@ -4,9 +4,7 @@ namespace SmartFridgeApp.Domain.FoodProducts
 {
     public interface IFoodProductRepository
     {
-        //Task<FoodProduct> GetAllAsync();
+        Task<FoodProduct> GetByIdAsync(int foodProductId);
         Task AddAsync(FoodProduct foodProduct);
-        Task DeleteAsync(int foodProductId);
-        // edit ?
     }
 }

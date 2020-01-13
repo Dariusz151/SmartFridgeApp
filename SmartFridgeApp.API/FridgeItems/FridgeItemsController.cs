@@ -29,9 +29,9 @@ namespace SmartFridgeApp.API.FridgeItems
             [FromRoute]Guid fridgeId, 
             [FromRoute]Guid userId)
         {
-            var fridges = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
+            var fridgeItems = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
 
-            return Ok(fridges);
+            return Ok(fridgeItems);
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SmartFridgeApp.Domain.FoodProducts;
 
 namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct
 {

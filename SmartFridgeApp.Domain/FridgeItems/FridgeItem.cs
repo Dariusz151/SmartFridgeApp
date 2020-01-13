@@ -2,6 +2,7 @@
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.Shared;
 using System;
+using SmartFridgeApp.Domain.FoodProducts;
 
 namespace SmartFridgeApp.Domain.FridgeItems
 {
@@ -9,7 +10,9 @@ namespace SmartFridgeApp.Domain.FridgeItems
     {
         public Guid Id { get; private set; }
 
-        public string Name { get; private set; }
+        public FoodProduct FoodProduct { get; private set; }
+
+        //public string Name { get; private set; }
 
         public string Desc { get; private set; }
 
@@ -30,14 +33,14 @@ namespace SmartFridgeApp.Domain.FridgeItems
 
         }
 
-        public FridgeItem(string name, string desc, AmountValue amountValue)
+        public FridgeItem(FoodProduct foodProduct, string desc, AmountValue amountValue)
         {
             Id = Guid.NewGuid();
             EnteredAt = DateTime.Now;
             AmountValue = amountValue;
             IsConsumed = false;
 
-            SetFridgeItemDetails(name, desc);
+            SetFridgeItemDetails(foodProduct, desc);
         }
 
         public void ChangeFridgeItemAmount(AmountValue amountValue)
@@ -45,12 +48,12 @@ namespace SmartFridgeApp.Domain.FridgeItems
             AmountValue = amountValue;
         }
 
-        public void UpdateFridgeItemDetails(string name, string desc)
+        public void UpdateFridgeItemDetails(FoodProduct foodProduct, string desc)
         {
             if (IsConsumed)
                 throw new DomainException("This item is consumed! Cant update details.");
 
-            SetFridgeItemDetails(name, desc);
+            SetFridgeItemDetails(foodProduct, desc);
         }
 
         public void ConsumeFridgeItem(AmountValue amountValue)
@@ -70,13 +73,9 @@ namespace SmartFridgeApp.Domain.FridgeItems
             }
         }
 
-        private void SetFridgeItemDetails(string name, string desc)
+        private void SetFridgeItemDetails(FoodProduct foodProduct, string desc)
         {
-            if (name.Length < 1)
-            {
-                throw new DomainException("FridgeItem name can't be empty.");
-            }
-            Name = name;
+            FoodProduct = foodProduct;
             Desc = desc;
         }
     }

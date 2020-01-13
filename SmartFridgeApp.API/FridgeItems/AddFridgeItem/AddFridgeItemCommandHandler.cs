@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SmartFridgeApp.Domain.FoodProducts;
 using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
@@ -12,22 +13,25 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
     public class AddFridgeItemCommandHandler : IRequestHandler<AddFridgeItemCommand>
     {
         private readonly IFridgeRepository _fridgeRepository;
+        private readonly IFoodProductRepository _foodProductRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public AddFridgeItemCommandHandler(
-            IFridgeRepository fridgeRepository, IUnitOfWork unitOfWork)
+            IFridgeRepository fridgeRepository, IUnitOfWork unitOfWork, IFoodProductRepository foodProductRepository)
         {
             _fridgeRepository = fridgeRepository;
             _unitOfWork = unitOfWork;
+            _foodProductRepository = foodProductRepository;
         }
 
         public async Task<Unit> Handle(AddFridgeItemCommand command, CancellationToken cancellationToken)
         {
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
+            var foodProduct = await _foodProductRepository.GetByIdAsync(command.FridgeItemDto.FoodProductId);
             
             var fridgeItem = new FridgeItem(
-                command.FridgeItemDto.Name,
+                foodProduct,
                 command.FridgeItemDto.Desc,
                 new AmountValue(
                     command.FridgeItemDto.Value,

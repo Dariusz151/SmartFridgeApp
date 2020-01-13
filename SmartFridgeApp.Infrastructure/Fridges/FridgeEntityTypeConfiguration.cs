@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SmartFridgeApp.Domain.FoodProducts;
 using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.Shared;
@@ -34,6 +35,8 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                         av.Property(p => p.Value).HasColumnName("Value");
                         av.Property(p => p.Unit).HasColumnName("Unit");
                     });
+
+                    f.OwnsOne<FoodProduct>("FoodProduct");
                 });
             });
 

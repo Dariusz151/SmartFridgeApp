@@ -13,16 +13,21 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             _context = context;
         }
 
+        public async Task<FoodProduct> GetByIdAsync(int foodProductId)
+        {
+            return await _context.FoodProducts.SingleOrDefaultAsync(f=> f.Id == foodProductId);
+        }
+
         public async Task AddAsync(FoodProduct foodProduct)
         {
             await _context.FoodProducts.AddAsync(foodProduct);
         }
 
-        public async Task DeleteAsync(int foodProductId)
-        {
-            var foodProduct = await _context.FoodProducts.SingleOrDefaultAsync(f => f.Id == foodProductId);
+        //public async Task DeleteAsync(int foodProductId)
+        //{
+        //    var foodProduct = await _context.FoodProducts.SingleOrDefaultAsync(f => f.Id == foodProductId);
 
-            _context.FoodProducts.Remove(foodProduct);
-        }
+        //    _context.FoodProducts.Remove(foodProduct);
+        //}
     }
 }
