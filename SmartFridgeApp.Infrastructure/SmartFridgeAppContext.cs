@@ -24,7 +24,7 @@ namespace SmartFridgeApp.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
+            //modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
         }
     }
 }

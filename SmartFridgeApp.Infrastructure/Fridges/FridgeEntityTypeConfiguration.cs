@@ -36,7 +36,10 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                         av.Property(p => p.Unit).HasColumnName("Unit");
                     });
 
-                    f.OwnsOne<FoodProduct>("FoodProduct");
+                    //f.OwnsOne<FoodProduct>("FoodProduct", j =>
+                    //{
+                    //    j.HasKey(fp => fp.Id);
+                    //});
                 });
             });
 
