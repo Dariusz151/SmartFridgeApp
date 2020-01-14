@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SmartFridgeApp.Domain.Recipes
+﻿namespace SmartFridgeApp.Domain.Recipes
 {
     public class IRecipeRepository
     {
