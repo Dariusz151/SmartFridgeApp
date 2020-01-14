@@ -14,22 +14,22 @@ namespace SmartFridgeApp.UnitTests.Domain
             
         }
 
-        [Test]
-        public void CreateNewFoodProductShouldHaveCorrectName()
+        [TestCase("mleko")]
+        [TestCase("MLEKO")]
+        [TestCase("mLEKO")]
+        [TestCase("mLekO")]
+        [TestCase("Mleko")]
+        public void CreateNewFoodProductShouldHaveCorrectFormattedName(string productName)
         {
-            var testString = "test";
-
-            FoodProduct foodProduct = new FoodProduct(testString);
-            Assert.AreEqual(foodProduct.Name, testString);
+            FoodProduct foodProduct = new FoodProduct(productName);
+            Assert.AreEqual(foodProduct.Name, "Mleko");
         }
+
         [Test]
         public void CreateNewFoodProductWithEmptyStringShouldThrowException()
         {
-            var testString = String.Empty;
-
             FoodProduct foodProduct;
-
-            Assert.Throws(typeof(DomainException), () => foodProduct = new FoodProduct(testString));
+            Assert.Throws(typeof(DomainException), () => foodProduct = new FoodProduct(String.Empty));
         }
     }
 }

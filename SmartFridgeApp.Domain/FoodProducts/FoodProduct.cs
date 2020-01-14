@@ -1,4 +1,5 @@
-﻿using SmartFridgeApp.Domain.SeedWork;
+﻿using System;
+using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.FoodProducts
 {
@@ -16,7 +17,17 @@ namespace SmartFridgeApp.Domain.FoodProducts
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Product name can't be empty.");
-            Name = name;
+            Name = UppercaseFirst(name.ToLower());
+        }
+        
+        private string UppercaseFirst(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
     }
 }

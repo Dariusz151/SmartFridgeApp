@@ -25,11 +25,9 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void CreateNewFridgeItemShouldHaveDateTimeNow()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
 
-            var fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
+            var fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
             var dateTime = DateTime.Now;
 
             Assert.AreEqual(dateTime.ToShortDateString(), fridgeItem.EnteredAt.ToShortDateString());
@@ -46,12 +44,9 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void UpdateFridgeItemDescriptionShouldHaveNewValue()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
 
-            var fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
-            
+            var fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
             string descUpdated = "updatedDesc";
 
             fridgeItem.UpdateFridgeItemDescription(descUpdated);
@@ -62,7 +57,6 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void SetFridgeItemDetailsNameShouldntBeEmpty()
         {
             string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
 
             FridgeItem fridgeItem;
@@ -76,7 +70,6 @@ namespace SmartFridgeApp.UnitTests.Domain
             FoodProduct foodProduct = new FoodProduct("Mleko");
 
             string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
 
             FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
@@ -92,13 +85,8 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void ConsumeFridgeItemWithLessAmountValueShouldntSetIsConsumed()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
-
-            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
-
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
             AmountValue amountValToConsume = new AmountValue(90.0f, Unit.Mililiter);
 
             fridgeItem.ConsumeFridgeItem(amountValToConsume);
@@ -111,13 +99,8 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void ConsumeFridgeItemWithSameAmountValueShouldSetIsConsumed()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
-
-            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
-
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
             AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
 
             fridgeItem.ConsumeFridgeItem(amountValToConsume);
@@ -129,12 +112,8 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void ConsumeConsumedFridgeItemShouldThrowException()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
-
-            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
 
             AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
             fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
@@ -147,12 +126,8 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void UpdateConsumedFridgeItemShouldThrowException()
         {
             FoodProduct foodProduct = new FoodProduct("Mleko");
-
-            string desc = "desc";
-            Guid userId = Guid.NewGuid();
             AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
-
-            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, "desc", amountValue);
 
             AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
             fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
