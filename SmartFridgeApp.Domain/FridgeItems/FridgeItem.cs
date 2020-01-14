@@ -9,23 +9,13 @@ namespace SmartFridgeApp.Domain.FridgeItems
     public class FridgeItem : Entity
     {
         public Guid Id { get; private set; }
-
         public FoodProduct FoodProduct { get; private set; }
-
-        //public string Name { get; private set; }
-
         public string Desc { get; private set; }
-
         public AmountValue AmountValue { get; private set; }
-
         public DateTime ExpirationDate { get; set; }
-
         public Category Category { get; set; }
-
         public DateTime EnteredAt { get; private set; }
-
         public bool IsConsumed { get; private set; }
-
         public bool IsOutdated() => DateTime.Compare(ExpirationDate, DateTime.UtcNow) > 1;
 
         private FridgeItem()
@@ -39,8 +29,8 @@ namespace SmartFridgeApp.Domain.FridgeItems
             EnteredAt = DateTime.Now;
             AmountValue = amountValue;
             IsConsumed = false;
-
-            SetFridgeItemDetails(foodProduct, desc);
+            Desc = desc;
+            FoodProduct = foodProduct;
         }
 
         public void ChangeFridgeItemAmount(AmountValue amountValue)
@@ -48,12 +38,12 @@ namespace SmartFridgeApp.Domain.FridgeItems
             AmountValue = amountValue;
         }
 
-        public void UpdateFridgeItemDetails(FoodProduct foodProduct, string desc)
+        public void UpdateFridgeItemDescription(string desc)
         {
             if (IsConsumed)
                 throw new DomainException("This item is consumed! Cant update details.");
 
-            SetFridgeItemDetails(foodProduct, desc);
+            this.Desc = desc;
         }
 
         public void ConsumeFridgeItem(AmountValue amountValue)
@@ -70,13 +60,10 @@ namespace SmartFridgeApp.Domain.FridgeItems
             {
                 IsConsumed = false;
                 this.AmountValue.DecreaseAmount(amountValue);
-            }
-        }
 
-        private void SetFridgeItemDetails(FoodProduct foodProduct, string desc)
-        {
-            FoodProduct = foodProduct;
-            Desc = desc;
+                // TODO: This event should have amountValue?
+                this.AddDomainEvent(new FridgeItemAmountDecreasedEvent(this));
+            }
         }
     }
 }

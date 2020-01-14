@@ -5,6 +5,7 @@ using SmartFridgeApp.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SmartFridgeApp.Domain.FoodProducts;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {
@@ -20,142 +21,144 @@ namespace SmartFridgeApp.UnitTests.Domain
             //_fridge = new Fridge(fridgeName, fridgeAddress, fridgeDesc);
         }
 
-        //[Test]
-        //public void CreateNewFridgeItemShouldHaveDateTimeNow()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
+        [Test]
+        public void CreateNewFridgeItemShouldHaveDateTimeNow()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
 
-        //    var fridgeItem = new FridgeItem(name, desc, amountValue);
-        //    var dateTime = DateTime.Now;
+            var fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
+            var dateTime = DateTime.Now;
+
+            Assert.AreEqual(dateTime.ToShortDateString(), fridgeItem.EnteredAt.ToShortDateString());
+        }
+
+        [Test]
+        public void AmountValueShouldntBeLessThanZero()
+        {
+            AmountValue amountVal;
+            Assert.Throws(typeof(DomainException), () => amountVal = new AmountValue(-10.0f, Unit.Grams));
+        }
+
+        [Test]
+        public void UpdateFridgeItemDescriptionShouldHaveNewValue()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
+
+            var fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
             
-        //    Assert.AreEqual(dateTime.ToShortDateString(), fridgeItem.EnteredAt.ToShortDateString());
-        //}
+            string descUpdated = "updatedDesc";
 
-        //[Test]
-        //public void AmountValueShouldntBeLessThanZero()
-        //{
-        //    AmountValue amountVal;
-        //    Assert.Throws(typeof(DomainException), () => amountVal = new AmountValue(-10.0f, Unit.Grams));
-        //}
+            fridgeItem.UpdateFridgeItemDescription(descUpdated);
+            Assert.AreEqual(fridgeItem.Desc, descUpdated);
+        }
 
-        //[Test]
-        //public void UpdateFridgeItemDetailsShouldHaveNewValues()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
+        [Test]
+        public void SetFridgeItemDetailsNameShouldntBeEmpty()
+        {
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
 
-        //    var fridgeItem = new FridgeItem(name, desc, amountValue);
+            FridgeItem fridgeItem;
 
-        //    string nameUpdated = "updatedName";
-        //    string descUpdated = "updatedDesc";
+            Assert.Throws(typeof(DomainException), () => fridgeItem = new FridgeItem(new FoodProduct(String.Empty), desc, amountValue));
+        }
 
-        //    fridgeItem.UpdateFridgeItemDetails(nameUpdated, descUpdated);
-        //    Assert.AreEqual(fridgeItem.Name, nameUpdated);
-        //    Assert.AreEqual(fridgeItem.Desc, descUpdated);
-        //}
+        [Test]
+        public void ConsumeFridgeItemWithGreaterAmountValueShouldSetIsConsumed()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
 
-        //[Test]
-        //public void SetFridgeItemDetailsNameShouldntBeEmpty()
-        //{
-        //    string name = String.Empty;
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(15.3f, Unit.Grams);
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
 
-        //    FridgeItem fridgeItem;
-            
-        //    Assert.Throws(typeof(DomainException), () => fridgeItem = new FridgeItem(name, desc, amountValue));
-        //}
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
 
-        //[Test]
-        //public void ConsumeFridgeItemWithGreaterAmountValueShouldSetIsConsumed()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+            AmountValue amountValToConsume = new AmountValue(110.0f, Unit.Mililiter);
 
-        //    FridgeItem fridgeItem = new FridgeItem(name, desc, amountValue);
+            fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-        //    AmountValue amountValToConsume = new AmountValue(110.0f, Unit.Mililiter);
+            Assert.AreEqual(true, fridgeItem.IsConsumed);
+        }
 
-        //    fridgeItem.ConsumeFridgeItem(amountValToConsume);
-            
-        //    Assert.AreEqual(true, fridgeItem.IsConsumed);
-        //}
+        [Test]
+        public void ConsumeFridgeItemWithLessAmountValueShouldntSetIsConsumed()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
 
-        //[Test]
-        //public void ConsumeFridgeItemWithLessAmountValueShouldntSetIsConsumed()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
 
-        //    FridgeItem fridgeItem = new FridgeItem(name, desc, amountValue);
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
 
-        //    AmountValue amountValToConsume = new AmountValue(90.0f, Unit.Mililiter);
+            AmountValue amountValToConsume = new AmountValue(90.0f, Unit.Mililiter);
 
-        //    fridgeItem.ConsumeFridgeItem(amountValToConsume);
+            fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-        //    Assert.AreEqual(false, fridgeItem.IsConsumed);
-        //    Assert.AreEqual(10.0f, fridgeItem.AmountValue.Value);
-        //}
+            Assert.AreEqual(false, fridgeItem.IsConsumed);
+            Assert.AreEqual(10.0f, fridgeItem.AmountValue.Value);
+        }
 
-        //[Test]
-        //public void ConsumeFridgeItemWithSameAmountValueShouldSetIsConsumed()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+        [Test]
+        public void ConsumeFridgeItemWithSameAmountValueShouldSetIsConsumed()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
 
-        //    FridgeItem fridgeItem = new FridgeItem(name, desc, amountValue);
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
 
-        //    AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
 
-        //    fridgeItem.ConsumeFridgeItem(amountValToConsume);
+            AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
 
-        //    Assert.AreEqual(true, fridgeItem.IsConsumed);
-        //}
+            fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-        //[Test]
-        //public void ConsumeConsumedFridgeItemShouldThrowException()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+            Assert.AreEqual(true, fridgeItem.IsConsumed);
+        }
 
-        //    FridgeItem fridgeItem = new FridgeItem(name, desc, amountValue);
+        [Test]
+        public void ConsumeConsumedFridgeItemShouldThrowException()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
 
-        //    AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
-        //    fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
 
-        //    Assert.AreEqual(true, fridgeItem.IsConsumed);
-        //    Assert.Throws(typeof(DomainException), () => fridgeItem.ConsumeFridgeItem(amountValToConsume));
-        //}
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
 
-        //[Test]
-        //public void UpdateConsumedFridgeItemShouldThrowException()
-        //{
-        //    string name = "name";
-        //    string desc = "desc";
-        //    Guid userId = Guid.NewGuid();
-        //    AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+            AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
+            fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
 
-        //    FridgeItem fridgeItem = new FridgeItem(name, desc, amountValue);
+            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            Assert.Throws(typeof(DomainException), () => fridgeItem.ConsumeFridgeItem(amountValToConsume));
+        }
 
-        //    AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
-        //    fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
+        [Test]
+        public void UpdateConsumedFridgeItemShouldThrowException()
+        {
+            FoodProduct foodProduct = new FoodProduct("Mleko");
 
-        //    Assert.AreEqual(true, fridgeItem.IsConsumed);
-        //    Assert.Throws(typeof(DomainException), () => fridgeItem.UpdateFridgeItemDetails("updated", "updated"));
-        //}
+            string desc = "desc";
+            Guid userId = Guid.NewGuid();
+            AmountValue amountValue = new AmountValue(100.0f, Unit.Mililiter);
+
+            FridgeItem fridgeItem = new FridgeItem(foodProduct, desc, amountValue);
+
+            AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
+            fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
+
+            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            Assert.Throws(typeof(DomainException), () => fridgeItem.UpdateFridgeItemDescription("updated"));
+        }
     }
 }
