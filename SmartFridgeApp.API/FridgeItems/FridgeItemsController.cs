@@ -25,7 +25,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [Route("{fridgeId}/{userId}")]
         [HttpGet]
         [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFridgeItemsByUser(
+        public async Task<IActionResult> GetFridgeItemsByUserAsync(
             [FromRoute]Guid fridgeId, 
             [FromRoute]Guid userId)
         {
@@ -40,7 +40,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [Route("{fridgeId}/add")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> AddFridgeItem(
+        public async Task<IActionResult> AddFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]AddFridgeItemRequest request)
         {
@@ -50,12 +50,12 @@ namespace SmartFridgeApp.API.FridgeItems
         }
 
         ///// <summary>
-        ///// Consume FridgeItem by given AmountValue.
+        ///// Remove FridgeItem from Fridge.
         ///// </summary>
-        [Route("{fridgeId}/consume")]
+        [Route("{fridgeId}/remove")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> RemoveFridgeItem(
+        public async Task<IActionResult> RemoveFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeItemRequest request)
         {
@@ -65,15 +65,18 @@ namespace SmartFridgeApp.API.FridgeItems
         }
 
         ///// <summary>
-        ///// Remove fridgeItem from fridge (by user).
+        ///// Consume fridgeItem.
         ///// </summary>
         [Route("{fridgeId}/consume")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> ConsumeFridgeItem(
+        public async Task<IActionResult> ConsumeFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]ConsumeFridgeItemRequest request)
         {
+            // TODO: Consuming doesnt work.
+
+
             await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
 
             return NoContent();

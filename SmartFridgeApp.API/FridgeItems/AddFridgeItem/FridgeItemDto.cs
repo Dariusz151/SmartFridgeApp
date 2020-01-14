@@ -1,12 +1,10 @@
-﻿using SmartFridgeApp.Domain.FoodProducts;
-using SmartFridgeApp.Domain.FridgeItems;
+﻿using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Shared;
 
-namespace SmartFridgeApp.API.FridgeItems
+namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
 {
-    public class FridgeItemDto
+    public class AddFridgeItemDto
     {
-        public string ProductName { get; set; }
         public int FoodProductId { get; set; }
         public string Description { get; set; }
         public Category Category { get; set; }

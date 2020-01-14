@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Shared;
 using Unit = MediatR.Unit;
 
 namespace SmartFridgeApp.API.FridgeItems.RemoveFridgeItem

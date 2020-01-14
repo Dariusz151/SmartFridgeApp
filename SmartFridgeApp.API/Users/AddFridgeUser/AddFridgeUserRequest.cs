@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmartFridgeApp.API.Users.AddFridgeUser
 {
-    public class FridgeUserRequest
+    public class AddFridgeUserRequest
     {
         public UserDto User { get; set; }
     }

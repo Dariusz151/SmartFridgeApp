@@ -27,7 +27,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [Route("")]
         [HttpGet]
         [ProducesResponseType(typeof(List<FoodProduct>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAllFoodProducts()
+        public async Task<IActionResult> GetAllFoodProductsAsync()
         {
             var foodProducts = await _mediator.Send(new GetFoodProductsQuery());
 
@@ -40,7 +40,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [Route("")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddFoodProduct([FromBody]AddFoodProductRequest request)
+        public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
             await _mediator.Send(new AddFoodProductCommand(request.Name));
 

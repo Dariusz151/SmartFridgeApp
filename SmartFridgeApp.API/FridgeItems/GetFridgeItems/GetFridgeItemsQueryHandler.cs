@@ -23,7 +23,8 @@ namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
-                               "[FridgeItems].[FridgeItem], " +
+                               "[FridgeItems].[ProductName], " +
+                               "[FridgeItems].[FoodProductId], " +
                                "[FridgeItems].[Description], " +
                                "[FridgeItems].[Category], " +
                                "[FridgeItems].[EnteredAt], " +
