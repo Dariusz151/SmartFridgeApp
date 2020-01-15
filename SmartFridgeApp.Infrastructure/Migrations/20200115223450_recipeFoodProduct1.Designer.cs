@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    partial class SmartFridgeAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200115223450_recipeFoodProduct1")]
+    partial class recipeFoodProduct1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,18 +40,15 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Address")
-                        .HasColumnName("Address");
+                    b.Property<string>("Address");
 
-                    b.Property<string>("Desc")
-                        .HasColumnName("Desc");
+                    b.Property<string>("Desc");
 
-                    b.Property<string>("Name")
-                        .HasColumnName("Name");
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fridges","app");
+                    b.ToTable("Fridges");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.RecipeFoodProducts.RecipeFoodProduct", b =>
@@ -71,12 +70,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .HasColumnName("Name");
+                    b.Property<string>("Name");
 
                     b.HasKey("RecipeId");
 
-                    b.ToTable("Recipes","app");
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Fridges.Fridge", b =>
@@ -86,19 +84,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                             b1.Property<Guid>("Id")
                                 .ValueGeneratedOnAdd();
 
-                            b1.Property<string>("Email")
-                                .HasColumnName("Email");
+                            b1.Property<string>("Email");
 
                             b1.Property<Guid>("FridgeId");
 
-                            b1.Property<string>("Name")
-                                .HasColumnName("Name");
-
-                            b1.Property<DateTime>("_createdAt")
-                                .HasColumnName("CreatedAt");
-
-                            b1.Property<bool>("_welcomeEmailWasSent")
-                                .HasColumnName("WelcomeEmailWasSent");
+                            b1.Property<string>("Name");
 
                             b1.HasKey("Id");
 
@@ -119,19 +109,15 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                     b2.Property<string>("Category")
                                         .IsRequired();
 
-                                    b2.Property<string>("Desc")
-                                        .HasColumnName("Desc");
+                                    b2.Property<string>("Desc");
 
-                                    b2.Property<DateTime>("EnteredAt")
-                                        .HasColumnName("EnteredAt");
+                                    b2.Property<DateTime>("EnteredAt");
 
-                                    b2.Property<DateTime>("ExpirationDate")
-                                        .HasColumnName("ExpirationDate");
+                                    b2.Property<DateTime>("ExpirationDate");
 
                                     b2.Property<int?>("FoodProductId");
 
-                                    b2.Property<bool>("IsConsumed")
-                                        .HasColumnName("IsConsumed");
+                                    b2.Property<bool>("IsConsumed");
 
                                     b2.Property<Guid>("UserId");
 

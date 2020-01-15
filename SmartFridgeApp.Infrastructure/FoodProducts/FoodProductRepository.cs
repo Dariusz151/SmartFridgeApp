@@ -15,7 +15,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
 
         public async Task<FoodProduct> GetByIdAsync(int foodProductId)
         {
-            return await _context.FoodProducts.SingleOrDefaultAsync(f=> f.Id == foodProductId);
+            return await _context.FoodProducts.SingleOrDefaultAsync(f=> f.FoodProductId == foodProductId);
         }
 
         public async Task AddAsync(FoodProduct foodProduct)

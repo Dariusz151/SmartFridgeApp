@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Infrastructure.Database;
 
 namespace SmartFridgeApp.Infrastructure.FoodProducts
 {
@@ -8,7 +9,9 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
     {
         public void Configure(EntityTypeBuilder<FoodProduct> builder)
         {
-            builder.HasKey(b => b.Id);
+            builder.ToTable("FoodProducts", SchemaNames.Application);
+            builder.HasKey(b => b.FoodProductId);
+            builder.Property("Name").HasColumnName("Name");
         }
     }
 }

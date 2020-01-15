@@ -5,10 +5,10 @@ namespace SmartFridgeApp.Domain.FoodProducts
 {
     public class FoodProduct : Entity, IAggregateRoot
     {
-        public int Id { get; set; }
+        public int FoodProductId { get; set; }
         public string Name { get; set; }
 
-        public FoodProduct()
+        private FoodProduct()
         {
             // EF Core
         }
