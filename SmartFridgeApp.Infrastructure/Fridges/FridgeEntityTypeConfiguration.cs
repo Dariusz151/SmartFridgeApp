@@ -48,7 +48,8 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.OwnsOne<AmountValue>("AmountValue", av =>
                     {
                         av.Property(p => p.Value).HasColumnName("Value");
-                        av.Property(p => p.Unit).HasColumnName("Unit");
+                        av.Property(p => p.Unit).HasColumnName("Unit").HasConversion(con => con.ToString(),
+                            c => (Unit) Enum.Parse(typeof(Unit), c));
                     });
                 });
             });

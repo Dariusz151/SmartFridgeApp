@@ -22,17 +22,19 @@ namespace SmartFridgeApp.Domain.Recipes
             // EF Core   
         }
 
-        //public Recipe()
-        //{
-            
-        //}
+        public Recipe(int recipeId, string name, List<RecipeFoodProduct> products)
+        {
+            RecipeId = recipeId;
+            Name = name;
+            Products = products;
+        }
 
         //public Recipe(string name, string description, List<FoodProduct> products)
         //    : this(name, description, 0, 0, String.Empty, products)
         //{
 
         //}
-        
+
 
         //public Recipe(string name, string description, int difficultyLevel, int minutesRequired, string category, List<FoodProduct> products)
         //{
