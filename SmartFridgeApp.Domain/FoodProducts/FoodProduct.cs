@@ -3,7 +3,7 @@ using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.FoodProducts
 {
-    public class FoodProduct
+    public class FoodProduct : Entity, IAggregateRoot
     {
         public int Id { get; set; }
         public string Name { get; set; }
