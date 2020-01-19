@@ -14,6 +14,8 @@ namespace SmartFridgeApp.Infrastructure.Recipes
             builder.HasKey(b => b.RecipeId);
             builder.Property("Name").HasColumnName("Name");
 
+            
+
             //builder.HasMany<FoodProduct>(fp => fp.Products);
         }
     }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartFridgeApp.API.Fridges;
-using SmartFridgeApp.API.Fridges.AddFridge;
-using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.API.Recipes.AddRecipe;
 using SmartFridgeApp.Domain.Recipes;
 

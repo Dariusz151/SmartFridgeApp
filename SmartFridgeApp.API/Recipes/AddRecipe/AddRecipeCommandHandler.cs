@@ -1,9 +1,13 @@
-﻿using System.Threading;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.API.Fridges;
 using SmartFridgeApp.Domain.FoodProducts;
 using SmartFridgeApp.Domain.Fridges;
+using SmartFridgeApp.Domain.RecipeFoodProducts;
 using SmartFridgeApp.Domain.Recipes;
 using SmartFridgeApp.Domain.SeedWork;
 
@@ -25,7 +29,22 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
 
         public async Task<Recipe> Handle(AddRecipeCommand command, CancellationToken cancellationToken)
         {
-            var recipe = new Recipe(command.Name, command.ProductIds);
+            var allFoodProducts = await _foodProductRepository.GetAllAsync();
+
+            //TODO: 'Sugar syntax' to this LINQ expression.
+
+            ICollection<FoodProduct> currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
+
+            var recipeFoodProducts = new List<RecipeFoodProduct>();
+
+            foreach (var el in currentFoodProducts)
+            {
+                var rfp = new RecipeFoodProduct();
+                rfp.FoodProduct = el;
+                recipeFoodProducts.Add(rfp);
+            }
+            
+            var recipe = new Recipe(command.Name, recipeFoodProducts);
 
             await _recipeRepository.AddRecipeAsync(recipe);
             await _unitOfWork.CommitAsync(cancellationToken);

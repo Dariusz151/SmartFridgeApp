@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.RecipeFoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.Recipes
@@ -12,18 +13,18 @@ namespace SmartFridgeApp.Domain.Recipes
         //public int DifficultyLevel { get; set; }
         //public int MinutesRequired { get; set; }
         //public string Category { get; set; }
-        
-        public virtual ICollection<FoodProduct> Products { get; set; }
+
+        public ICollection<RecipeFoodProduct> RecipeFoodProducts { get; set; }
 
         private Recipe()
         {
             // EF Core   
         }
 
-        public Recipe(string name, ICollection<FoodProduct> products)
+        public Recipe(string name, ICollection<RecipeFoodProduct> products)
         {
             Name = name;
-            Products = products;
+            RecipeFoodProducts = products;
         }
 
         //public Recipe(string name, string description, List<FoodProduct> products)

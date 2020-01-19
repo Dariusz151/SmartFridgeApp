@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmartFridgeApp.Domain.FoodProducts
 {
@@ -6,5 +7,6 @@ namespace SmartFridgeApp.Domain.FoodProducts
     {
         Task<FoodProduct> GetByIdAsync(int foodProductId);
         Task AddAsync(FoodProduct foodProduct);
+        Task<ICollection<FoodProduct>> GetAllAsync();
     }
 }

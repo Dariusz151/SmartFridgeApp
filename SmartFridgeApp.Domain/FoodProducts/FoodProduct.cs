@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SmartFridgeApp.Domain.RecipeFoodProducts;
 using SmartFridgeApp.Domain.Recipes;
 using SmartFridgeApp.Domain.SeedWork;
 
@@ -9,7 +10,7 @@ namespace SmartFridgeApp.Domain.FoodProducts
         public int FoodProductId { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Recipe> Recipes { get; set; }
+        public ICollection<RecipeFoodProduct> RecipeFoodProducts { get; set; }
 
         private FoodProduct()
         {
