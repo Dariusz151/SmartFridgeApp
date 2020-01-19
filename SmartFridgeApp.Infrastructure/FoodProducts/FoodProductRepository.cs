@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.FoodProducts;
 
@@ -21,6 +23,11 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
         public async Task AddAsync(FoodProduct foodProduct)
         {
             await _context.FoodProducts.AddAsync(foodProduct);
+        }
+
+        public async Task<ICollection<FoodProduct>> GetAllAsync()
+        {
+            return await _context.FoodProducts.ToListAsync();
         }
 
         //public async Task DeleteAsync(int foodProductId)

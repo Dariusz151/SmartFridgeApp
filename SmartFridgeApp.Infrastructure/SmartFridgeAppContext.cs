@@ -19,9 +19,10 @@ namespace SmartFridgeApp.Infrastructure
         public DbSet<FridgeItem> FridgeItems { get; set; }
 
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<RecipeFoodProduct> RecipeFoodProducts { get; set; }
-
         public DbSet<FoodProduct> FoodProducts { get; set; }
+        //public DbSet<RecipeFoodProduct> RecipeFoodProducts { get; set; }
+
+
 
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {

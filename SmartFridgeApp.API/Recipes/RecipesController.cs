@@ -34,7 +34,7 @@ namespace SmartFridgeApp.API.Recipes
         {
             // TODO: Test if recipe add data to RecipeFoodProduct
 
-            var recipe = await _mediator.Send(new AddRecipeCommand(request.Name, request.Products));
+            var recipe = await _mediator.Send(new AddRecipeCommand(request.Name, request.ProductIds));
 
             return Created(string.Empty, recipe);
         }
