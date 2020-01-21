@@ -10,7 +10,7 @@ using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
 {
-    public class GetFridgeItemsQueryHandler : IRequestHandler<GetFridgeItemsQuery, List<FridgeItemDto>>
+    public class GetFridgeItemsQueryHandler : IRequestHandler<GetFridgeItemsQuery, IEnumerable<FridgeItemDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -19,7 +19,7 @@ namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<List<FridgeItemDto>> Handle(GetFridgeItemsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FridgeItemDto>> Handle(GetFridgeItemsQuery request, CancellationToken cancellationToken)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
@@ -37,7 +37,7 @@ namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
 
             //return new List<FridgeItemDto>();
 
-            return fridgeItems.AsList();
+            return fridgeItems.AsEnumerable();
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 
 namespace SmartFridgeApp.API.Users.GetFridgeUsers
 {
-    internal class GetFridgeUsersQuery : IRequest<List<FridgeUserDto>>
+    internal class GetFridgeUsersQuery : IRequest<IEnumerable<FridgeUserDto>>
     {
         public Guid FridgeId { get; }
 

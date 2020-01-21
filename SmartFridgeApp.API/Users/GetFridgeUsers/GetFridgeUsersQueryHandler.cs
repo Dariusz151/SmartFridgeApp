@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.API.Fridges;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.Users.GetFridgeUsers
 {
-    internal class GetFridgeUsersQueryHandler : IRequestHandler<GetFridgeUsersQuery, List<FridgeUserDto>>
+    internal class GetFridgeUsersQueryHandler : IRequestHandler<GetFridgeUsersQuery, IEnumerable<FridgeUserDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -19,7 +17,7 @@ namespace SmartFridgeApp.API.Users.GetFridgeUsers
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<List<FridgeUserDto>> Handle(GetFridgeUsersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FridgeUserDto>> Handle(GetFridgeUsersQuery request, CancellationToken cancellationToken)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
@@ -30,7 +28,7 @@ namespace SmartFridgeApp.API.Users.GetFridgeUsers
                                "WHERE [FridgeId] = @FridgeId";
             var users = await connection.QueryAsync<FridgeUserDto>(sql, new { request.FridgeId });
 
-            return users.AsList();
+            return users.AsEnumerable();
         }
     }
 }

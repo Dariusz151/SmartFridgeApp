@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -7,7 +8,7 @@ using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.Fridges.GetFridges
 {
-    public class GetFridgesQueryHandler : IRequestHandler<GetFridgesQuery, List<FridgeDto>>
+    public class GetFridgesQueryHandler : IRequestHandler<GetFridgesQuery, IEnumerable<FridgeDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -16,7 +17,7 @@ namespace SmartFridgeApp.API.Fridges.GetFridges
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<List<FridgeDto>> Handle(GetFridgesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FridgeDto>> Handle(GetFridgesQuery request, CancellationToken cancellationToken)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
@@ -27,7 +28,7 @@ namespace SmartFridgeApp.API.Fridges.GetFridges
 
             var fridges = await connection.QueryAsync<FridgeDto>(sql);
 
-            return fridges.AsList();
+            return fridges.AsEnumerable();
         }
     }
 }

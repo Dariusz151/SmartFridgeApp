@@ -4,7 +4,7 @@ using SmartFridgeApp.Domain.FoodProducts;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
 {
-    public class GetFoodProductsQuery : IRequest<List<FoodProduct>>
+    public class GetFoodProductsQuery : IRequest<IEnumerable<FoodProduct>>
     {
         public GetFoodProductsQuery()
         {

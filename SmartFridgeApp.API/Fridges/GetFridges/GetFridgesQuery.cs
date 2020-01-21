@@ -3,7 +3,7 @@ using MediatR;
 
 namespace SmartFridgeApp.API.Fridges.GetFridges
 {
-    public class GetFridgesQuery :IRequest<List<FridgeDto>>
+    public class GetFridgesQuery :IRequest<IEnumerable<FridgeDto>>
     {
         public GetFridgesQuery()
         {
