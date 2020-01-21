@@ -30,7 +30,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
         {
             var allFoodProducts = await _foodProductRepository.GetAllAsync();
 
-            //TODO: 'Sugar syntax' to this LINQ expression.
+            //TODO: 'Sugar syntax' to this. LINQ expression.
 
             ICollection<FoodProduct> currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
 
