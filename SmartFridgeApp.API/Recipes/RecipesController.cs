@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
 using SmartFridgeApp.API.Recipes.GetRecipes;
-using SmartFridgeApp.Domain.Recipes;
 
 namespace SmartFridgeApp.API.Recipes
 {

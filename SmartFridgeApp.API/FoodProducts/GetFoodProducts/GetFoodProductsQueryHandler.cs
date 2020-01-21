@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts

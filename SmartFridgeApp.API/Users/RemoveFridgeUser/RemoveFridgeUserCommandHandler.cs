@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.Domain.Fridges;
+using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.API.Users.RemoveFridgeUser

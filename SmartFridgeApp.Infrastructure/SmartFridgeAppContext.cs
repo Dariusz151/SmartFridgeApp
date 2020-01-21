@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartFridgeApp.Domain.FoodProducts;
-using SmartFridgeApp.Domain.FridgeItems;
-using SmartFridgeApp.Domain.Fridges;
-using SmartFridgeApp.Domain.RecipeFoodProducts;
-using SmartFridgeApp.Domain.Recipes;
-using SmartFridgeApp.Domain.Users;
+using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.FridgeItems;
+using SmartFridgeApp.Domain.Models.Fridges;
+using SmartFridgeApp.Domain.Models.Recipes;
+using SmartFridgeApp.Domain.Models.Users;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
 using SmartFridgeApp.Infrastructure.RecipeFoodProducts;

@@ -1,10 +1,12 @@
-﻿using SmartFridgeApp.Domain.FoodProducts;
-using SmartFridgeApp.Domain.Recipes;
+﻿using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.Recipes;
 
-namespace SmartFridgeApp.Domain.RecipeFoodProducts
+namespace SmartFridgeApp.Domain.Shared
 {
     public class RecipeFoodProduct
     {
+        // for EF Core Many-to-Many purpose
+
         public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
 

@@ -1,11 +1,11 @@
 ﻿using NUnit.Framework;
-using SmartFridgeApp.Domain.FridgeItems;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.FridgeItems;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Infrastructure.Database;
 
 namespace SmartFridgeApp.Infrastructure.FoodProducts

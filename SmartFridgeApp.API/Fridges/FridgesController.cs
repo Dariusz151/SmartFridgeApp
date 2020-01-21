@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using SmartFridgeApp.API.Fridges.DeleteFridge;
 using SmartFridgeApp.API.Fridges.GetFridges;
-using SmartFridgeApp.Domain.Fridges;
 
 namespace SmartFridgeApp.API.Fridges
 {

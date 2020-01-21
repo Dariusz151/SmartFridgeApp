@@ -1,6 +1,6 @@
 ﻿using SmartFridgeApp.Domain.SeedWork;
 
-namespace SmartFridgeApp.Domain.Users.Events
+namespace SmartFridgeApp.Domain.Models.Users.Events
 {
     public class UserRemovedEvent : DomainEventBase
     {

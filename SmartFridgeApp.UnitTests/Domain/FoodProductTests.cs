@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.UnitTests.Domain

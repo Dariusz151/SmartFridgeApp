@@ -5,11 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.API.Fridges;
-using SmartFridgeApp.Domain.FoodProducts;
-using SmartFridgeApp.Domain.Fridges;
-using SmartFridgeApp.Domain.RecipeFoodProducts;
-using SmartFridgeApp.Domain.Recipes;
+using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.Recipes;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.API.Recipes.AddRecipe
 {

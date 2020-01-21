@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SmartFridgeApp.Domain.Fridges
+namespace SmartFridgeApp.Domain.Models.Fridges
 {
     public interface IFridgeRepository
     {

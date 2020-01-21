@@ -1,12 +1,12 @@
-﻿using SmartFridgeApp.Domain.Fridges.Events;
-using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Users;
-using SmartFridgeApp.Domain.Users.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartFridgeApp.Domain.Models.Fridges.Events;
+using SmartFridgeApp.Domain.Models.Users;
+using SmartFridgeApp.Domain.Models.Users.Events;
+using SmartFridgeApp.Domain.SeedWork;
 
-namespace SmartFridgeApp.Domain.Fridges
+namespace SmartFridgeApp.Domain.Models.Fridges
 {
     public class Fridge : Entity, IAggregateRoot
     {

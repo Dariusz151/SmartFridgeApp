@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartFridgeApp.Domain.SeedWork;
 
-namespace SmartFridgeApp.Domain.Users.Events
+namespace SmartFridgeApp.Domain.Models.Users.Events
 {
     public class UserAddedEvent : DomainEventBase
     {

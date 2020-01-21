@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using SmartFridgeApp.Domain.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SmartFridgeApp.Domain.Models.Fridges;
+using SmartFridgeApp.Domain.Models.Users;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

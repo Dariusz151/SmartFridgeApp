@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SmartFridgeApp.Domain.FridgeItems;
-using SmartFridgeApp.Domain.Recipes;
+using SmartFridgeApp.Domain.Models.FridgeItems;
+using SmartFridgeApp.Domain.Models.Recipes;
 
 namespace SmartFridgeApp.Domain.DomainServices
 {

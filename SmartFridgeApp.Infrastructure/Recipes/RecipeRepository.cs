@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SmartFridgeApp.Domain.Recipes;
+using SmartFridgeApp.Domain.Models.Recipes;
 
 namespace SmartFridgeApp.Infrastructure.Recipes
 {

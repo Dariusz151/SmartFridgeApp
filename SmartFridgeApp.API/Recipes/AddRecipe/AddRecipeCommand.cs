@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
-using SmartFridgeApp.Domain.Recipes;
+using SmartFridgeApp.Domain.Models.Recipes;
 
 namespace SmartFridgeApp.API.Recipes.AddRecipe
 {

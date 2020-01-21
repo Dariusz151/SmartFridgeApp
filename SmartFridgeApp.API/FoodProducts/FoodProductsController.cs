@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
 using SmartFridgeApp.API.FoodProducts.GetFoodProducts;
 using SmartFridgeApp.API.Fridges.GetFridges;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 
 namespace SmartFridgeApp.API.FoodProducts
 {

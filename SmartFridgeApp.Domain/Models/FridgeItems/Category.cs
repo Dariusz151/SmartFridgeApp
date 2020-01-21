@@ -1,4 +1,4 @@
-﻿namespace SmartFridgeApp.Domain.FridgeItems
+﻿namespace SmartFridgeApp.Domain.Models.FridgeItems
 {
     public enum Category
     {

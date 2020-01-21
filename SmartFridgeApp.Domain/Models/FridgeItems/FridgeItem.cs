@@ -1,10 +1,10 @@
-﻿using SmartFridgeApp.Domain.FridgeItems.Events;
+﻿using System;
+using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.FridgeItems.Events;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.Shared;
-using System;
-using SmartFridgeApp.Domain.FoodProducts;
 
-namespace SmartFridgeApp.Domain.FridgeItems
+namespace SmartFridgeApp.Domain.Models.FridgeItems
 {
     public class FridgeItem : Entity
     {

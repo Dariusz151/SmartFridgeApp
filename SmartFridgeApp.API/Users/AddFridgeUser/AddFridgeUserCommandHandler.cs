@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.Domain.Fridges;
+using SmartFridgeApp.Domain.Models.Fridges;
+using SmartFridgeApp.Domain.Models.Users;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Users;
 
 namespace SmartFridgeApp.API.Users.AddFridgeUser
 {

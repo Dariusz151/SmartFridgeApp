@@ -1,8 +1,7 @@
-﻿
-using SmartFridgeApp.Domain.FridgeItems;
+﻿using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.SeedWork;
 
-namespace SmartFridgeApp.Domain.Fridges.Events
+namespace SmartFridgeApp.Domain.Models.Fridges.Events
 {
     public class FridgeItemAddedEvent : DomainEventBase
     {

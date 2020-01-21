@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using SmartFridgeApp.Domain.Fridges;
 using System.Threading.Tasks;
+using SmartFridgeApp.Domain.Models.Fridges;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
 {

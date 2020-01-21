@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using SmartFridgeApp.Domain.FoodProducts;
-using SmartFridgeApp.Domain.RecipeFoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.Shared;
 
-namespace SmartFridgeApp.Domain.Recipes
+namespace SmartFridgeApp.Domain.Models.Recipes
 {
     public class Recipe : Entity, IAggregateRoot
     {

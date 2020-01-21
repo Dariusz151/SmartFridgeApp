@@ -1,13 +1,12 @@
-﻿using SmartFridgeApp.Domain.FridgeItems;
-using SmartFridgeApp.Domain.Fridges;
-using SmartFridgeApp.Domain.SeedWork;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartFridgeApp.Domain.Models.FridgeItems;
+using SmartFridgeApp.Domain.Models.Users.Events;
+using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.Shared;
-using SmartFridgeApp.Domain.Users.Events;
 
-namespace SmartFridgeApp.Domain.Users
+namespace SmartFridgeApp.Domain.Models.Users
 {
     public class User : Entity
     {

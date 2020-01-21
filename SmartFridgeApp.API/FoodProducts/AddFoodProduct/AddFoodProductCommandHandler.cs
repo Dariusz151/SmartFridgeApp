@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.Domain.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct

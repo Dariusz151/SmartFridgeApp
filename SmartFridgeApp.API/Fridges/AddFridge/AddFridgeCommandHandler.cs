@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using SmartFridgeApp.Domain.Fridges;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.API.Fridges.AddFridge

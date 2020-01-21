@@ -1,6 +1,6 @@
 ﻿using SmartFridgeApp.Domain.SeedWork;
 
-namespace SmartFridgeApp.Domain.Fridges.Events
+namespace SmartFridgeApp.Domain.Models.Fridges.Events
 {
     public class FridgeCreatedEvent : DomainEventBase
     {

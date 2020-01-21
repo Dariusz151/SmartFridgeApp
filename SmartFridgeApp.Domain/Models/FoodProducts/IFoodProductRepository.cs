@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SmartFridgeApp.Domain.FoodProducts
+namespace SmartFridgeApp.Domain.Models.FoodProducts
 {
     public interface IFoodProductRepository
     {
