@@ -26,6 +26,10 @@ namespace SmartFridgeApp.API.Recipes.GetRecipes
                  SELECT 
 	                r.RecipeId as [RecipeId],
 	                r.Name as [RecipeName],
+                    r.Description,
+                    r.DifficultyLevel,
+                    r.MinutesRequired,
+                    r.Category,
 	                rfp.FoodProductId as [FoodProductId],
 	                fp.Name as [FoodProductName]
                  FROM [app].[Recipes] r
