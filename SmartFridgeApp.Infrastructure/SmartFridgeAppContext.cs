@@ -20,7 +20,6 @@ namespace SmartFridgeApp.Infrastructure
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<FoodProduct> FoodProducts { get; set; }
-        //public DbSet<RecipeFoodProduct> RecipeFoodProducts { get; set; }
         
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {
@@ -29,21 +28,10 @@ namespace SmartFridgeApp.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<RecipeFoodProduct>()
-            //    .HasKey(t => new {t.FoodProductId, t.RecipeId});
-
-            //modelBuilder.Entity<RecipeFoodProduct>()
-            //    .HasOne(rfp => rfp.Recipe)
-            //    .WithMany(p => p.RecipeFoodProducts)
-            //    .HasForeignKey(pi => pi.RecipeId);
-
-            //modelBuilder.Entity<RecipeFoodProduct>()
-            //    .HasOne(rfp => rfp.FoodProduct)
-            //    .WithMany(p => p.RecipeFoodProducts)
-            //    .HasForeignKey(pi => pi.FoodProductId);
-
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
         }
     }
 }

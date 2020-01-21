@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    partial class SmartFridgeAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200121184527_DatabaseConfigChanges1")]
+    partial class DatabaseConfigChanges1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +27,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .HasColumnName("Name");
+                    b.Property<string>("Name");
 
                     b.HasKey("FoodProductId");
 
-                    b.ToTable("FoodProducts","app");
+                    b.ToTable("FoodProducts");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Fridges.Fridge", b =>
@@ -71,12 +72,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .HasColumnName("Name");
+                    b.Property<string>("Name");
 
                     b.HasKey("RecipeId");
 
-                    b.ToTable("Recipes","app");
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Fridges.Fridge", b =>
