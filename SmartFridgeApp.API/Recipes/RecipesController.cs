@@ -14,13 +14,10 @@ namespace SmartFridgeApp.API.Recipes
     public class RecipesController : Controller
     {
         private readonly IMediator _mediator;
-        // TODO: Delete repository from here.
-        private readonly IRecipeRepository _recipeRepository;
-
-        public RecipesController(IMediator mediator, IRecipeRepository recipeRepository)
+       
+        public RecipesController(IMediator mediator)
         {
             _mediator = mediator;
-            _recipeRepository = recipeRepository;
         }
 
         /// <summary>
@@ -41,8 +38,6 @@ namespace SmartFridgeApp.API.Recipes
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddRecipeAsync([FromBody]AddRecipeRequest request)
         {
-            // TODO: Test if recipe add data to RecipeFoodProduct
-
             var recipe = await _mediator.Send(new AddRecipeCommand(request.Name, request.ProductIds));
 
             return Created(string.Empty, recipe);
