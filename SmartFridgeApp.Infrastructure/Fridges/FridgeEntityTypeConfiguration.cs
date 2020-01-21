@@ -34,7 +34,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 
                 x.OwnsMany<FridgeItem>("_fridgeItems", f =>
                 {
-                    f.ToTable("FridgeItems");
+                    f.ToTable("FridgeItems", SchemaNames.Application);
                     f.HasKey(k => k.Id);
                     f.HasForeignKey("UserId");
 

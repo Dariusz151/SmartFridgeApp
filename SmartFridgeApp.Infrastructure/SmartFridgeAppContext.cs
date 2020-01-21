@@ -7,6 +7,7 @@ using SmartFridgeApp.Domain.Recipes;
 using SmartFridgeApp.Domain.Users;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
+using SmartFridgeApp.Infrastructure.RecipeFoodProducts;
 using SmartFridgeApp.Infrastructure.Recipes;
 
 namespace SmartFridgeApp.Infrastructure
@@ -20,9 +21,7 @@ namespace SmartFridgeApp.Infrastructure
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<FoodProduct> FoodProducts { get; set; }
         //public DbSet<RecipeFoodProduct> RecipeFoodProducts { get; set; }
-
-
-
+        
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {
 
@@ -30,23 +29,21 @@ namespace SmartFridgeApp.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RecipeFoodProduct>()
-                .HasKey(t => new {t.FoodProductId, t.RecipeId});
+            //modelBuilder.Entity<RecipeFoodProduct>()
+            //    .HasKey(t => new {t.FoodProductId, t.RecipeId});
 
-            modelBuilder.Entity<RecipeFoodProduct>()
-                .HasOne(rfp => rfp.Recipe)
-                .WithMany(p => p.RecipeFoodProducts)
-                .HasForeignKey(pi => pi.RecipeId);
+            //modelBuilder.Entity<RecipeFoodProduct>()
+            //    .HasOne(rfp => rfp.Recipe)
+            //    .WithMany(p => p.RecipeFoodProducts)
+            //    .HasForeignKey(pi => pi.RecipeId);
 
-            modelBuilder.Entity<RecipeFoodProduct>()
-                .HasOne(rfp => rfp.FoodProduct)
-                .WithMany(p => p.RecipeFoodProducts)
-                .HasForeignKey(pi => pi.FoodProductId);
+            //modelBuilder.Entity<RecipeFoodProduct>()
+            //    .HasOne(rfp => rfp.FoodProduct)
+            //    .WithMany(p => p.RecipeFoodProducts)
+            //    .HasForeignKey(pi => pi.FoodProductId);
 
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
         }
     }
 }
