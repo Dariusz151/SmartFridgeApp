@@ -43,7 +43,13 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
                 recipeFoodProducts.Add(rfp);
             }
             
-            var recipe = new Recipe(command.Name, recipeFoodProducts);
+            var recipe = new Recipe(
+                command.Name, 
+                command.Description,
+                command.DifficultyLevel,
+                command.MinutesRequired,
+                command.Category,
+                recipeFoodProducts);
 
             await _recipeRepository.AddRecipeAsync(recipe);
             await _unitOfWork.CommitAsync(cancellationToken);

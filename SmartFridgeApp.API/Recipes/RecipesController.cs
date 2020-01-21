@@ -37,7 +37,14 @@ namespace SmartFridgeApp.API.Recipes
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddRecipeAsync([FromBody]AddRecipeRequest request)
         {
-            var recipe = await _mediator.Send(new AddRecipeCommand(request.Name, request.ProductIds));
+            var recipe = await _mediator.Send(new AddRecipeCommand(
+                request.Name, 
+                request.ProductIds,
+                request.Description,
+                request.DifficultyLevel,
+                request.MinutesRequired,
+                request.Category
+                ));
 
             return Created(string.Empty, recipe);
         }
