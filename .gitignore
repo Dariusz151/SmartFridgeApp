@@ -24,8 +24,8 @@ bld/
 
 [Pp]ublish/
 
-appsettings.Development.json
-appsettings.Production.json
+#appsettings.Development.json
+#appsettings.Production.json
 
 # Visual Studio 2015 cache/options directory
 .vs/
