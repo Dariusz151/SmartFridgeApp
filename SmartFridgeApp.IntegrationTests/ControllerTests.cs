@@ -20,6 +20,42 @@ namespace SmartFridgeApp.IntegrationTests
         }
 
         [Test]
+        public async Task GetAllFoodProductsShouldReturnsOk()
+        {
+            var response = await client.GetAsync("/api/foodProducts");
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task GetAllFridgeItemsShouldReturnsOk()
+        {
+            var userId = "74F61232-41EE-44C6-A274-8600228B48CB";
+            var fridgeId = "B518063A-5844-4568-94CF-F1127AB65147";
+
+            var response = await client.GetAsync($"/api/fridgeItems/{fridgeId}/{userId}");
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task GetAllFridgeUsersShouldReturnsOk()
+        {
+            var fridgeId = "B518063A-5844-4568-94CF-F1127AB65147";
+            var response = await client.GetAsync($"/api/fridgeUsers/{fridgeId}");
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.OK);
+        }
+
+        [Test]
+        public async Task GetAllRecipesShouldReturnsOk()
+        {
+            var response = await client.GetAsync($"/api/recipes");
+
+            response.StatusCode.Should().BeEquivalentTo(HttpStatusCode.OK);
+        }
+        
+        [Test]
         public async Task GetAllFridgesShouldReturnListOfFridges()
         {
             var response = await client.GetAsync("/api/fridges");
