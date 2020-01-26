@@ -1,8 +1,6 @@
 language: csharp
-sudo: required
 dist: trusty
 mono: none
-dotnet: 2.2
 before_script:
   - chmod a+x ./build.sh
   - chmod a+x ./pipeline.sh
@@ -11,6 +9,5 @@ script:
 deploy:
   - provider: script
     script: ./pipeline.sh
-    skip_cleanup: true
     on:
       branch: master

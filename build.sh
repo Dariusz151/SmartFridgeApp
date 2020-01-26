@@ -1,6 +1,6 @@
 #!/bin/bash
 set -ev
 
-dotnet restore
+# dotnet restore
 
-dotnet build -c Release
+# dotnet build -c Release
