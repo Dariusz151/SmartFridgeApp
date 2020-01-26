@@ -3,8 +3,6 @@ sudo: required
 dist: trusty
 mono: none
 dotnet: 2.2
-install:
-  - export DOTNET_CLI_TELEMETRY_OPTOUT=1
 before_script:
   - chmod a+x ./build.sh
   - chmod a+x ./pipeline.sh
