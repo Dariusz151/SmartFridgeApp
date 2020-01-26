@@ -31,5 +31,15 @@ namespace SmartFridgeApp.UnitTests.Domain
             FoodProduct foodProduct;
             Assert.Throws(typeof(DomainException), () => foodProduct = new FoodProduct(String.Empty));
         }
+
+        [Test]
+        public void UpdateFoodProductWithEmptyStringShouldThrowException()
+        {
+            FoodProduct foodProduct;
+            foodProduct = new FoodProduct("Bułka");
+
+            Assert.Throws(typeof(DomainException), () => foodProduct.UpdateProductName(""));
+            Assert.AreEqual(foodProduct.Name, "Bułka");
+        }
     }
 }

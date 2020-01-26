@@ -48,5 +48,26 @@ namespace SmartFridgeApp.Domain.Models.Recipes
 
             this.AddDomainEvent(new RecipeAddedEvent(this));
         }
+
+        public void UpdateRecipe(string name, string desc, int difficultyLevel, int minutesRequired, string category)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new DomainException("Recipe must have name!");
+            Name = name;
+
+            if (!string.IsNullOrEmpty(desc))
+                Description = desc;
+
+            if (difficultyLevel > 0)
+                DifficultyLevel = difficultyLevel;
+
+            if (minutesRequired > 0)
+                MinutesRequired = minutesRequired;
+
+            if (!string.IsNullOrEmpty(category))
+                Category = category;
+
+            this.AddDomainEvent(new RecipeUpdatedEvent(this));
+        }
     }
 }

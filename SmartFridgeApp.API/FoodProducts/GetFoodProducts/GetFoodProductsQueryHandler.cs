@@ -9,7 +9,7 @@ using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
 {
-    public class GetFoodProductsQueryHandler : IRequestHandler<GetFoodProductsQuery, IEnumerable<FoodProduct>>
+    public class GetFoodProductsQueryHandler : IRequestHandler<GetFoodProductsQuery, IEnumerable<FoodProductDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -18,16 +18,16 @@ namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<FoodProduct>> Handle(GetFoodProductsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FoodProductDto>> Handle(GetFoodProductsQuery request, CancellationToken cancellationToken)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                "[FoodProductId], " +
-                               "[Name] " +
+                               "[Name] as [FoodProductName] " +
                                "FROM " +
                                "[dbo].[v_FoodProducts]";
 
-            var foodProducts = await connection.QueryAsync<FoodProduct>(sql);
+            var foodProducts = await connection.QueryAsync<FoodProductDto>(sql);
 
             return foodProducts.AsEnumerable();
         }

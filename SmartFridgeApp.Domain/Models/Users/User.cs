@@ -38,6 +38,14 @@ namespace SmartFridgeApp.Domain.Models.Users
             _welcomeEmailWasSent = false;
         }
 
+        public void UpdateUser(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+                Name = name;
+
+            this.AddDomainEvent(new UserUpdatedEvent(this));
+        }
+        
         public void AddFridgeItem(FridgeItem item)
         {
             _fridgeItems.Add(item);

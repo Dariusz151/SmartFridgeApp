@@ -14,6 +14,12 @@ namespace SmartFridgeApp.Infrastructure.Recipes
             _context = context;
         }
 
+        public async Task<Recipe> GetRecipeByIdAsync(int recipeId)
+        {
+            var recipe = await _context.Recipes.SingleOrDefaultAsync(x => x.RecipeId == recipeId);
+            return recipe;
+        }
+
         public async Task<List<Recipe>> GetAllRecipesAsync()
         {
             return await _context.Recipes.ToListAsync();
@@ -22,6 +28,13 @@ namespace SmartFridgeApp.Infrastructure.Recipes
         public async Task AddRecipeAsync(Recipe recipe)
         {
             await _context.Recipes.AddAsync(recipe);
+        }
+
+        public async Task DeleteRecipeAsync(int recipeId)
+        {
+            var recipe = await _context.Recipes.SingleOrDefaultAsync(x => x.RecipeId == recipeId);
+
+            _context.Recipes.Remove(recipe);
         }
     }
 }

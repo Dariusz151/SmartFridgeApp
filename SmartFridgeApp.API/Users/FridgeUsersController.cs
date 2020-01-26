@@ -5,9 +5,11 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.Fridges.UpdateFridge;
 using SmartFridgeApp.API.Users.AddFridgeUser;
 using SmartFridgeApp.API.Users.GetFridgeUsers;
 using SmartFridgeApp.API.Users.RemoveFridgeUser;
+using SmartFridgeApp.API.Users.UpdateFridgeUser;
 
 namespace SmartFridgeApp.API.Users
 {
@@ -48,6 +50,21 @@ namespace SmartFridgeApp.API.Users
 
             //return userId ?
             return Created(string.Empty, null);
+        }
+
+        /// <summary>
+        /// Update user details by given id.
+        /// </summary>
+        [Route("{fridgeId}/update")]
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateFridgeUserAsync(
+            [FromRoute]Guid fridgeId,
+            [FromBody]UpdateFridgeUserRequest request)
+        {
+            await _mediator.Send(new UpdateFridgeUserCommand(request.UserId, request.Name, fridgeId));
+            
+            return Ok();
         }
 
         /// <summary>

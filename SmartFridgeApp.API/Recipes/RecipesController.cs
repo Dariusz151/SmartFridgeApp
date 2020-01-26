@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
+using SmartFridgeApp.API.Recipes.DeleteRecipe;
 using SmartFridgeApp.API.Recipes.GetRecipes;
+using SmartFridgeApp.API.Recipes.UpdateRecipe;
 
 namespace SmartFridgeApp.API.Recipes
 {
@@ -32,6 +34,9 @@ namespace SmartFridgeApp.API.Recipes
             return Ok(recipes);
         }
 
+        /// <summary>
+        /// Add new recipe.
+        /// </summary>
         [Route("")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -47,6 +52,39 @@ namespace SmartFridgeApp.API.Recipes
                 ));
 
             return Created(string.Empty, recipe);
+        }
+
+        /// <summary>
+        /// Update recipe details by given id.
+        /// </summary>
+        [Route("")]
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateRecipeAsync([FromBody]UpdateRecipeRequest request)
+        {
+            await _mediator.Send(new UpdateRecipeCommand(
+                request.RecipeId,
+                request.Name,
+                request.Description,
+                request.DifficultyLevel,
+                request.MinutesRequired,
+                request.Category
+            ));
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Delete recipe by given id.
+        /// </summary>
+        [Route("")]
+        [HttpDelete]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> DeleteRecipeAsync([FromBody]DeleteRecipeRequest request)
+        {
+            await _mediator.Send(new DeleteRecipeCommand(request.RecipeId));
+
+            return NoContent();
         }
     }
 }
