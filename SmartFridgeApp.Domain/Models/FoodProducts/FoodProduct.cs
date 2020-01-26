@@ -32,7 +32,7 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
                 throw new DomainException("Product name can't be empty.");
             Name = UppercaseFirst(newName);
 
-            // TODO: Add Event
+            this.AddDomainEvent(new FoodProductChangedEvent(this));
         }
         
         private string UppercaseFirst(string s)

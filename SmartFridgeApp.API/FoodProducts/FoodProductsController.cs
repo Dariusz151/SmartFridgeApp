@@ -41,7 +41,7 @@ namespace SmartFridgeApp.API.FoodProducts
         /// </summary>
         [Route("")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
             await _mediator.Send(new AddFoodProductCommand(request.Name));
@@ -67,12 +67,12 @@ namespace SmartFridgeApp.API.FoodProducts
         /// </summary>
         [Route("")]
         [HttpDelete]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteFoodProductAsync([FromBody]DeleteFoodProductRequest request)
         {
             await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));
 
-            return Ok();
+            return NoContent();
         }
     }
 }

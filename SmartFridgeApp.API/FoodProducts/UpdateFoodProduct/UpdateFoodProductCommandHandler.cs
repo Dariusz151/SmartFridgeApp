@@ -20,10 +20,10 @@ namespace SmartFridgeApp.API.FoodProducts.UpdateFoodProduct
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(UpdateFoodProductCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateFoodProductCommand command, CancellationToken cancellationToken)
         {
-            var foodProduct = await _foodProductRepository.GetByIdAsync(request.FoodProductId);
-            foodProduct.UpdateProductName(request.FoodProductName);
+            var foodProduct = await _foodProductRepository.GetByIdAsync(command.FoodProductId);
+            foodProduct.UpdateProductName(command.FoodProductName);
             
             await _unitOfWork.CommitAsync(cancellationToken);
 
