@@ -22,6 +22,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+[Pp]ublish/
+
 appsettings.Development.json
 appsettings.Production.json
 
