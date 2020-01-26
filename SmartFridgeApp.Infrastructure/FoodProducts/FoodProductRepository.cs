@@ -30,6 +30,12 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             return await _context.FoodProducts.ToListAsync();
         }
 
+        public async Task DeleteAsync(int foodProductId)
+        {
+            var foodProduct = await _context.FoodProducts.SingleAsync(x => x.FoodProductId == foodProductId);
+            _context.FoodProducts.Remove(foodProduct);
+        }
+
         //public async Task DeleteAsync(int foodProductId)
         //{
         //    var foodProduct = await _context.FoodProducts.SingleOrDefaultAsync(f => f.Id == foodProductId);
