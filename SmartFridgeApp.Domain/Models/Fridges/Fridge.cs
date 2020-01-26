@@ -82,6 +82,14 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             return _users.Single(u => u.Id == userId);
         }
 
+        public void ChangeFridgeName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+                Name = name;
+
+            this.AddDomainEvent(new FridgeUpdatedEvent(this));
+        }
+
         //public void AddFridgeItem(FridgeItem item)
         //{
         //    // check if item is valid. domain exception if not

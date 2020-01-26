@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using SmartFridgeApp.API.Fridges.DeleteFridge;
 using SmartFridgeApp.API.Fridges.GetFridges;
+using SmartFridgeApp.API.Fridges.UpdateFridge;
 
 namespace SmartFridgeApp.API.Fridges
 {
@@ -44,6 +45,19 @@ namespace SmartFridgeApp.API.Fridges
             var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
             
             return Created(string.Empty, fridge);
+        }
+
+        /// <summary>
+        /// Register fridge.
+        /// </summary>
+        [Route("")]
+        [HttpPut]
+        [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddFridgeAsync([FromBody]UpdateFridgeRequest request)
+        {
+            await _mediator.Send(new UpdateFridgeCommand(request.FridgeId, request.Name));
+
+            return Ok();
         }
 
         /// <summary>
