@@ -9,5 +9,6 @@ script:
 deploy:
   - provider: script
     script: ./pipeline.sh
+    skip_cleanup: true
     on:
       branch: master
