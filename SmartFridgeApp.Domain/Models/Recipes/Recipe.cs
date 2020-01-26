@@ -51,8 +51,9 @@ namespace SmartFridgeApp.Domain.Models.Recipes
 
         public void UpdateRecipe(string name, string desc, int difficultyLevel, int minutesRequired, string category)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
+            if (string.IsNullOrEmpty(name))
+                throw new DomainException("Recipe must have name!");
+            Name = name;
 
             if (!string.IsNullOrEmpty(desc))
                 Description = desc;

@@ -22,11 +22,13 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         private Fridge()
         {
-            
+
         }
-        
+
         public Fridge(string name, string address, string desc)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new DomainException("Fridge should have a name.");
             Id = Guid.NewGuid();
             Address = address;
             Name = name;
@@ -63,7 +65,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Can't remove user that doesn't exist.");
             }
         }
-        
+
         //public List<FridgeItemId> GetFridgeItems(Guid userId)
         //{
         //    var user = _users.Single(u => u.Id == userId);
@@ -84,8 +86,9 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         public void ChangeFridgeName(string name)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
+            if (string.IsNullOrEmpty(name))
+                throw new DomainException("Fridge should have a name.");
+            Name = name;
 
             this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
@@ -98,7 +101,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         //    this.AddDomainEvent(new FridgeItemAddedEvent(item));
         //}
-        
+
         //public void ConsumeFridgeItem(Guid fridgeItemId, AmountValue amountValue)
         //{
         //    _fridgeItems.Single(i => i.Id == fridgeItemId).ConsumeFridgeItem(amountValue);

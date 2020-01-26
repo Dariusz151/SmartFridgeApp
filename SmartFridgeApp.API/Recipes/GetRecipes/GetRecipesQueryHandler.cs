@@ -54,8 +54,15 @@ namespace SmartFridgeApp.API.Recipes.GetRecipes
                         return recipe;
                     }, splitOn: "FoodProductId")
                 .Distinct().ToList();
-            
-            return list.AsEnumerable();
+
+            IEnumerable<RecipeDto> result = null;
+
+            await Task.Run(() =>
+            {
+                result = list.AsEnumerable();
+            }, cancellationToken);
+
+            return result;
         }
     }
 }

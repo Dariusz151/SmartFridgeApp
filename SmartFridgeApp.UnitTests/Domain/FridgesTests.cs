@@ -69,7 +69,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void RemoveUserThatNotExistShould()
+        public void RemoveUserThatNotExistShouldThrowException()
         {
             _user = new User(userName, userEmail);
             
@@ -77,6 +77,26 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             Assert.AreEqual(1, _fridge.DomainEvents.Count);
             Assert.Throws(typeof(DomainException), () => _fridge.RemoveUser(_user.Id));
+        }
+
+        [Test]
+        public void CreateFridgeWithEmptyNameShouldThrowException()
+        {
+            Fridge fridge2;
+            Assert.Throws(typeof(DomainException), () => fridge2 = new Fridge("", "adress", "desc"));
+        }
+
+        [Test]
+        public void UpdateFridgeWithInvalidNameShouldThrowException()
+        {
+            Assert.Throws(typeof(DomainException), () => _fridge.ChangeFridgeName(""));
+        }
+
+        [Test]
+        public void UpdateFridgeWithValidNameShouldBeFine()
+        {
+            _fridge.ChangeFridgeName("UpdatedFridge");
+           Assert.AreEqual("UpdatedFridge", _fridge.Name);
         }
     }
 }
