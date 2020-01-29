@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
 using SmartFridgeApp.API.Recipes.DeleteRecipe;
+using SmartFridgeApp.API.Recipes.FindRecipes;
 using SmartFridgeApp.API.Recipes.GetRecipes;
 using SmartFridgeApp.API.Recipes.UpdateRecipe;
 
@@ -52,6 +53,21 @@ namespace SmartFridgeApp.API.Recipes
                 ));
 
             return Created(string.Empty, recipe);
+        }
+
+        /// <summary>
+        /// Get list of matching recipes.
+        /// </summary>
+        [Route("find")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> FindMatchingRecipesAsync([FromBody]FindRecipesRequest request)
+        {
+            var recipes = await _mediator.Send(new FindRecipesCommand(
+                request.FoodProducts
+            ));
+
+            return Ok(recipes);
         }
 
         /// <summary>

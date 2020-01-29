@@ -10,7 +10,7 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
         public int FoodProductId { get; private set; }
         public string Name { get; private set; }
 
-        public ICollection<RecipeFoodProduct> RecipeFoodProducts { get; set; }
+        //public ICollection<RecipeFoodProduct> RecipeFoodProducts { get; set; }
 
         private FoodProduct()
         {
