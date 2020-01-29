@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -23,9 +22,7 @@ namespace SmartFridgeApp.Infrastructure.Recipes
             builder.Property("Category").HasColumnName("Category");
 
             var converter = new ValueConverter<List<FoodProduct>, string>(v=>v.XmlSerializeToString().ToString(), v=>v.XmlDeserializeFromString<List<FoodProduct>>());
-
-
-
+            
             builder.Property("FoodProducts").HasColumnName("FoodProducts").HasConversion(converter);
         }
     }

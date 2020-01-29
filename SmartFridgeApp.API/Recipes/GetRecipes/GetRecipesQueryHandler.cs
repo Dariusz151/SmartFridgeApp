@@ -33,31 +33,7 @@ namespace SmartFridgeApp.API.Recipes.GetRecipes
                 ";
 
             var recipes = await connection.QueryAsync<RecipeDto>(query);
-
-
-            //var recipesDict = new Dictionary<int, RecipeDto>();
-            //var list = connection.Query<RecipeDto, FoodProductDto, RecipeDto>(
-            //        query, (recipeDto, foodProductDto) =>
-            //        {
-            //            if (!recipesDict.TryGetValue(recipeDto.RecipeId, out var recipe))
-            //            {
-            //                recipe = recipeDto;
-            //                recipe.FoodProducts = new List<FoodProductDto>();
-            //                recipesDict.Add(recipe.RecipeId, recipe);
-            //            }
-
-            //            recipe.FoodProducts.Add(foodProductDto);
-            //            return recipe;
-            //        }, splitOn: "FoodProductId")
-            //    .Distinct().ToList();
-
-            //IEnumerable<RecipeDto> result = null;
-
-            //await Task.Run(() =>
-            //{
-            //    result = list.AsEnumerable();
-            //}, cancellationToken);
-
+            
             return recipes;
         }
     }

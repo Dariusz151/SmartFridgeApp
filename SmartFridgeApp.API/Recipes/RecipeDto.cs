@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using SmartFridgeApp.API.FoodProducts;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-
-namespace SmartFridgeApp.API.Recipes
+﻿namespace SmartFridgeApp.API.Recipes
 {
     public class RecipeDto
     {
@@ -12,6 +8,7 @@ namespace SmartFridgeApp.API.Recipes
         public int DifficultyLevel { get; set; }
         public int MinutesRequired { get; set; }
         public string Category { get; set; }
+        // TODO: how to return this serialized string?
         public string FoodProducts { get; set; }
     }
 }
