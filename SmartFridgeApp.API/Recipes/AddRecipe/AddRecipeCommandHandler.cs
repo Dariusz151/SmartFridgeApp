@@ -32,16 +32,8 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
 
             //TODO: 'Sugar syntax' to this. LINQ expression.
 
-            ICollection<FoodProduct> currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
-
-            var recipeFoodProducts = new List<RecipeFoodProduct>();
-
-            foreach (var el in currentFoodProducts)
-            {
-                var rfp = new RecipeFoodProduct();
-                rfp.FoodProduct = el;
-                recipeFoodProducts.Add(rfp);
-            }
+            List<FoodProduct> currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
+            
             
             var recipe = new Recipe(
                 command.Name, 
@@ -49,7 +41,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
                 command.DifficultyLevel,
                 command.MinutesRequired,
                 command.Category,
-                recipeFoodProducts);
+                currentFoodProducts);
 
             await _recipeRepository.AddRecipeAsync(recipe);
             await _unitOfWork.CommitAsync(cancellationToken);

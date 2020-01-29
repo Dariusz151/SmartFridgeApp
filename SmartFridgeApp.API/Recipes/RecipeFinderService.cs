@@ -22,7 +22,7 @@ namespace SmartFridgeApp.API.Recipes
             var recipes = await _recipeRepository.GetAllRecipesAsync();
 
             var recipesAvailable = new List<Recipe>();
-            var productAgreedCounter = 0;
+            //var productAgreedCounter = 0;
 
             foreach (var recipe in recipes)
             {

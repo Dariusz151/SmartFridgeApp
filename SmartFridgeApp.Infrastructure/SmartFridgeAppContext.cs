@@ -6,7 +6,6 @@ using SmartFridgeApp.Domain.Models.Recipes;
 using SmartFridgeApp.Domain.Models.Users;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
-using SmartFridgeApp.Infrastructure.RecipeFoodProducts;
 using SmartFridgeApp.Infrastructure.Recipes;
 
 namespace SmartFridgeApp.Infrastructure
@@ -28,7 +27,7 @@ namespace SmartFridgeApp.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
+            //modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
         }

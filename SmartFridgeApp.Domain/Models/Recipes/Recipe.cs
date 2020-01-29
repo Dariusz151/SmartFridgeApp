@@ -16,24 +16,24 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         public int MinutesRequired { get; set; }
         public string Category { get; set; }
 
-        public ICollection<RecipeFoodProduct> RecipeFoodProducts { get; set; }
-
+        public List<FoodProduct> FoodProducts { get; set; }
+        
         private Recipe()
         {
             // EF Core   
         }
 
-        public Recipe(string name, ICollection<RecipeFoodProduct> products)
+        public Recipe(string name, List<FoodProduct> products)
             : this(name, String.Empty, products)
         {
         }
 
-        public Recipe(string name, string description, ICollection<RecipeFoodProduct> products)
+        public Recipe(string name, string description, List<FoodProduct> products)
             : this(name, description, 0, 0, String.Empty, products)
         {
         }
         
-        public Recipe(string name, string description, int difficultyLevel, int minutesRequired, string category, ICollection<RecipeFoodProduct> products)
+        public Recipe(string name, string description, int difficultyLevel, int minutesRequired, string category, List<FoodProduct> products)
         {
             if (products.Count == 0)
                 throw new DomainException("Recipe must have any products!");
@@ -44,7 +44,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             DifficultyLevel = difficultyLevel;
             MinutesRequired = minutesRequired;
             Category = category;
-            RecipeFoodProducts = products;
+            FoodProducts = products;
 
             this.AddDomainEvent(new RecipeAddedEvent(this));
         }
