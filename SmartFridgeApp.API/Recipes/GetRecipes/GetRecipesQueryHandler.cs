@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.API.FoodProducts;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.Recipes.GetRecipes
@@ -25,44 +23,42 @@ namespace SmartFridgeApp.API.Recipes.GetRecipes
             const string query = @"
                  SELECT 
 	                r.RecipeId as [RecipeId],
-	                r.Name as [RecipeName],
-                    r.Description,
-                    r.DifficultyLevel,
-                    r.MinutesRequired,
-                    r.Category,
-	                rfp.FoodProductId as [FoodProductId],
-	                fp.Name as [FoodProductName]
-                 FROM [app].[Recipes] r
-                 LEFT JOIN [dbo].RecipeFoodProduct rfp
-	                ON r.RecipeId = rfp.RecipeId
-                 LEFT JOIN [app].FoodProducts fp
-	                ON fp.FoodProductId = rfp.FoodProductId
+	                r.RecipeName as [RecipeName],
+                    r.Description as [Description],
+                    r.DifficultyLevel as [DifficultyLevel],
+                    r.MinutesRequired as [MinutesRequired],
+                    r.Category as [Category],
+                    r.FoodProducts as [FoodProducts]
+                 FROM [dbo].[v_Recipes] r
                 ";
 
-            var recipesDict = new Dictionary<int, RecipeDto>();
-            var list = connection.Query<RecipeDto, FoodProductDto, RecipeDto>(
-                    query, (recipeDto, foodProductDto) =>
-                    {
-                        if (!recipesDict.TryGetValue(recipeDto.RecipeId, out var recipe))
-                        {
-                            recipe = recipeDto;
-                            recipe.FoodProducts = new List<FoodProductDto>();
-                            recipesDict.Add(recipe.RecipeId, recipe);
-                        }
+            var recipes = await connection.QueryAsync<RecipeDto>(query);
 
-                        recipe.FoodProducts.Add(foodProductDto);
-                        return recipe;
-                    }, splitOn: "FoodProductId")
-                .Distinct().ToList();
 
-            IEnumerable<RecipeDto> result = null;
+            //var recipesDict = new Dictionary<int, RecipeDto>();
+            //var list = connection.Query<RecipeDto, FoodProductDto, RecipeDto>(
+            //        query, (recipeDto, foodProductDto) =>
+            //        {
+            //            if (!recipesDict.TryGetValue(recipeDto.RecipeId, out var recipe))
+            //            {
+            //                recipe = recipeDto;
+            //                recipe.FoodProducts = new List<FoodProductDto>();
+            //                recipesDict.Add(recipe.RecipeId, recipe);
+            //            }
 
-            await Task.Run(() =>
-            {
-                result = list.AsEnumerable();
-            }, cancellationToken);
+            //            recipe.FoodProducts.Add(foodProductDto);
+            //            return recipe;
+            //        }, splitOn: "FoodProductId")
+            //    .Distinct().ToList();
 
-            return result;
+            //IEnumerable<RecipeDto> result = null;
+
+            //await Task.Run(() =>
+            //{
+            //    result = list.AsEnumerable();
+            //}, cancellationToken);
+
+            return recipes;
         }
     }
 }

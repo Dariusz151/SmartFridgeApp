@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SmartFridgeApp.API.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 
 namespace SmartFridgeApp.API.Recipes
 {
@@ -11,6 +12,6 @@ namespace SmartFridgeApp.API.Recipes
         public int DifficultyLevel { get; set; }
         public int MinutesRequired { get; set; }
         public string Category { get; set; }
-        public ICollection<FoodProductDto> FoodProducts { get; set; }
+        public string FoodProducts { get; set; }
     }
 }

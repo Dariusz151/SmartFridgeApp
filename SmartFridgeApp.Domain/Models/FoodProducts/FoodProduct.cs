@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using SmartFridgeApp.Domain.Models.FoodProducts.Events;
+﻿using SmartFridgeApp.Domain.Models.FoodProducts.Events;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.Domain.Models.FoodProducts
 {
     public class FoodProduct : Entity, IAggregateRoot
     {
-        public int FoodProductId { get; private set; }
-        public string Name { get; private set; }
+        public int FoodProductId { get; set; }
+        public string Name { get; set; }
         
         private FoodProduct()
         {

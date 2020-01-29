@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.API.Fridges;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.Recipes;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.API.Recipes.AddRecipe
 {
@@ -32,8 +29,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
 
             //TODO: 'Sugar syntax' to this. LINQ expression.
 
-            List<FoodProduct> currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
-            
+            var currentFoodProducts = (from foodProduct in allFoodProducts from el in command.ProductIds where foodProduct.FoodProductId.Equals(el) select foodProduct).ToList();
             
             var recipe = new Recipe(
                 command.Name, 

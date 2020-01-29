@@ -24,6 +24,8 @@ namespace SmartFridgeApp.Infrastructure.Recipes
 
             var converter = new ValueConverter<List<FoodProduct>, string>(v=>v.XmlSerializeToString().ToString(), v=>v.XmlDeserializeFromString<List<FoodProduct>>());
 
+
+
             builder.Property("FoodProducts").HasColumnName("FoodProducts").HasConversion(converter);
         }
     }
