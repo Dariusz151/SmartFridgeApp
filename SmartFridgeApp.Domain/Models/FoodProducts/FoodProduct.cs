@@ -7,17 +7,20 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
     {
         public int FoodProductId { get; set; }
         public string Name { get; set; }
-        
+        public string Category { get; set; }
+
         private FoodProduct()
         {
             // EF Core
         }
 
-        public FoodProduct(string name)
+        public FoodProduct(string name, string category)
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Product name can't be empty.");
             Name = UppercaseFirst(name.ToLower());
+
+            Category = category;
 
             this.AddDomainEvent(new FoodProductAddedEvent(this));
         }
