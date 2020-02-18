@@ -4,5 +4,6 @@
     {
         public int FoodProductId { get; set; }
         public string FoodProductName { get; set; }
+        public string FoodProductCategory { get; set; }
     }
 }

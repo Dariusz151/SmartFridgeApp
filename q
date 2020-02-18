@@ -1,0 +1,89 @@
+[33m1c0d08c[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m add Category to foodProduct
+[33ma17724a[m changed name AddFridteItemDto
+[33m7ded45c[m added DatabaseOperationsTests
+[33m7103453[m cleanup after modification
+[33maf6630e[m changed GetRecipe handler and AddRecipe with serialized list of products
+[33m1d43e9d[m added XMLExtensions to serialize; changed db to serializing food products; deleted RecipeFoodProduct class
+[33m0c3fe79[m RecipeFinderService implement
+[33mce6cb5d[m added tests for Controllers (Get methods)
+[33m622316e[m Merge branch 'develop'
+[33me21b086[m added new unit tests (Updates methods in domain)
+[33m383f7d1[m added UpdateFridgeUser
+[33meb08e0c[m added DeleteFoodProduct and DeleteRecipe
+[33m2d8918b[m added DeleteFoodProduct, UpdateFoodProduct
+[33m69478cf[m fixed gitignore (error fromt travis)
+[33m24c4638[m fixed executable bash scripts
+[33m0e8abb1[m changed travis config 1
+[33mdf5f74f[m travis config
+[33m4b97df6[m changed travis config
+[33m8e8ea71[m fixed travis name
+[33m26a9d9d[m pipeline init
+[33m16c0d2b[m Changes in CreateRecipe (added additional properties)
+[33m0e43fb0[m changes in struct Recipe
+[33m91a92d0[m extend Recipe class in domain model
+[33m162f009[m added Events to FoodProducts and Recipes
+[33m79d2658[m cleanup RecipesController class (after tests)
+[33m5491b87[m fixed dapper query for GetRecipes (many-to-many relationship)
+[33mb954f33[m added GetRecipe methods
+[33macdc498[m fixed changes connected with db schema; changed List into Enumerables
+[33m41d7e08[m changed db config 2; refactor
+[33m1670488[m changed db entity config
+[33m8e4ab0b[m added general Dockerfile
+[33m90f5a95[m Create dockerimage.yml
+[33meaa00e5[m fixed struct in db
+[33md582104[m changes in RecipesFoodProducts cd...
+[33meacd8f6[m Added Recipe in Application layer
+[33m3b2ed9a[m changes in db config
+[33m44e7ef7[m added RecipeRepository config
+[33m2848a55[m added IRecipeFinderService
+[33m2e50a60[m config recipeRepository
+[33m9084760[m added recipe class and configure EntityTypeConfiguration
+[33m1ad8c77[m little refactor; changes in FridgeItems
+[33m8622122[m refactor in tests; added Formatting name in FoodProduct
+[33m3cf94e3[m small changes in domain FridgeItem; fixed unit tests
+[33me503549[m added migration to db connected with food product
+[33mf8770a1[m changed from FridteItem.Name to FoodProduct object
+[33m4f40cb1[m Added AddFoodProducts
+[33mc32aed2[m added FoodProducts query and query handler
+[33mfaedc8d[m added FoodProducts Repository
+[33m2c56228[m added FoodProduct config to db
+[33mdb27280[m added FoodProducts in domain
+[33mf985ec2[m fixed intergraiton test
+[33m7a8183e[m added ConsumeFridgeItem
+[33m8d8e433[m deleted old project from repo; trying add integration tests
+[33m1f32db9[m added DeleteFridge methods
+[33m935687a[m bugfix on GetFridgeUsers
+[33mcca2fe3[m added GetFridgeItems
+[33m98bb01a[m Category enum change config (convert to string)
+[33m8a484ef[m added GetFridges methods
+[33m5c0d3bf[m added RemoveFridgeItem methods
+[33m2ffb83a[m added AddFridgeItem method
+[33m0098d69[m added migration to db (fridgeItems)
+[33m9c4dea5[m change api route; add summary in controller
+[33m14e05b3[m remove user from fridge works properly
+[33me753def[m added RemoveFridgeuser methods
+[33m03aa2b2[m added SqlConnectionFactory
+[33m66a353b[m added Users in context; changes in EntityConfiguration; addfridgeuser command handlers
+[33m9675e3a[m added UsersController with GetFridgeUsers query
+[33m0196d0c[m added Swagger
+[33m31b6d8e[m added infrastructure; unitOfWork; eventsDispatcher changes from typedIdValue to normal Guid
+[33m0c629da[m added database
+[33m489b416[m added API project; AddFridge workflow
+[33m2f943e6[m added Infrastructure layer; add FridgeRepository
+[33m450dbcf[m added fridgeItems tests
+[33m9fdb699[m added FridgeItemsTests
+[33m57ca01a[m Fridge domain tests
+[33m9d25039[m userSecrets added
+[33ma7eae0a[m refactor for ddd ...
+[33ma2f0365[m added Domain project; refactoring for DDD
+[33mb2fc3de[m added Route ActionName
+[33m3f00e77[m added requests, repositories, services to FoodItem
+[33mcc74dfb[m added userGroups and init Commands pattern
+[33m07ae3e6[m added EFCore, init db
+[33mea6e107[m config appsettings
+[33mda4d2d6[m change FoodItem rules
+[33m222dbe8[m added swagger
+[33mf1ef224[m added User and FoodItem domain classes; tests for expiration date
+[33m118084b[m init project
+[33m30c06f7[m Dodaj pliki projektów.
+[33m2375319[m Dodaj pliki .gitignore i .gitattributes.

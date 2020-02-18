@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
@@ -23,7 +22,8 @@ namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                "[FoodProductId], " +
-                               "[Name] as [FoodProductName] " +
+                               "[Name] as [FoodProductName], " +
+                               "[Category] as [FoodProductCategory] " +
                                "FROM " +
                                "[dbo].[v_FoodProducts]";
 

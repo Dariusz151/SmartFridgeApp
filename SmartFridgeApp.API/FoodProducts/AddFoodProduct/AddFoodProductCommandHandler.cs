@@ -19,7 +19,7 @@ namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct
 
         public async Task<Unit> Handle(AddFoodProductCommand command, CancellationToken cancellationToken)
         {
-            var foodProduct = new FoodProduct(command.Name);
+            var foodProduct = new FoodProduct(command.Name, command.Category);
 
             await _foodProductRepository.AddAsync(foodProduct);
             await _unitOfWork.CommitAsync(cancellationToken);
