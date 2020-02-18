@@ -5,16 +5,16 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 {
     public class FoodProduct : Entity, IAggregateRoot
     {
-        public int FoodProductId { get; set; }
+        public short FoodProductId { get; set; }
         public string Name { get; set; }
-        public string Category { get; set; }
+        public Category Category { get; set; }
 
         private FoodProduct()
         {
             // EF Core
         }
 
-        public FoodProduct(string name, string category)
+        public FoodProduct(string name, Category category)
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Product name can't be empty.");

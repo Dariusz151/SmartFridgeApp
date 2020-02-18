@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Models.FoodProducts;
@@ -34,6 +35,16 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
         {
             var foodProduct = await _context.FoodProducts.SingleAsync(x => x.FoodProductId == foodProductId);
             _context.FoodProducts.Remove(foodProduct);
+        }
+
+        public async Task CreateCategoryAsync(Category category)
+        {
+            await _context.Categories.AddAsync(category);
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            return await _context.Categories.ToListAsync();
         }
     }
 }

@@ -10,8 +10,8 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20200121184658_DatabaseConfigChanges2")]
-    partial class DatabaseConfigChanges2
+    [Migration("20200218222615_Init1")]
+    partial class Init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,21 +21,41 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.FoodProducts.FoodProduct", b =>
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.Category", b =>
                 {
-                    b.Property<int>("FoodProductId")
+                    b.Property<byte>("CategoryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasMaxLength(25);
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories","app");
+                });
+
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", b =>
+                {
+                    b.Property<short>("FoodProductId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte?>("CategoryId");
+
                     b.Property<string>("Name")
-                        .HasColumnName("Name");
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasMaxLength(40);
 
                     b.HasKey("FoodProductId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("FoodProducts","app");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.Fridges.Fridge", b =>
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.Fridges.Fridge", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -54,24 +74,26 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.ToTable("Fridges","app");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.RecipeFoodProducts.RecipeFoodProduct", b =>
-                {
-                    b.Property<int>("FoodProductId");
-
-                    b.Property<int>("RecipeId");
-
-                    b.HasKey("FoodProductId", "RecipeId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("RecipeFoodProduct");
-                });
-
-            modelBuilder.Entity("SmartFridgeApp.Domain.Recipes.Recipe", b =>
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.Recipes.Recipe", b =>
                 {
                     b.Property<int>("RecipeId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category")
+                        .HasColumnName("Category");
+
+                    b.Property<string>("Description")
+                        .HasColumnName("Description");
+
+                    b.Property<int>("DifficultyLevel")
+                        .HasColumnName("DifficultyLevel");
+
+                    b.Property<string>("FoodProducts")
+                        .HasColumnName("FoodProducts");
+
+                    b.Property<int>("MinutesRequired")
+                        .HasColumnName("MinutesRequired");
 
                     b.Property<string>("Name")
                         .HasColumnName("Name");
@@ -81,9 +103,16 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.ToTable("Recipes","app");
                 });
 
-            modelBuilder.Entity("SmartFridgeApp.Domain.Fridges.Fridge", b =>
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", b =>
                 {
-                    b.OwnsMany("SmartFridgeApp.Domain.Users.User", "_users", b1 =>
+                    b.HasOne("SmartFridgeApp.Domain.Models.FoodProducts.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("SmartFridgeApp.Domain.Models.Fridges.Fridge", b =>
+                {
+                    b.OwnsMany("SmartFridgeApp.Domain.Models.Users.User", "_users", b1 =>
                         {
                             b1.Property<Guid>("Id")
                                 .ValueGeneratedOnAdd();
@@ -108,18 +137,15 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                             b1.ToTable("Users","app");
 
-                            b1.HasOne("SmartFridgeApp.Domain.Fridges.Fridge")
+                            b1.HasOne("SmartFridgeApp.Domain.Models.Fridges.Fridge")
                                 .WithMany("_users")
                                 .HasForeignKey("FridgeId")
                                 .OnDelete(DeleteBehavior.Cascade);
 
-                            b1.OwnsMany("SmartFridgeApp.Domain.FridgeItems.FridgeItem", "_fridgeItems", b2 =>
+                            b1.OwnsMany("SmartFridgeApp.Domain.Models.FridgeItems.FridgeItem", "_fridgeItems", b2 =>
                                 {
                                     b2.Property<Guid>("Id")
                                         .ValueGeneratedOnAdd();
-
-                                    b2.Property<string>("Category")
-                                        .IsRequired();
 
                                     b2.Property<string>("Desc")
                                         .HasColumnName("Desc");
@@ -130,7 +156,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                     b2.Property<DateTime>("ExpirationDate")
                                         .HasColumnName("ExpirationDate");
 
-                                    b2.Property<int?>("FoodProductId");
+                                    b2.Property<short?>("FoodProductId");
 
                                     b2.Property<bool>("IsConsumed")
                                         .HasColumnName("IsConsumed");
@@ -145,11 +171,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                                     b2.ToTable("FridgeItems","app");
 
-                                    b2.HasOne("SmartFridgeApp.Domain.FoodProducts.FoodProduct", "FoodProduct")
+                                    b2.HasOne("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", "FoodProduct")
                                         .WithMany()
                                         .HasForeignKey("FoodProductId");
 
-                                    b2.HasOne("SmartFridgeApp.Domain.Users.User")
+                                    b2.HasOne("SmartFridgeApp.Domain.Models.Users.User")
                                         .WithMany("_fridgeItems")
                                         .HasForeignKey("UserId")
                                         .OnDelete(DeleteBehavior.Cascade);
@@ -169,26 +195,13 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                                             b3.ToTable("FridgeItems","app");
 
-                                            b3.HasOne("SmartFridgeApp.Domain.FridgeItems.FridgeItem")
+                                            b3.HasOne("SmartFridgeApp.Domain.Models.FridgeItems.FridgeItem")
                                                 .WithOne("AmountValue")
                                                 .HasForeignKey("SmartFridgeApp.Domain.Shared.AmountValue", "FridgeItemId")
                                                 .OnDelete(DeleteBehavior.Cascade);
                                         });
                                 });
                         });
-                });
-
-            modelBuilder.Entity("SmartFridgeApp.Domain.RecipeFoodProducts.RecipeFoodProduct", b =>
-                {
-                    b.HasOne("SmartFridgeApp.Domain.FoodProducts.FoodProduct", "FoodProduct")
-                        .WithMany("RecipeFoodProducts")
-                        .HasForeignKey("FoodProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SmartFridgeApp.Domain.Recipes.Recipe", "Recipe")
-                        .WithMany("RecipeFoodProducts")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

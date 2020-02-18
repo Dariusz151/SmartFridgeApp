@@ -38,7 +38,7 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
                     command.FridgeItemDto.Unit)
             );
 
-            fridgeItem.Category = command.FridgeItemDto.Category;
+            //fridgeItem.Category = command.FridgeItemDto.Category;
             // fridgeItem.ExpirationDate = 
             
             user.AddFridgeItem(fridgeItem);

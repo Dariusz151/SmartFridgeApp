@@ -18,7 +18,8 @@ namespace SmartFridgeApp.Infrastructure
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<FoodProduct> FoodProducts { get; set; }
-        
+        public DbSet<Category> Categories { get; set; }
+
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {
 
@@ -30,6 +31,7 @@ namespace SmartFridgeApp.Infrastructure
             //modelBuilder.ApplyConfiguration(new RecipeFoodProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
         }
     }
 }

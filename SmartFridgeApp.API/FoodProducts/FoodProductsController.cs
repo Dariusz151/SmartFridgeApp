@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
+using SmartFridgeApp.API.FoodProducts.Categories.CreateCategory;
 using SmartFridgeApp.API.FoodProducts.DeleteFoodProduct;
 using SmartFridgeApp.API.FoodProducts.GetFoodProducts;
 using SmartFridgeApp.API.FoodProducts.UpdateFoodProduct;
-using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 
 namespace SmartFridgeApp.API.FoodProducts
@@ -36,15 +38,45 @@ namespace SmartFridgeApp.API.FoodProducts
             return Ok(foodProducts);
         }
 
+        ///// <summary>
+        ///// Get all available categories for foodProducts.
+        ///// </summary>
+        //[Route("/api/foodProducts/categories")]
+        //[HttpGet]
+        //[ProducesResponseType(typeof(Dictionary<int, string>), (int)HttpStatusCode.OK)]
+        //public IActionResult GetAllCategoriesAsync()
+        //{
+        //    var categories = Enum.GetValues(typeof(Category))
+        //        .Cast<Category>()
+        //        .ToDictionary(t => (int)t, t => t.ToString());
+
+        //    return Ok(categories);
+        //}
+
         /// <summary>
-        /// Create new foodProduct.
+        /// Create new food product category.
+        /// </summary>
+        [Route("/api/foodProducts/categories")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateCategoryAsync([FromBody]CreateCategoryRequest request)
+        {
+            await _mediator.Send(new CreateCategoryCommand(request.Name));
+            
+            return Ok();
+        }
+
+        /// <summary>
+        /// Create new food product.
         /// </summary>
         [Route("")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
-            await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
+
+
+            //await _mediator.Send(new AddFoodProductCommand(request.Name, (Category)request.Category));
 
             return Ok();
         }

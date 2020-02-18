@@ -13,7 +13,7 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
         public string Desc { get; private set; }
         public AmountValue AmountValue { get; private set; }
         public DateTime ExpirationDate { get; set; }
-        public Category Category { get; set; }
+        //public Category Category { get; set; }
         public DateTime EnteredAt { get; private set; }
         public bool IsConsumed { get; private set; } 
         public bool IsOutdated() => DateTime.Compare(ExpirationDate, DateTime.UtcNow) > 1;

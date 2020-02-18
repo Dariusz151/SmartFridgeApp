@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.Models.Users;
@@ -41,9 +42,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.Property<DateTime>("ExpirationDate").HasColumnName("ExpirationDate");
                     f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
                     f.Property("IsConsumed").HasColumnName("IsConsumed");
-                    f.Property(cat=>cat.Category).HasConversion(conv => conv.ToString(),
-                        c => (Category)Enum.Parse(typeof(Category), c));
-
+                    
                     f.OwnsOne<AmountValue>("AmountValue", av =>
                     {
                         av.Property(p => p.Value).HasColumnName("Value");
