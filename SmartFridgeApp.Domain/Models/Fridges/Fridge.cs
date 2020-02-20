@@ -10,7 +10,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 {
     public class Fridge : Entity, IAggregateRoot
     {
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
 
         public string Name { get; private set; }
 
@@ -29,7 +29,6 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Fridge should have a name.");
-            Id = Guid.NewGuid();
             Address = address;
             Name = name;
             Desc = desc;
@@ -51,7 +50,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             this.AddDomainEvent(new UserAddedEvent(user.Id));
         }
 
-        public void RemoveUser(Guid userId)
+        public void RemoveUser(int userId)
         {
             try
             {
@@ -73,13 +72,13 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         //    return user.GetFridgeItemIds();
         //}
 
-        public List<Guid> GetFridgeUsers()
+        public List<int> GetFridgeUsers()
         {
             var userIds = _users.Select(x => x.Id).ToList();
             return userIds;
         }
 
-        public User GetFridgeUser(Guid userId)
+        public User GetFridgeUser(int userId)
         {
             return _users.Single(u => u.Id == userId);
         }

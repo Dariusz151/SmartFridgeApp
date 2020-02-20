@@ -5,9 +5,9 @@ namespace SmartFridgeApp.Domain.Models.Fridges.Events
 {
     public class UserAddedEvent : DomainEventBase
     {
-        public Guid UserId { get; }
+        public int UserId { get; }
 
-        public UserAddedEvent(Guid userId)
+        public UserAddedEvent(int userId)
         {
             UserId = UserId;
         }

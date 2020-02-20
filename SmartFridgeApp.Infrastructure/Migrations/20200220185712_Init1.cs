@@ -16,7 +16,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    CategoryId = table.Column<byte>(nullable: false),
+                    CategoryId = table.Column<short>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
@@ -29,10 +30,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true),
-                    Desc = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Address = table.Column<string>(maxLength: 100, nullable: true),
+                    Desc = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,11 +48,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 {
                     RecipeId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    DifficultyLevel = table.Column<int>(nullable: false),
-                    MinutesRequired = table.Column<int>(nullable: false),
-                    Category = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    Type = table.Column<string>(nullable: true),
                     FoodProducts = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -66,7 +66,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     FoodProductId = table.Column<short>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
-                    CategoryId = table.Column<byte>(nullable: true)
+                    CategoryId = table.Column<short>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,12 +85,12 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    FridgeId = table.Column<Guid>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    WelcomeEmailWasSent = table.Column<bool>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Email = table.Column<string>(maxLength: 250, nullable: false),
+                    FridgeId = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,15 +109,16 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FoodProductId = table.Column<short>(nullable: true),
-                    Desc = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(maxLength: 1000, nullable: true),
                     Value = table.Column<float>(nullable: false),
                     Unit = table.Column<string>(nullable: false),
                     ExpirationDate = table.Column<DateTime>(nullable: false),
                     EnteredAt = table.Column<DateTime>(nullable: false),
                     IsConsumed = table.Column<bool>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

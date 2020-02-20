@@ -15,11 +15,12 @@ namespace SmartFridgeApp.Infrastructure.Recipes
         {
             builder.ToTable("Recipes", SchemaNames.Application);
             builder.HasKey(b => b.RecipeId);
-            builder.Property("Name").HasColumnName("Name");
-            builder.Property("Description").HasColumnName("Description");
-            builder.Property("DifficultyLevel").HasColumnName("DifficultyLevel");
-            builder.Property("MinutesRequired").HasColumnName("MinutesRequired");
-            builder.Property("Category").HasColumnName("Category");
+            builder.Property("Name").HasColumnName("Name")
+                .IsRequired().HasMaxLength(100);
+            builder.Property("Description").HasColumnName("Description").HasMaxLength(5000);
+            //builder.Property("DifficultyLevel").HasColumnName("DifficultyLevel");
+            //builder.Property("MinutesRequired").HasColumnName("MinutesRequired");
+            builder.Property("Type").HasColumnName("Type");
 
             var converter = new ValueConverter<List<FoodProduct>, string>(v=>v.XmlSerializeToString().ToString(), v=>v.XmlDeserializeFromString<List<FoodProduct>>());
             

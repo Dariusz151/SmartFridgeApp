@@ -47,8 +47,6 @@ namespace SmartFridgeApp.API.Recipes
                 request.Name, 
                 request.ProductIds,
                 request.Description,
-                request.DifficultyLevel,
-                request.MinutesRequired,
                 request.Category
                 ));
 
@@ -82,8 +80,6 @@ namespace SmartFridgeApp.API.Recipes
                 request.RecipeId,
                 request.Name,
                 request.Description,
-                request.DifficultyLevel,
-                request.MinutesRequired,
                 request.Category
             ));
 

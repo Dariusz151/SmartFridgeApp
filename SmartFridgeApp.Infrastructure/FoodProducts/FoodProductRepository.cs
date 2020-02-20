@@ -46,5 +46,10 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
         {
             return await _context.Categories.ToListAsync();
         }
+
+        public async Task<Category> GetCategoryByIdAsync(int categoryId)
+        {
+            return await _context.Categories.SingleOrDefaultAsync(c => c.CategoryId == categoryId);
+        }
     }
 }

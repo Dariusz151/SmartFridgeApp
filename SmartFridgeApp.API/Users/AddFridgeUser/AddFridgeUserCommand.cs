@@ -8,10 +8,10 @@ namespace SmartFridgeApp.API.Users.AddFridgeUser
 {
     public class AddFridgeUserCommand : IRequest
     {
-        public Guid FridgeId { get; }
+        public int FridgeId { get; }
         public UserDto User { get; }
 
-        public AddFridgeUserCommand(Guid fridgeId, UserDto user)
+        public AddFridgeUserCommand(int fridgeId, UserDto user)
         {
             FridgeId = fridgeId;
             User = user;

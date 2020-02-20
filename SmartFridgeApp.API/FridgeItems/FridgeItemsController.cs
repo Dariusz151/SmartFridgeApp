@@ -41,7 +41,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFridgeItemAsync(
-            [FromRoute]Guid fridgeId,
+            [FromRoute]int fridgeId,
             [FromBody]AddFridgeItemRequest request)
         {
             await _mediator.Send(new AddFridgeItemCommand(fridgeId, request.FridgeItem, request.UserId));
@@ -56,7 +56,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveFridgeItemAsync(
-            [FromRoute]Guid fridgeId,
+            [FromRoute]int fridgeId,
             [FromBody]RemoveFridgeItemRequest request)
         {
             await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
@@ -71,7 +71,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> ConsumeFridgeItemAsync(
-            [FromRoute]Guid fridgeId,
+            [FromRoute]int fridgeId,
             [FromBody]ConsumeFridgeItemRequest request)
         {
             // TODO: Consuming doesnt work.

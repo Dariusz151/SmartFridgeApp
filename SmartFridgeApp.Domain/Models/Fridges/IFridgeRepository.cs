@@ -5,9 +5,9 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 {
     public interface IFridgeRepository
     {
-        Task<Fridge> GetByIdAsync(Guid id);
+        Task<Fridge> GetByIdAsync(int id);
         Task AddAsync(Fridge fridge);
-        Task DeleteAsync(Guid fridgeId);
+        Task DeleteAsync(int fridgeId);
         //Task<List<Fridge>> GetAllAsync();
     }
 }

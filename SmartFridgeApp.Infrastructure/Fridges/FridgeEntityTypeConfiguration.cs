@@ -17,9 +17,12 @@ namespace SmartFridgeApp.Infrastructure.Fridges
             builder.ToTable("Fridges", SchemaNames.Application);
             builder.HasKey(b => b.Id);
 
-            builder.Property("Name").HasColumnName("Name");
-            builder.Property("Address").HasColumnName("Address");
-            builder.Property("Desc").HasColumnName("Desc");
+            builder.Property("Name").HasColumnName("Name")
+                .IsRequired().HasMaxLength(50);
+            builder.Property("Address").HasColumnName("Address")
+                .HasMaxLength(100);
+            builder.Property("Desc").HasColumnName("Desc")
+                .HasMaxLength(250);
 
             builder.OwnsMany<User>("_users", x =>
             {
@@ -27,10 +30,13 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 x.HasKey(u => u.Id);
                 x.HasForeignKey("FridgeId");
 
-                x.Property("Name").HasColumnName("Name");
-                x.Property("Email").HasColumnName("Email");
+                x.Property("Name").HasColumnName("Name")
+                    .IsRequired()
+                    .HasMaxLength(100);
+                x.Property("Email").HasColumnName("Email")
+                    .IsRequired()
+                    .HasMaxLength(250);
                 x.Property("_createdAt").HasColumnName("CreatedAt");
-                x.Property("_welcomeEmailWasSent").HasColumnName("WelcomeEmailWasSent");
                 
                 x.OwnsMany<FridgeItem>("_fridgeItems", f =>
                 {
@@ -38,7 +44,8 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.HasKey(k => k.Id);
                     f.HasForeignKey("UserId");
 
-                    f.Property("Desc").HasColumnName("Desc");
+                    f.Property("Note").HasColumnName("Note")
+                        .HasMaxLength(1000);
                     f.Property<DateTime>("ExpirationDate").HasColumnName("ExpirationDate");
                     f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
                     f.Property("IsConsumed").HasColumnName("IsConsumed");

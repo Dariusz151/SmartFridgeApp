@@ -7,6 +7,6 @@ namespace SmartFridgeApp.API.Users.RemoveFridgeUser
 {
     public class RemoveFridgeUserRequest
     {
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace SmartFridgeApp.Domain.Models.Users
 {
     public class User : Entity
     {
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
 
         public string Name { get; private set; }
 
@@ -20,8 +20,6 @@ namespace SmartFridgeApp.Domain.Models.Users
 
         private DateTime _createdAt;
 
-        private bool _welcomeEmailWasSent;
-
         private User()
         {
 
@@ -29,13 +27,11 @@ namespace SmartFridgeApp.Domain.Models.Users
 
         public User(string name, string email)
         {
-            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             _createdAt = DateTime.Now;
 
             this._fridgeItems = new List<FridgeItem>();
-            _welcomeEmailWasSent = false;
         }
 
         public void UpdateUser(string name)
@@ -53,7 +49,7 @@ namespace SmartFridgeApp.Domain.Models.Users
             this.AddDomainEvent(new FridgeItemAdded(item));
         }
 
-        public void RemoveFridgeItem(Guid fridgeItemId)
+        public void RemoveFridgeItem(long fridgeItemId)
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
@@ -61,7 +57,7 @@ namespace SmartFridgeApp.Domain.Models.Users
             this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
         
-        public void ConsumeFridgeItem(Guid fridgeItemId, AmountValue amountValue)
+        public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
         {
             var fridgeItem = this.GetFridgeItem(fridgeItemId);
             fridgeItem.ConsumeFridgeItem(amountValue);
@@ -69,7 +65,7 @@ namespace SmartFridgeApp.Domain.Models.Users
             this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
         }
         
-        private FridgeItem GetFridgeItem(Guid fridgeItemId)
+        private FridgeItem GetFridgeItem(long fridgeItemId)
         {
             var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
             return fridgeItem;

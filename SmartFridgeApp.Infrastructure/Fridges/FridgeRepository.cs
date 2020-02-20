@@ -20,7 +20,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
             await _context.Fridges.AddAsync(fridge);
         }
 
-        public async Task<Fridge> GetByIdAsync(Guid id)
+        public async Task<Fridge> GetByIdAsync(int id)
         {
             return await _context.Fridges.SingleAsync(x => x.Id == id);
         }
@@ -30,7 +30,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
         //    return await _context.Fridges.ToListAsync();
         //}
 
-        public async Task DeleteAsync(Guid fridgeId)
+        public async Task DeleteAsync(int fridgeId)
         {
             var fridge = await _context.Fridges.SingleOrDefaultAsync(f => f.Id == fridgeId);
 

@@ -13,5 +13,6 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 
         Task CreateCategoryAsync(Category category);
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<Category> GetCategoryByIdAsync(int categoryId);
     }
 }

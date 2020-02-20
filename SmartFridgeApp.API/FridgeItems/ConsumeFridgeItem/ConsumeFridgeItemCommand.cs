@@ -6,12 +6,12 @@ namespace SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem
 {
     public class ConsumeFridgeItemCommand : IRequest
     {
-        public Guid FridgeItemId { get; set; }
-        public Guid FridgeId { get; set; }
-        public Guid UserId { get; set; }
+        public long FridgeItemId { get; set; }
+        public int FridgeId { get; set; }
+        public int UserId { get; set; }
         public AmountValue AmountValue { get; set; }
 
-        public ConsumeFridgeItemCommand(Guid fridgeItemId, Guid userId, Guid fridgeId, AmountValue amountValue)
+        public ConsumeFridgeItemCommand(long fridgeItemId, int userId, int fridgeId, AmountValue amountValue)
         {
             FridgeItemId = fridgeItemId;
             UserId = userId;

@@ -33,8 +33,6 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
             var recipe = new Recipe(
                 command.Name, 
                 command.Description,
-                command.DifficultyLevel,
-                command.MinutesRequired,
                 command.Category,
                 currentFoodProducts);
 

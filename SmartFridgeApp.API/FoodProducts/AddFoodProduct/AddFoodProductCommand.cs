@@ -6,12 +6,12 @@ namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct
     public class AddFoodProductCommand : IRequest
     {
         public string Name { get; }
-        public Category Category { get; }
+        public int CategoryId { get; }
 
-        public AddFoodProductCommand(string name, Category category)
+        public AddFoodProductCommand(string name, int categoryId)
         {
             Name = name;
-            Category = category;
+            CategoryId = categoryId;
         }
     }
 }

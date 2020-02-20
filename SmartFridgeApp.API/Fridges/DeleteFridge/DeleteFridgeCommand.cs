@@ -5,9 +5,9 @@ namespace SmartFridgeApp.API.Fridges.DeleteFridge
 {
     public class DeleteFridgeCommand : IRequest
     {
-        public Guid FridgeId { get; }
+        public int FridgeId { get; }
 
-        public DeleteFridgeCommand(Guid fridgeId)
+        public DeleteFridgeCommand(int fridgeId)
         {
             FridgeId = fridgeId;
         }

@@ -21,7 +21,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.Category", b =>
                 {
-                    b.Property<byte>("CategoryId");
+                    b.Property<short>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -39,7 +41,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<byte?>("CategoryId");
+                    b.Property<short?>("CategoryId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -55,17 +57,22 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.Fridges.Fridge", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
-                        .HasColumnName("Address");
+                        .HasColumnName("Address")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Desc")
-                        .HasColumnName("Desc");
+                        .HasColumnName("Desc")
+                        .HasMaxLength(250);
 
                     b.Property<string>("Name")
-                        .HasColumnName("Name");
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -78,23 +85,20 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Category")
-                        .HasColumnName("Category");
-
                     b.Property<string>("Description")
-                        .HasColumnName("Description");
-
-                    b.Property<int>("DifficultyLevel")
-                        .HasColumnName("DifficultyLevel");
+                        .HasColumnName("Description")
+                        .HasMaxLength(5000);
 
                     b.Property<string>("FoodProducts")
                         .HasColumnName("FoodProducts");
 
-                    b.Property<int>("MinutesRequired")
-                        .HasColumnName("MinutesRequired");
-
                     b.Property<string>("Name")
-                        .HasColumnName("Name");
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Type")
+                        .HasColumnName("Type");
 
                     b.HasKey("RecipeId");
 
@@ -112,22 +116,24 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 {
                     b.OwnsMany("SmartFridgeApp.Domain.Models.Users.User", "_users", b1 =>
                         {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd();
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<string>("Email")
-                                .HasColumnName("Email");
+                                .IsRequired()
+                                .HasColumnName("Email")
+                                .HasMaxLength(250);
 
-                            b1.Property<Guid>("FridgeId");
+                            b1.Property<int>("FridgeId");
 
                             b1.Property<string>("Name")
-                                .HasColumnName("Name");
+                                .IsRequired()
+                                .HasColumnName("Name")
+                                .HasMaxLength(100);
 
                             b1.Property<DateTime>("_createdAt")
                                 .HasColumnName("CreatedAt");
-
-                            b1.Property<bool>("_welcomeEmailWasSent")
-                                .HasColumnName("WelcomeEmailWasSent");
 
                             b1.HasKey("Id");
 
@@ -142,11 +148,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                             b1.OwnsMany("SmartFridgeApp.Domain.Models.FridgeItems.FridgeItem", "_fridgeItems", b2 =>
                                 {
-                                    b2.Property<Guid>("Id")
-                                        .ValueGeneratedOnAdd();
-
-                                    b2.Property<string>("Desc")
-                                        .HasColumnName("Desc");
+                                    b2.Property<long>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                                     b2.Property<DateTime>("EnteredAt")
                                         .HasColumnName("EnteredAt");
@@ -159,7 +163,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                     b2.Property<bool>("IsConsumed")
                                         .HasColumnName("IsConsumed");
 
-                                    b2.Property<Guid>("UserId");
+                                    b2.Property<string>("Note")
+                                        .HasColumnName("Note")
+                                        .HasMaxLength(1000);
+
+                                    b2.Property<int>("UserId");
 
                                     b2.HasKey("Id");
 
@@ -180,7 +188,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                                     b2.OwnsOne("SmartFridgeApp.Domain.Shared.AmountValue", "AmountValue", b3 =>
                                         {
-                                            b3.Property<Guid>("FridgeItemId");
+                                            b3.Property<long>("FridgeItemId")
+                                                .ValueGeneratedOnAdd()
+                                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                                             b3.Property<string>("Unit")
                                                 .IsRequired()

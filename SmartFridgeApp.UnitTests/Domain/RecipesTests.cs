@@ -24,7 +24,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             List<FoodProduct> list = new List<FoodProduct>();
             
             Assert.Throws(typeof(DomainException),
-                () => recipe = new Recipe("recipe", "desc", 2, 25, "category", list));
+                () => recipe = new Recipe("recipe", "desc", "category", list));
         }
 
         [Test]

@@ -5,10 +5,10 @@ namespace SmartFridgeApp.API.Users.RemoveFridgeUser
 {
     public class RemoveFridgeUserCommand : IRequest
     {
-        public Guid FridgeId { get; }
-        public Guid UserId { get; }
+        public int FridgeId { get; }
+        public int UserId { get; }
 
-        public RemoveFridgeUserCommand(Guid fridgeId, Guid userId)
+        public RemoveFridgeUserCommand(int fridgeId, int userId)
         {
             FridgeId = fridgeId;
             UserId = userId;

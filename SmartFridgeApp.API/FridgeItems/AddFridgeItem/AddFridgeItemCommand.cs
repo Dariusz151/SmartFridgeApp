@@ -5,11 +5,11 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
 {
     public class AddFridgeItemCommand : IRequest
     {
-        public Guid FridgeId { get; }
+        public int FridgeId { get; }
         public AddFridgeItemDto FridgeItemDto { get; }
-        public Guid UserId { get; }
+        public int UserId { get; }
 
-        public AddFridgeItemCommand(Guid fridgeId, AddFridgeItemDto fridgeItemDto, Guid userId)
+        public AddFridgeItemCommand(int fridgeId, AddFridgeItemDto fridgeItemDto, int userId)
         {
             FridgeItemDto = fridgeItemDto;
             UserId = userId;

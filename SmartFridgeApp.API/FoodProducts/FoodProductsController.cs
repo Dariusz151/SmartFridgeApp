@@ -74,9 +74,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
-
-
-            //await _mediator.Send(new AddFoodProductCommand(request.Name, (Category)request.Category));
+            await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
 
             return Ok();
         }
