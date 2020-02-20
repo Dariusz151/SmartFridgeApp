@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
@@ -33,25 +31,23 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType(typeof(List<FoodProductDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllFoodProductsAsync()
         {
-            var foodProducts = await _mediator.Send(new GetFoodProductsQuery());
+            var foodProducts = await _mediator.Send(new GetCategoriesQuery());
 
             return Ok(foodProducts);
         }
 
-        ///// <summary>
-        ///// Get all available categories for foodProducts.
-        ///// </summary>
-        //[Route("/api/foodProducts/categories")]
-        //[HttpGet]
-        //[ProducesResponseType(typeof(Dictionary<int, string>), (int)HttpStatusCode.OK)]
-        //public IActionResult GetAllCategoriesAsync()
-        //{
-        //    var categories = Enum.GetValues(typeof(Category))
-        //        .Cast<Category>()
-        //        .ToDictionary(t => (int)t, t => t.ToString());
+        /// <summary>
+        /// Get all available categories for foodProducts.
+        /// </summary>
+        [Route("/api/foodProducts/categories")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllCategoriesAsync()
+        {
+            var categories = await _mediator.Send(new GetCategoriesQuery());
 
-        //    return Ok(categories);
-        //}
+            return Ok(categories);
+        }
 
         /// <summary>
         /// Create new food product category.

@@ -8,16 +8,16 @@ using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
 {
-    public class GetFoodProductsQueryHandler : IRequestHandler<GetFoodProductsQuery, IEnumerable<FoodProductDto>>
+    public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, IEnumerable<FoodProductDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetFoodProductsQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetCategoriesQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<FoodProductDto>> Handle(GetFoodProductsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FoodProductDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +

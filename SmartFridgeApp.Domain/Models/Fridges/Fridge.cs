@@ -11,18 +11,13 @@ namespace SmartFridgeApp.Domain.Models.Fridges
     public class Fridge : Entity, IAggregateRoot
     {
         public int Id { get; private set; }
-
         public string Name { get; private set; }
-
         public string Address { get; private set; }
-
         public string Desc { get; private set; }
-
         private List<User> _users;
 
         private Fridge()
         {
-
         }
 
         public Fridge(string name, string address, string desc)
@@ -64,14 +59,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Can't remove user that doesn't exist.");
             }
         }
-
-        //public List<FridgeItemId> GetFridgeItems(Guid userId)
-        //{
-        //    var user = _users.Single(u => u.Id == userId);
-
-        //    return user.GetFridgeItemIds();
-        //}
-
+        
         public List<int> GetFridgeUsers()
         {
             var userIds = _users.Select(x => x.Id).ToList();
@@ -91,26 +79,5 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
             this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
-
-        //public void AddFridgeItem(FridgeItem item)
-        //{
-        //    // check if item is valid. domain exception if not
-
-        //    _fridgeItems.Add(item);
-
-        //    this.AddDomainEvent(new FridgeItemAddedEvent(item));
-        //}
-
-        //public void ConsumeFridgeItem(Guid fridgeItemId, AmountValue amountValue)
-        //{
-        //    _fridgeItems.Single(i => i.Id == fridgeItemId).ConsumeFridgeItem(amountValue);
-        //}
-
-        //public void EditFridgeDetails(string name, string desc, string address)
-        //{
-        //    Name = name;
-        //    Desc = desc;
-        //    Address = address;
-        //}
     }
 }

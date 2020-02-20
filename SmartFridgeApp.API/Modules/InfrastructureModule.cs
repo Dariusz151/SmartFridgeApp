@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Autofac;
-using MediatR;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using Autofac;
 using SmartFridgeApp.API.Recipes;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.FoodProducts;
@@ -58,29 +51,6 @@ namespace SmartFridgeApp.API.Modules
             builder.RegisterType<DomainEventsDispatcher>()
                 .As<IDomainEventsDispatcher>()
                 .InstancePerLifetimeScope();
-
-            //builder.RegisterAssemblyTypes(typeof(PaymentCreatedNotification).GetTypeInfo().Assembly)
-            //    .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
-
-            //builder.RegisterGenericDecorator(
-            //    typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
-            //    typeof(INotificationHandler<>));
-
-            //builder.RegisterGenericDecorator(
-            //    typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
-            //    typeof(IRequestHandler<,>));
-
-            //builder.RegisterType<CommandsDispatcher>()
-            //    .As<ICommandsDispatcher>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<CommandsScheduler>()
-            //    .As<ICommandsScheduler>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<StronglyTypedIdValueConverterSelector>()
-            //    .As<IValueConverterSelector>()
-            //    .InstancePerLifetimeScope();
         }
     }
 }

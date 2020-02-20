@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SmartFridgeApp.Domain.Models.Fridges
 {
@@ -8,6 +7,5 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         Task<Fridge> GetByIdAsync(int id);
         Task AddAsync(Fridge fridge);
         Task DeleteAsync(int fridgeId);
-        //Task<List<Fridge>> GetAllAsync();
     }
 }

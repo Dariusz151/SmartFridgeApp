@@ -70,10 +70,5 @@ namespace SmartFridgeApp.Domain.Models.Users
             var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
             return fridgeItem;
         }
-
-        //public List<FridgeItemId> GetFridgeItemIds()
-        //{
-        //    return this._fridgeItems.Select(x => x.Id).ToList();
-        //}
     }
 }

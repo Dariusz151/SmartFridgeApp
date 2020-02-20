@@ -3,9 +3,9 @@ using MediatR;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
 {
-    public class GetFoodProductsQuery : IRequest<IEnumerable<FoodProductDto>>
+    public class GetCategoriesQuery : IRequest<IEnumerable<FoodProductDto>>
     {
-        public GetFoodProductsQuery()
+        public GetCategoriesQuery()
         {
             
         }

@@ -25,8 +25,7 @@ namespace SmartFridgeApp.API.Recipes.UpdateRecipe
 
             var recipe = await _recipeRepository.GetRecipeByIdAsync(command.RecipeId);
 
-            recipe.UpdateRecipe(command.Name, command.Description, command.DifficultyLevel, command.MinutesRequired,
-                command.Category);
+            recipe.UpdateRecipe(command.Name, command.Description, command.Category);
             
             await _unitOfWork.CommitAsync(cancellationToken);
 

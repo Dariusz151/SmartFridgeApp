@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.Models.Fridges;
 
@@ -24,12 +22,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
         {
             return await _context.Fridges.SingleAsync(x => x.Id == id);
         }
-
-        //public async Task<List<Fridge>> GetAllAsync()
-        //{
-        //    return await _context.Fridges.ToListAsync();
-        //}
-
+        
         public async Task DeleteAsync(int fridgeId)
         {
             var fridge = await _context.Fridges.SingleOrDefaultAsync(f => f.Id == fridgeId);

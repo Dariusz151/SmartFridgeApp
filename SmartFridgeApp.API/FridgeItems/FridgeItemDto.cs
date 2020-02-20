@@ -1,5 +1,4 @@
 ﻿using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.API.FridgeItems
