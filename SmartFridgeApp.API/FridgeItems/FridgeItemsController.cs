@@ -26,8 +26,8 @@ namespace SmartFridgeApp.API.FridgeItems
         [HttpGet]
         [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFridgeItemsByUserAsync(
-            [FromRoute]Guid fridgeId, 
-            [FromRoute]Guid userId)
+            [FromRoute]int fridgeId, 
+            [FromRoute]int userId)
         {
             var fridgeItems = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
 
