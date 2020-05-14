@@ -5,6 +5,7 @@ namespace SmartFridgeApp.Domain.Shared
 {
     public class AmountValue
     {
+        //TODO: If in database is incorrect Unit value -> crash (500 Internal server error)
         public float Value { get; private set; }
         public Unit Unit { get; private set; }
 

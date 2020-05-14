@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
 using SmartFridgeApp.API.FoodProducts.Categories.CreateCategory;
+using SmartFridgeApp.API.FoodProducts.Categories.GetCategories;
 using SmartFridgeApp.API.FoodProducts.DeleteFoodProduct;
 using SmartFridgeApp.API.FoodProducts.GetFoodProducts;
 using SmartFridgeApp.API.FoodProducts.UpdateFoodProduct;
@@ -24,19 +25,6 @@ namespace SmartFridgeApp.API.FoodProducts
         }
 
         /// <summary>
-        /// Get all available foodProducts.
-        /// </summary>
-        [Route("")]
-        [HttpGet]
-        [ProducesResponseType(typeof(List<FoodProductDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAllFoodProductsAsync()
-        {
-            var foodProducts = await _mediator.Send(new GetCategoriesQuery());
-
-            return Ok(foodProducts);
-        }
-
-        /// <summary>
         /// Get all available categories for foodProducts.
         /// </summary>
         [Route("/api/foodProducts/categories")]
@@ -48,6 +36,21 @@ namespace SmartFridgeApp.API.FoodProducts
 
             return Ok(categories);
         }
+
+        /// <summary>
+        /// Get all available foodProducts.
+        /// </summary>
+        [Route("")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<FoodProductDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllFoodProductsAsync()
+        {
+            var foodProducts = await _mediator.Send(new GetFoodProductsQuery());
+
+            return Ok(foodProducts);
+        }
+
+       
 
         /// <summary>
         /// Create new food product category.

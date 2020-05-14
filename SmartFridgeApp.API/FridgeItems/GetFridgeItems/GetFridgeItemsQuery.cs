@@ -4,12 +4,12 @@ using MediatR;
             
 namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
 {
-    public class GetFridgeItemsQuery :IRequest<IEnumerable<FridgeItemDto>>
+    public class GetFridgeItemsQuery : IRequest<IEnumerable<FridgeItemDto>>
     {
-        public Guid UserId { get; }
-        public Guid FridgeId { get; }
+        public int UserId { get; }
+        public int FridgeId { get; }
 
-        public GetFridgeItemsQuery(Guid userId, Guid fridgeId)
+        public GetFridgeItemsQuery(int userId, int fridgeId)
         {
             UserId = userId;
             FridgeId = fridgeId;

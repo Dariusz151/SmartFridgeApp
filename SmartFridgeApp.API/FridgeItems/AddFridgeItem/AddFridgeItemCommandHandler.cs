@@ -32,7 +32,7 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
             
             var fridgeItem = new FridgeItem(
                 foodProduct,
-                command.FridgeItemDto.Description,
+                "",
                 new AmountValue(
                     command.FridgeItemDto.Value,
                     command.FridgeItemDto.Unit)

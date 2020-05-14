@@ -23,7 +23,7 @@ namespace SmartFridgeApp.API.FoodProducts.Categories.GetCategories
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                "[CategoryId] as [CategoryId], " +
-                               "[Name] as [Name]" +
+                               "[Name] as [Name] " +
                                "FROM " +
                                "[app].[Categories]";
 
