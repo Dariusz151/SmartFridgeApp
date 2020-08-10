@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getFridges } from "../services/smartfridgeappService";
 import FridgesDashboard from "./FridgesDashboard.jsx";
+import FridgesPanel from "./FridgesPanel.jsx";
 import Table from "./Table.jsx";
 
 class MainContent extends Component {
@@ -15,6 +16,9 @@ class MainContent extends Component {
           <div className="main-panel">
             <Table></Table>
           </div>
+        </div>
+        <div class-name="fridges-panel">
+          <FridgesPanel></FridgesPanel>
         </div>
         <div className="bottom-panel">
           <FridgesDashboard></FridgesDashboard>

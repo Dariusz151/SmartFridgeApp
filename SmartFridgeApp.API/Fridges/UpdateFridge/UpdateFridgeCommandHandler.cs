@@ -23,6 +23,7 @@ namespace SmartFridgeApp.API.Fridges.UpdateFridge
             var fridge = await _fridgeRepository.GetByIdAsync(request.FridgeId);
 
             fridge.ChangeFridgeName(request.Name);
+            fridge.ChangeFridgeDesc(request.Desc);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

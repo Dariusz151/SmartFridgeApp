@@ -15,11 +15,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Quartz;
+using Quartz.Impl;
+using SmartFridgeApp.API.InternalCommands;
 using SmartFridgeApp.API.Modules;
+using SmartFridgeApp.API.Outbox;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API
@@ -27,6 +32,9 @@ namespace SmartFridgeApp.API
     public class Startup
     {
         private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString";
+
+        private ISchedulerFactory _schedulerFactory;
+        private IScheduler _scheduler;
 
         public Startup(IHostingEnvironment env)
         {
@@ -74,7 +82,8 @@ namespace SmartFridgeApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IApplicationLifetime lifetime, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -91,6 +100,8 @@ namespace SmartFridgeApp.API
             app.UseHttpsRedirection();
             app.UseMvc();
 
+            this.StartQuartz(serviceProvider);
+
             ConfigureSwagger(app);
         }
 
@@ -100,12 +111,60 @@ namespace SmartFridgeApp.API
 
             container.Populate(services);
             container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
+            container.RegisterModule(new MediatorModule());
 
             var buildContainer = container.Build();
 
             //ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
 
             return new AutofacServiceProvider(buildContainer);
+        }
+
+        public void StartQuartz(IServiceProvider serviceProvider)
+        {
+            this._schedulerFactory = new StdSchedulerFactory();
+            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+
+            var container = new ContainerBuilder();
+
+            container.RegisterModule(new OutboxModule());
+            container.RegisterModule(new MediatorModule());
+            container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
+
+            //container.Register(c =>
+            //{
+            //    var dbContextOptionsBuilder = new DbContextOptionsBuilder<SmartFridgeAppContext>();
+            //    dbContextOptionsBuilder.UseSqlServer(this._configuration[OrdersConnectionString]);
+
+            //    dbContextOptionsBuilder
+            //        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+
+            //    return new OrdersContext(dbContextOptionsBuilder.Options);
+            //}).AsSelf().InstancePerLifetimeScope();
+
+            _scheduler.JobFactory = new JobFactory(container.Build());
+
+            _scheduler.Start().GetAwaiter().GetResult();
+
+            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
+            var trigger =
+                TriggerBuilder
+                    .Create()
+                    .StartNow()
+                    .WithCronSchedule("20 * * * * ?")
+                    .Build();
+
+            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
+
+            var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
+            var triggerCommandsProcessing =
+                TriggerBuilder
+                    .Create()
+                    .StartNow()
+                    .WithCronSchedule("20 * * * * ?")
+                    //.WithCronSchedule("0 0/1 * * * ?")
+                    .Build();
+            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
         }
 
         private static void ConfigureSwagger(IApplicationBuilder app)

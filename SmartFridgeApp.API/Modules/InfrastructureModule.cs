@@ -1,4 +1,8 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
+using MediatR;
+using SmartFridgeApp.API.Fridges.IntegrationHandlers;
+using SmartFridgeApp.API.InternalCommands;
 using SmartFridgeApp.API.Recipes;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.FoodProducts;
@@ -8,7 +12,9 @@ using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Infrastructure;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
+using SmartFridgeApp.Infrastructure.InternalCommands;
 using SmartFridgeApp.Infrastructure.Recipes;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.Modules
 {
@@ -50,6 +56,25 @@ namespace SmartFridgeApp.API.Modules
 
             builder.RegisterType<DomainEventsDispatcher>()
                 .As<IDomainEventsDispatcher>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(FridgeAddedNotification).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
+
+            builder.RegisterGenericDecorator(
+                typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
+                typeof(INotificationHandler<>));
+
+            builder.RegisterGenericDecorator(
+                typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
+                typeof(IRequestHandler<,>));
+
+            builder.RegisterType<CommandsDispatcher>()
+                .As<ICommandsDispatcher>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CommandsScheduler>()
+                .As<ICommandsScheduler>()
                 .InstancePerLifetimeScope();
         }
     }

@@ -55,7 +55,7 @@ namespace SmartFridgeApp.API.Fridges
         [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddFridgeAsync([FromBody]UpdateFridgeRequest request)
         {
-            await _mediator.Send(new UpdateFridgeCommand(request.FridgeId, request.Name));
+            await _mediator.Send(new UpdateFridgeCommand(request.FridgeId, request.Name, request.Desc));
 
             return Ok();
         }

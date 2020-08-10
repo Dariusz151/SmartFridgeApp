@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    partial class SmartFridgeAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200810205528_AddedInternalCommands")]
+    partial class AddedInternalCommands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,7 +109,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Infrastructure.InternalCommands.InternalCommand", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Data");
 
@@ -117,24 +120,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InternalCommands","app");
-                });
-
-            modelBuilder.Entity("SmartFridgeApp.Infrastructure.Outbox.OutboxMessage", b =>
-                {
-                    b.Property<Guid>("Id");
-
-                    b.Property<string>("Data");
-
-                    b.Property<DateTime>("OccurredOn");
-
-                    b.Property<DateTime?>("ProcessedDate");
-
-                    b.Property<string>("Type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OutboxMessages","app");
+                    b.ToTable("InternalCommands");
                 });
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", b =>

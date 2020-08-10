@@ -79,5 +79,14 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
             this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
+
+        public void ChangeFridgeDesc(string desc)
+        {
+            if (string.IsNullOrEmpty(desc))
+                throw new DomainException("Fridge should have a description.");
+            Desc = desc;
+
+            this.AddDomainEvent(new FridgeUpdatedEvent(this));
+        }
     }
 }

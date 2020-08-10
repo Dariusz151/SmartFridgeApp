@@ -27,7 +27,7 @@ namespace SmartFridgeApp.API.Fridges.AddFridge
 
             await _unitOfWork.CommitAsync(cancellationToken);
             
-            return new FridgeDto { Id = fridge.Id };
+            return new FridgeDto { Id = fridge.Id, Name = fridge.Name };
         }
     }
 }

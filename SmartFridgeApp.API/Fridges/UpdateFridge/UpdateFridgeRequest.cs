@@ -6,5 +6,6 @@ namespace SmartFridgeApp.API.Fridges.UpdateFridge
     {
         public int FridgeId { get; set; }
         public string Name { get; set; }
+        public string Desc { get; set; }
     }
 }

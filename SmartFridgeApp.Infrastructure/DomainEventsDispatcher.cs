@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Core;
 using MediatR;
+using Newtonsoft.Json;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Infrastructure.Outbox;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -31,7 +35,23 @@ namespace SmartFridgeApp.Infrastructure
             var domainEvents = domainEntities
                 .SelectMany(x => x.Entity.DomainEvents)
                 .ToList();
-            
+
+            var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
+            foreach (var domainEvent in domainEvents)
+            {
+                Type domainEvenNotificationType = typeof(IDomainEventNotification<>);
+                var domainNotificationWithGenericType = domainEvenNotificationType.MakeGenericType(domainEvent.GetType());
+                var domainNotification = _lifetimeScope.ResolveOptional(domainNotificationWithGenericType, new List<Parameter>
+                {
+                    new NamedParameter("domainEvent", domainEvent)
+                });
+
+                if (domainNotification != null)
+                {
+                    domainEventNotifications.Add(domainNotification as SeedWork.IDomainEventNotification<IDomainEvent>);
+                }
+            }
+
             domainEntities
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
 
@@ -42,6 +62,17 @@ namespace SmartFridgeApp.Infrastructure
                 });
 
             await Task.WhenAll(tasks);
+
+            foreach (var domainEventNotification in domainEventNotifications)
+            {
+                string type = domainEventNotification.GetType().FullName;
+                var data = JsonConvert.SerializeObject(domainEventNotification);
+                OutboxMessage outboxMessage = new OutboxMessage(
+                    domainEventNotification.DomainEvent.OccurredOn,
+                    type,
+                    data);
+                this._context.OutboxMessages.Add(outboxMessage);
+            }
         }
     }
 }
