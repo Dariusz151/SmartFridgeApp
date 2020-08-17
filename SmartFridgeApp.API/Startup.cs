@@ -131,16 +131,16 @@ namespace SmartFridgeApp.API
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
 
-            //container.Register(c =>
-            //{
-            //    var dbContextOptionsBuilder = new DbContextOptionsBuilder<SmartFridgeAppContext>();
-            //    dbContextOptionsBuilder.UseSqlServer(this._configuration[OrdersConnectionString]);
+            container.Register(c =>
+            {
+                var dbContextOptionsBuilder = new DbContextOptionsBuilder<SmartFridgeAppContext>();
+                dbContextOptionsBuilder.UseSqlServer(this.Configuration[SmartFridgeAppConnectionString]);
 
-            //    dbContextOptionsBuilder
-            //        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+                //dbContextOptionsBuilder
+                //    .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
 
-            //    return new OrdersContext(dbContextOptionsBuilder.Options);
-            //}).AsSelf().InstancePerLifetimeScope();
+                return new SmartFridgeAppContext(dbContextOptionsBuilder.Options);
+            }).AsSelf().InstancePerLifetimeScope();
 
             _scheduler.JobFactory = new JobFactory(container.Build());
 

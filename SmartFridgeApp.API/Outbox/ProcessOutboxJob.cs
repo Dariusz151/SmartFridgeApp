@@ -45,6 +45,8 @@ namespace SmartFridgeApp.API.Outbox
                 Type type = Assembly.GetAssembly(typeof(FridgeAddedNotification)).GetType(message.Type);
                 var request = JsonConvert.DeserializeObject(message.Data, type);
 
+                Console.WriteLine(request);
+
                 await this._mediator.Publish((INotification) request);
 
                 await connection.ExecuteAsync(sqlUpdateProcessedDate, new

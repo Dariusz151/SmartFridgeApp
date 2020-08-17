@@ -23,16 +23,25 @@ namespace SmartFridgeApp.API.InternalCommands
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
 
-            const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [EnqueueDate] , [Type], [Data]) VALUES " +
+            const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [ProcessedDate] , [Type], [Data]) VALUES " +
                                      "(@Id, @EnqueueDate, @Type, @Data)";
 
-            await connection.ExecuteAsync(sqlInsert, new
+            try
             {
-                Id = Guid.NewGuid(),
-                EnqueueDate = DateTime.UtcNow,
-                Type = command.GetType().FullName,
-                Data = JsonConvert.SerializeObject(command)
-            });
+                await connection.ExecuteAsync(sqlInsert, new
+                {
+                    Id = Guid.NewGuid(),
+                    EnqueueDate = DateTime.UtcNow,
+                    Type = command.GetType().FullName,
+                    Data = JsonConvert.SerializeObject(command)
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            
         }
     }
 }
