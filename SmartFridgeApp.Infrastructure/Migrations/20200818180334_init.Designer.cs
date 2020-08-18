@@ -10,8 +10,8 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20200220185712_Init1")]
-    partial class Init1
+    [Migration("20200818180334_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,9 +59,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.Fridges.Fridge", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address")
                         .HasColumnName("Address")
@@ -70,6 +69,10 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.Property<string>("Desc")
                         .HasColumnName("Desc")
                         .HasMaxLength(250);
+
+                    b.Property<bool>("IsWelcomed")
+                        .HasColumnName("IsWelcomed")
+                        .HasMaxLength(10);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -107,6 +110,40 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.ToTable("Recipes","app");
                 });
 
+            modelBuilder.Entity("SmartFridgeApp.Infrastructure.InternalCommands.InternalCommand", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("Data");
+
+                    b.Property<DateTime>("EnqueueDate");
+
+                    b.Property<DateTime?>("ProcessedDate");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InternalCommands","app");
+                });
+
+            modelBuilder.Entity("SmartFridgeApp.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("Data");
+
+                    b.Property<DateTime>("OccurredOn");
+
+                    b.Property<DateTime?>("ProcessedDate");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OutboxMessages","app");
+                });
+
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", b =>
                 {
                     b.HasOne("SmartFridgeApp.Domain.Models.FoodProducts.Category", "Category")
@@ -127,7 +164,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                 .HasColumnName("Email")
                                 .HasMaxLength(250);
 
-                            b1.Property<int>("FridgeId");
+                            b1.Property<Guid>("FridgeId");
 
                             b1.Property<string>("Name")
                                 .IsRequired()

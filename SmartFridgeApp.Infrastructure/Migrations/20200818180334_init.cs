@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
-    public partial class Init1 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,15 +30,47 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Address = table.Column<string>(maxLength: 100, nullable: true),
-                    Desc = table.Column<string>(maxLength: 250, nullable: true)
+                    Desc = table.Column<string>(maxLength: 250, nullable: true),
+                    IsWelcomed = table.Column<bool>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fridges", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InternalCommands",
+                schema: "app",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true),
+                    EnqueueDate = table.Column<DateTime>(nullable: false),
+                    ProcessedDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InternalCommands", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                schema: "app",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    OccurredOn = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true),
+                    ProcessedDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,7 +121,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     Email = table.Column<string>(maxLength: 250, nullable: false),
-                    FridgeId = table.Column<int>(nullable: false),
+                    FridgeId = table.Column<Guid>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -168,6 +200,14 @@ namespace SmartFridgeApp.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "FridgeItems",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "InternalCommands",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "OutboxMessages",
                 schema: "app");
 
             migrationBuilder.DropTable(

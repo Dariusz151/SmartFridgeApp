@@ -19,10 +19,10 @@ namespace SmartFridgeApp.API.InternalCommands
 
         public CommandsDispatcher(
             IMediator mediator,
-            SmartFridgeAppContext ordersContext)
+            SmartFridgeAppContext context)
         {
             this._mediator = mediator;
-            this._context = ordersContext;
+            this._context = context;
         }
 
         public async Task DispatchCommandAsync(Guid id)

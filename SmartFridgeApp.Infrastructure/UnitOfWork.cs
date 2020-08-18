@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.SeedWork;
 
@@ -19,6 +20,7 @@ namespace SmartFridgeApp.Infrastructure
         {
             await this._domainEventsDispatcher.DispatchEventsAsync();
             return await this._smartFridgeAppContext.SaveChangesAsync(cancellationToken);
+            
         }
     }
 }

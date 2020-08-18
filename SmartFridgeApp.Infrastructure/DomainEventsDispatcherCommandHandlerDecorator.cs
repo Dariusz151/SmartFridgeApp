@@ -23,9 +23,14 @@ namespace SmartFridgeApp.Infrastructure
 
         public async Task<Unit> Handle(T command, CancellationToken cancellationToken)
         {
+            Console.WriteLine("In decorator: before handle.");
             await this._decorated.Handle(command, cancellationToken);
 
             await this._unitOfWork.CommitAsync(cancellationToken);
+
+            Console.WriteLine("In decorator: after unitOfWork.Commit.");
+
+
 
             return Unit.Value;
         }

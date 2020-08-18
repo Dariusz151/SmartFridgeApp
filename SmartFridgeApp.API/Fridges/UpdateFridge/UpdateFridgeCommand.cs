@@ -5,11 +5,11 @@ namespace SmartFridgeApp.API.Fridges.UpdateFridge
 {
     public class UpdateFridgeCommand : IRequest
     {
-        public int FridgeId { get; set; }
+        public Guid FridgeId { get; set; }
         public string Name { get; set; }
         public string Desc { get; set; }
 
-        public UpdateFridgeCommand(int fridgeId, string name, string desc)
+        public UpdateFridgeCommand(Guid fridgeId, string name, string desc)
         {
             FridgeId = fridgeId;
             Name = name;

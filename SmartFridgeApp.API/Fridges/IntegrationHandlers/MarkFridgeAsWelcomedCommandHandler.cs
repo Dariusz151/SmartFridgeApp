@@ -19,6 +19,7 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
 
         public async Task<Unit> Handle(MarkFridgeAsWelcomedCommand command, CancellationToken cancellationToken)
         {
+            Console.WriteLine("In Handle MarkFridgeAsWelcomedCommandHandler.");
             var fridge = await this._fridgeRepository.GetByIdAsync(command.FridgeId);
 
             fridge.MarkAsWelcomed();

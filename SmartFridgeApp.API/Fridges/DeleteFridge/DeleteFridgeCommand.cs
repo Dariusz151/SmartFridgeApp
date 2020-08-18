@@ -1,12 +1,13 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 
 namespace SmartFridgeApp.API.Fridges.DeleteFridge
 {
     public class DeleteFridgeCommand : IRequest
     {
-        public int FridgeId { get; }
+        public Guid FridgeId { get; }
 
-        public DeleteFridgeCommand(int fridgeId)
+        public DeleteFridgeCommand(Guid fridgeId)
         {
             FridgeId = fridgeId;
         }

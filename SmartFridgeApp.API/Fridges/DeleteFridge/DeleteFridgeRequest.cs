@@ -1,7 +1,9 @@
-﻿namespace SmartFridgeApp.API.Fridges.DeleteFridge
+﻿using System;
+
+namespace SmartFridgeApp.API.Fridges.DeleteFridge
 {
     public class DeleteFridgeRequest
     {
-        public int FridgeId { get; set; }
+        public Guid FridgeId { get; set; }
     }
 }

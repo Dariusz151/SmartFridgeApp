@@ -40,8 +40,6 @@ namespace SmartFridgeApp.API.InternalCommands
             {
                 Console.WriteLine(e);
             }
-
-            Console.WriteLine("Siem");
         }
     }
 }

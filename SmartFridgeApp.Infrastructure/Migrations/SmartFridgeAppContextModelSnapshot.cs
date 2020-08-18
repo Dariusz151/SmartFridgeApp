@@ -57,9 +57,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.Fridges.Fridge", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address")
                         .HasColumnName("Address")
@@ -68,6 +67,10 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.Property<string>("Desc")
                         .HasColumnName("Desc")
                         .HasMaxLength(250);
+
+                    b.Property<bool>("IsWelcomed")
+                        .HasColumnName("IsWelcomed")
+                        .HasMaxLength(10);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -159,7 +162,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                 .HasColumnName("Email")
                                 .HasMaxLength(250);
 
-                            b1.Property<int>("FridgeId");
+                            b1.Property<Guid>("FridgeId");
 
                             b1.Property<string>("Name")
                                 .IsRequired()

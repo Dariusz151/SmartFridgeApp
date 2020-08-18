@@ -41,7 +41,7 @@ namespace SmartFridgeApp.API.Users
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFridgeUserAsync(
-            [FromRoute]int fridgeId,
+            [FromRoute]Guid fridgeId,
             [FromBody]AddFridgeUserRequest request)
         {
             await _mediator.Send(new AddFridgeUserCommand(fridgeId, request.User));
@@ -57,7 +57,7 @@ namespace SmartFridgeApp.API.Users
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateFridgeUserAsync(
-            [FromRoute]int fridgeId,
+            [FromRoute]Guid fridgeId,
             [FromBody]UpdateFridgeUserRequest request)
         {
             await _mediator.Send(new UpdateFridgeUserCommand(request.UserId, request.Name, fridgeId));
@@ -72,7 +72,7 @@ namespace SmartFridgeApp.API.Users
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> RemoveFridgeUserAsync(
-            [FromRoute]int fridgeId,
+            [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeUserRequest request)
         {
             await _mediator.Send(new RemoveFridgeUserCommand(fridgeId, request.UserId));

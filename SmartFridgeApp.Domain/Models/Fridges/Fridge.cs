@@ -10,7 +10,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 {
     public class Fridge : Entity, IAggregateRoot
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Address { get; private set; }
         public string Desc { get; private set; }
@@ -28,6 +28,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             Address = address;
             Name = name;
             Desc = desc;
+            Id = Guid.NewGuid();
             IsWelcomed = false;
 
             _users = new List<User>();
