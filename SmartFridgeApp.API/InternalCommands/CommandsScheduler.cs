@@ -23,7 +23,7 @@ namespace SmartFridgeApp.API.InternalCommands
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
 
-            const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [ProcessedDate] , [Type], [Data]) VALUES " +
+            const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [EnqueueDate], [Type], [Data]) VALUES " +
                                      "(@Id, @EnqueueDate, @Type, @Data)";
 
             try
@@ -41,7 +41,7 @@ namespace SmartFridgeApp.API.InternalCommands
                 Console.WriteLine(e);
             }
 
-            
+            Console.WriteLine("Siem");
         }
     }
 }

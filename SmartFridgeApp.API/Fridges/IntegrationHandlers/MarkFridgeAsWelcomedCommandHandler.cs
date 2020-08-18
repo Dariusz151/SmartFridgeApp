@@ -21,7 +21,7 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
         {
             var fridge = await this._fridgeRepository.GetByIdAsync(command.FridgeId);
 
-            //customer.MarkAsWelcomedByEmail();
+            fridge.MarkAsWelcomed();
 
             Console.WriteLine("Mark fridge as welcomed.");
 

@@ -19,6 +19,8 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
         {
             // Send welcome e-mail message...
 
+
+
             await this._commandsScheduler.EnqueueAsync(new MarkFridgeAsWelcomedCommand(notification.FridgeId));
         }
     }

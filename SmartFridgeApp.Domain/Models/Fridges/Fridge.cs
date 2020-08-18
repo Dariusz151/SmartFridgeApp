@@ -14,6 +14,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         public string Name { get; private set; }
         public string Address { get; private set; }
         public string Desc { get; private set; }
+        public bool IsWelcomed { get; private set; }
         private List<User> _users;
 
         private Fridge()
@@ -27,10 +28,16 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             Address = address;
             Name = name;
             Desc = desc;
+            IsWelcomed = false;
 
             _users = new List<User>();
 
             AddDomainEvent(new FridgeCreatedEvent(this));
+        }
+
+        public void MarkAsWelcomed()
+        {
+            IsWelcomed = true;
         }
 
         public void AddUser(User user)

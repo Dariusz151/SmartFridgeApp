@@ -39,8 +39,8 @@ namespace SmartFridgeApp.Infrastructure
             var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
             foreach (var domainEvent in domainEvents)
             {
-                Type domainEvenNotificationType = typeof(IDomainEventNotification<>);
-                var domainNotificationWithGenericType = domainEvenNotificationType.MakeGenericType(domainEvent.GetType());
+                Type domainEventNotificationType = typeof(IDomainEventNotification<>);
+                var domainNotificationWithGenericType = domainEventNotificationType.MakeGenericType(domainEvent.GetType());
                 var domainNotification = _lifetimeScope.ResolveOptional(domainNotificationWithGenericType, new List<Parameter>
                 {
                     new NamedParameter("domainEvent", domainEvent)
@@ -52,16 +52,16 @@ namespace SmartFridgeApp.Infrastructure
                 }
             }
 
-            domainEntities
-                .ForEach(entity => entity.Entity.ClearDomainEvents());
+            //domainEntities
+            //    .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-            var tasks = domainEvents
-                .Select(async (domainEvent) =>
-                {
-                    await _mediator.Publish(domainEvent);
-                });
+            //var tasks = domainEvents
+            //    .Select(async (domainEvent) =>
+            //    {
+            //        await _mediator.Publish(domainEvent);
+            //    });
 
-            await Task.WhenAll(tasks);
+            //await Task.WhenAll(tasks);
 
             foreach (var domainEventNotification in domainEventNotifications)
             {

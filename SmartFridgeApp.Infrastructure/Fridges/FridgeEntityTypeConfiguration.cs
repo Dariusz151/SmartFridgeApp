@@ -23,6 +23,8 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 .HasMaxLength(100);
             builder.Property("Desc").HasColumnName("Desc")
                 .HasMaxLength(250);
+            builder.Property("IsWelcomed").HasColumnName("IsWelcomed")
+                .HasMaxLength(10);
 
             builder.OwnsMany<User>("_users", x =>
             {
