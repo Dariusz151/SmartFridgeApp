@@ -47,12 +47,13 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
         public void ConsumeFridgeItem(AmountValue amountValue)
         {
             if (IsConsumed)
-                throw new DomainException("This item is consumed! Cant consume again.");
+                throw new DomainException("Error in ConsumeFridgeItem", "This item is consumed! Cant consume again.");
 
             if (this.AmountValue.CompareTo(amountValue) <= 0)
             {
+                this.AmountValue.ResetAmount();
                 IsConsumed = true;
-                this.AddDomainEvent(new FridgeItemConsumedEvent(this));
+                //this.AddDomainEvent(new FridgeItemConsumedEvent(this));
             }
             else
             {
@@ -60,7 +61,7 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
                 this.AmountValue.DecreaseAmount(amountValue);
 
                 // TODO: This event should have amountValue?
-                this.AddDomainEvent(new FridgeItemAmountDecreasedEvent(this));
+                //this.AddDomainEvent(new FridgeItemAmountDecreasedEvent(this));
             }
         }
     }

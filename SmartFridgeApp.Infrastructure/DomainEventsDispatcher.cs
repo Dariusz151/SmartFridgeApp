@@ -52,8 +52,8 @@ namespace SmartFridgeApp.Infrastructure
                 }
             }
 
-            //domainEntities
-            //    .ForEach(entity => entity.Entity.ClearDomainEvents());
+            domainEntities
+                .ForEach(entity => entity.Entity.ClearDomainEvents());
 
             //var tasks = domainEvents
             //    .Select(async (domainEvent) =>

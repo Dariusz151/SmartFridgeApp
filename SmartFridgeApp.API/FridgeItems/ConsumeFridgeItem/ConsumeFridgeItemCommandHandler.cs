@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.Domain.Models.Fridges;
@@ -24,9 +25,9 @@ namespace SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem
             // TODO: Test if Consume FridgeItem works.
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
-
+            
             user.ConsumeFridgeItem(command.FridgeItemId, command.AmountValue);
-
+            
             await _unitOfWork.CommitAsync(cancellationToken);
 
             return Unit.Value;

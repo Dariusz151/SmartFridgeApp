@@ -6,9 +6,9 @@ namespace SmartFridgeApp.API.Users.GetFridgeUsers
 {
     internal class GetFridgeUsersQuery : IRequest<IEnumerable<FridgeUserDto>>
     {
-        public int FridgeId { get; }
+        public Guid FridgeId { get; }
 
-        public GetFridgeUsersQuery(int fridgeId)
+        public GetFridgeUsersQuery(Guid fridgeId)
         {
             FridgeId = fridgeId;
         }

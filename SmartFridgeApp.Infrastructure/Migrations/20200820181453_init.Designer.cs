@@ -10,7 +10,7 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20200818180334_init")]
+    [Migration("20200820181453_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,9 +155,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 {
                     b.OwnsMany("SmartFridgeApp.Domain.Models.Users.User", "_users", b1 =>
                         {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd();
 
                             b1.Property<string>("Email")
                                 .IsRequired()
@@ -206,7 +205,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                         .HasColumnName("Note")
                                         .HasMaxLength(1000);
 
-                                    b2.Property<int>("UserId");
+                                    b2.Property<Guid>("UserId");
 
                                     b2.HasKey("Id");
 

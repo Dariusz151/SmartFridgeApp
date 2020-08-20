@@ -7,9 +7,9 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
     {
         public Guid FridgeId { get; }
         public AddFridgeItemDto FridgeItemDto { get; }
-        public int UserId { get; }
+        public Guid UserId { get; }
 
-        public AddFridgeItemCommand(Guid fridgeId, AddFridgeItemDto fridgeItemDto, int userId)
+        public AddFridgeItemCommand(Guid fridgeId, AddFridgeItemDto fridgeItemDto, Guid userId)
         {
             FridgeItemDto = fridgeItemDto;
             UserId = userId;

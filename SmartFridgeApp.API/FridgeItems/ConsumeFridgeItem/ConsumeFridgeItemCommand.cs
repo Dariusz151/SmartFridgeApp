@@ -8,10 +8,10 @@ namespace SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem
     {
         public long FridgeItemId { get; set; }
         public Guid FridgeId { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public AmountValue AmountValue { get; set; }
 
-        public ConsumeFridgeItemCommand(long fridgeItemId, int userId, Guid fridgeId, AmountValue amountValue)
+        public ConsumeFridgeItemCommand(long fridgeItemId, Guid userId, Guid fridgeId, AmountValue amountValue)
         {
             FridgeItemId = fridgeItemId;
             UserId = userId;

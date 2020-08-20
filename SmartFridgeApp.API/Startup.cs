@@ -65,7 +65,11 @@ namespace SmartFridgeApp.API
                 });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc()
+                .AddJsonOptions(opt => opt.SerializerSettings.Converters.Add(
+                    new Newtonsoft.Json.Converters.StringEnumConverter()))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMediatR(Assembly.GetExecutingAssembly());
             
             this.AddSwagger(services);
@@ -151,7 +155,7 @@ namespace SmartFridgeApp.API
                 TriggerBuilder
                     .Create()
                     .StartNow()
-                    .WithCronSchedule("20 * * * * ?")
+                    .WithCronSchedule("0/15 * * * * ?")
                     .Build();
 
             _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
@@ -161,7 +165,7 @@ namespace SmartFridgeApp.API
                 TriggerBuilder
                     .Create()
                     .StartNow()
-                    .WithCronSchedule("20 * * * * ?")
+                    .WithCronSchedule("0/15 * * * * ?")
                     //.WithCronSchedule("0 0/1 * * * ?")
                     .Build();
             _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();

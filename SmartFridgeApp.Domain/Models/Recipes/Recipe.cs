@@ -41,7 +41,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             Type = type;
             FoodProducts = products;
 
-            this.AddDomainEvent(new RecipeAddedEvent(this));
+            //this.AddDomainEvent(new RecipeAddedEvent(this));
         }
 
         public void UpdateRecipe(string name, string desc, string type)
@@ -56,7 +56,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             if (!string.IsNullOrEmpty(type))
                 Type = type;
 
-            this.AddDomainEvent(new RecipeUpdatedEvent(this));
+            //this.AddDomainEvent(new RecipeUpdatedEvent(this));
         }
     }
 }

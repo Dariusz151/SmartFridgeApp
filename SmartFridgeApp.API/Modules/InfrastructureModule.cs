@@ -3,6 +3,7 @@ using Autofac;
 using MediatR;
 using SmartFridgeApp.API.Fridges.IntegrationHandlers;
 using SmartFridgeApp.API.InternalCommands;
+using SmartFridgeApp.API.Notifications;
 using SmartFridgeApp.API.Recipes;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.FoodProducts;
@@ -75,6 +76,10 @@ namespace SmartFridgeApp.API.Modules
 
             builder.RegisterType<CommandsScheduler>()
                 .As<ICommandsScheduler>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<EmailSender>()
+                .As<INotifier>()
                 .InstancePerLifetimeScope();
         }
     }

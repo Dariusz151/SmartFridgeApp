@@ -7,9 +7,9 @@ namespace SmartFridgeApp.API.FridgeItems.RemoveFridgeItem
     {
         public long FridgeItemId { get; set; }
         public Guid FridgeId { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public RemoveFridgeItemCommand(long fridgeItemId, int userId, Guid fridgeId)
+        public RemoveFridgeItemCommand(long fridgeItemId, Guid userId, Guid fridgeId)
         {
             FridgeItemId = fridgeItemId;
             UserId = userId;

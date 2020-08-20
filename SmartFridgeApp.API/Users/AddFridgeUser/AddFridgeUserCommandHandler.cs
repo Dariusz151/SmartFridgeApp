@@ -19,7 +19,7 @@ namespace SmartFridgeApp.API.Users.AddFridgeUser
         }
         
         public async Task<Unit> Handle(AddFridgeUserCommand request, CancellationToken cancellationToken)
-        {
+        { 
             var fridge = await _fridgeRepository.GetByIdAsync(request.FridgeId);
 
             var user = new User(request.User.Name, request.User.Email);

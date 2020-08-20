@@ -1,5 +1,6 @@
 ﻿using SmartFridgeApp.Domain.SeedWork;
 using System;
+using Newtonsoft.Json;
 
 namespace SmartFridgeApp.Domain.Shared
 {
@@ -14,12 +15,21 @@ namespace SmartFridgeApp.Domain.Shared
 
         }
 
+        //[JsonConstructor]
+        //public AmountValue(float value, Unit unit)
+        //{
+        //    this.Value = value;
+        //    this.Unit = unit;
+        //}
+
+
         public AmountValue(float value)
             :this(value, Unit.NotAssigned)
         {
 
         }
 
+        [JsonConstructor]
         public AmountValue(float value, Unit unit)
         {
             if (value <= 0)
@@ -33,6 +43,11 @@ namespace SmartFridgeApp.Domain.Shared
         public void DecreaseAmount(AmountValue amountValue)
         {
             this.Value = this.Value - amountValue.Value;
+        }
+
+        public void ResetAmount()
+        {
+            this.Value = 0;
         }
 
         public int CompareTo(AmountValue obj)

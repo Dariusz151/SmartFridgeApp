@@ -28,7 +28,7 @@ namespace SmartFridgeApp.API.Users
         [Route("{fridgeId}")]
         [HttpGet]
         [ProducesResponseType(typeof(List<FridgeUserDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFridgeUsersAsync(int fridgeId)
+        public async Task<IActionResult> GetFridgeUsersAsync(Guid fridgeId)
         {
             var users = await _mediator.Send(new GetFridgeUsersQuery(fridgeId));
             return Ok(users);

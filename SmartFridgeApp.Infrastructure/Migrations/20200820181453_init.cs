@@ -117,8 +117,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     Email = table.Column<string>(maxLength: 250, nullable: false),
                     FridgeId = table.Column<Guid>(nullable: false),
@@ -150,7 +149,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     ExpirationDate = table.Column<DateTime>(nullable: false),
                     EnteredAt = table.Column<DateTime>(nullable: false),
                     IsConsumed = table.Column<bool>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

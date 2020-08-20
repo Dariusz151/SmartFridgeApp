@@ -8,6 +8,7 @@ using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
 using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
+using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.API.FridgeItems
 {
@@ -74,11 +75,15 @@ namespace SmartFridgeApp.API.FridgeItems
             [FromRoute]Guid fridgeId,
             [FromBody]ConsumeFridgeItemRequest request)
         {
-            // TODO: Consuming doesnt work.
-
-
-            await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
-
+            try
+            {
+                await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
+            }
+            catch (DomainException domainException)
+            {
+                return BadRequest($"Can't consume fridge item. Error message: {domainException.Details}");
+            }
+            
             return NoContent();
         }
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.Domain.Models.Fridges;
@@ -19,13 +16,10 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
 
         public async Task<Unit> Handle(MarkFridgeAsWelcomedCommand command, CancellationToken cancellationToken)
         {
-            Console.WriteLine("In Handle MarkFridgeAsWelcomedCommandHandler.");
             var fridge = await this._fridgeRepository.GetByIdAsync(command.FridgeId);
 
             fridge.MarkAsWelcomed();
-
-            Console.WriteLine("Mark fridge as welcomed.");
-
+            
             return Unit.Value;
         }
     }

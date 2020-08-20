@@ -50,17 +50,17 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
             _users.Add(user);
 
-            this.AddDomainEvent(new UserAddedEvent(user.Id));
+           // this.AddDomainEvent(new UserAddedEvent(user));
         }
 
-        public void RemoveUser(int userId)
+        public void RemoveUser(Guid userId)
         {
             try
             {
                 var user = _users.Single(u => u.Id == userId);
                 _users.Remove(user);
 
-                this.AddDomainEvent(new UserRemovedEvent(user));
+                //this.AddDomainEvent(new UserRemovedEvent(user));
             }
             catch (InvalidOperationException)
             {
@@ -68,13 +68,13 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             }
         }
         
-        public List<int> GetFridgeUsers()
+        public List<Guid> GetFridgeUsers()
         {
             var userIds = _users.Select(x => x.Id).ToList();
             return userIds;
         }
 
-        public User GetFridgeUser(int userId)
+        public User GetFridgeUser(Guid userId)
         {
             return _users.Single(u => u.Id == userId);
         }
@@ -85,7 +85,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Fridge should have a name.");
             Name = name;
 
-            this.AddDomainEvent(new FridgeUpdatedEvent(this));
+            //this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
 
         public void ChangeFridgeDesc(string desc)
@@ -94,7 +94,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Fridge should have a description.");
             Desc = desc;
 
-            this.AddDomainEvent(new FridgeUpdatedEvent(this));
+            //this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
     }
 }

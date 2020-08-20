@@ -1,15 +1,16 @@
 ﻿using System;
+using SmartFridgeApp.Domain.Models.Users;
 using SmartFridgeApp.Domain.SeedWork;
 
 namespace SmartFridgeApp.Domain.Models.Fridges.Events
 {
     public class UserAddedEvent : DomainEventBase
     {
-        public int UserId { get; }
+        public User User { get; }
 
-        public UserAddedEvent(int userId)
+        public UserAddedEvent(User user)
         {
-            UserId = UserId;
+            User = user;
         }
     }
 }

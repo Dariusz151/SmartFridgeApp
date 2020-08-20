@@ -10,14 +10,10 @@ namespace SmartFridgeApp.Domain.Models.Users
 {
     public class User : Entity
     {
-        public int Id { get; private set; }
-
+        public Guid Id { get; private set; }
         public string Name { get; private set; }
-
         public string Email { get; private set; }
-
         private List<FridgeItem> _fridgeItems;
-
         private DateTime _createdAt;
 
         private User()
@@ -27,6 +23,7 @@ namespace SmartFridgeApp.Domain.Models.Users
 
         public User(string name, string email)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             _createdAt = DateTime.Now;
@@ -39,14 +36,14 @@ namespace SmartFridgeApp.Domain.Models.Users
             if (!string.IsNullOrEmpty(name))
                 Name = name;
 
-            this.AddDomainEvent(new UserUpdatedEvent(this));
+            //this.AddDomainEvent(new UserUpdatedEvent(this));
         }
         
         public void AddFridgeItem(FridgeItem item)
         {
             _fridgeItems.Add(item);
 
-            this.AddDomainEvent(new FridgeItemAdded(item));
+            //this.AddDomainEvent(new FridgeItemAdded(item));
         }
 
         public void RemoveFridgeItem(long fridgeItemId)
@@ -54,7 +51,7 @@ namespace SmartFridgeApp.Domain.Models.Users
             var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
 
-            this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
+           // this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
         
         public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
@@ -62,7 +59,7 @@ namespace SmartFridgeApp.Domain.Models.Users
             var fridgeItem = this.GetFridgeItem(fridgeItemId);
             fridgeItem.ConsumeFridgeItem(amountValue);
 
-            this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
+            //this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
         }
         
         private FridgeItem GetFridgeItem(long fridgeItemId)
