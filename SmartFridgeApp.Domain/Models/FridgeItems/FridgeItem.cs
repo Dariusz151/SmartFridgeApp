@@ -2,6 +2,7 @@
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.FridgeItems.Events;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.Domain.Models.FridgeItems
@@ -39,7 +40,7 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
         public void UpdateFridgeItemNote(string note)
         {
             if (IsConsumed)
-                throw new DomainException("This item is consumed! Cant update details.");
+                throw new DomainException("Error in UpdateFridgeItemNote", "This item is consumed! Cant update details.");
 
             this.Note = note;
         }

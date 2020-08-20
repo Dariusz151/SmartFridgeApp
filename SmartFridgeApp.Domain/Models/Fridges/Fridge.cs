@@ -5,6 +5,7 @@ using SmartFridgeApp.Domain.Models.Fridges.Events;
 using SmartFridgeApp.Domain.Models.Users;
 using SmartFridgeApp.Domain.Models.Users.Events;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Domain.Models.Fridges
 {
@@ -55,17 +56,11 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         public void RemoveUser(Guid userId)
         {
-            try
-            {
-                var user = _users.Single(u => u.Id == userId);
-                _users.Remove(user);
+            var user = GetFridgeUser(userId);
+            _users.Remove(user);
 
-                //this.AddDomainEvent(new UserRemovedEvent(user));
-            }
-            catch (InvalidOperationException)
-            {
-                throw new DomainException("Can't remove user that doesn't exist.");
-            }
+            //this.AddDomainEvent(new UserRemovedEvent(user));
+           
         }
         
         public List<Guid> GetFridgeUsers()
@@ -76,7 +71,14 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         public User GetFridgeUser(Guid userId)
         {
-            return _users.Single(u => u.Id == userId);
+            try
+            {
+                return _users.Single(u => u.Id == userId);
+            }
+            catch
+            {
+                throw new UserNotExistException("This user does not exist.");
+            }
         }
 
         public void ChangeFridgeName(string name)

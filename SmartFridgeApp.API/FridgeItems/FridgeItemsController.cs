@@ -8,7 +8,7 @@ using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
 using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
-using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.API.FridgeItems
 {
@@ -28,7 +28,7 @@ namespace SmartFridgeApp.API.FridgeItems
         [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFridgeItemsByUserAsync(
             [FromRoute]Guid fridgeId, 
-            [FromRoute]int userId)
+            [FromRoute]Guid userId)
         {
             var fridgeItems = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
 
@@ -60,8 +60,23 @@ namespace SmartFridgeApp.API.FridgeItems
             [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeItemRequest request)
         {
-            await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
-
+            try
+            {
+                await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
+            }
+            catch (InvalidFridgeIdException e)
+            {
+                return BadRequest("Invalid fridge id.");
+            }
+            catch (UserNotExistException e)
+            {
+                return BadRequest("User does not exist.");
+            }
+            catch (FridgeItemNotExistException e)
+            {
+                return BadRequest("Fridge item does not exist.");
+            }
+            
             return NoContent();
         }
 
@@ -78,6 +93,18 @@ namespace SmartFridgeApp.API.FridgeItems
             try
             {
                 await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
+            }
+            catch (InvalidFridgeIdException e)
+            {
+                return BadRequest("Invalid fridge id.");
+            }
+            catch (UserNotExistException e)
+            {
+                return BadRequest("User does not exist.");
+            }
+            catch (FridgeItemNotExistException e)
+            {
+                return BadRequest("Fridge item does not exist.");
             }
             catch (DomainException domainException)
             {

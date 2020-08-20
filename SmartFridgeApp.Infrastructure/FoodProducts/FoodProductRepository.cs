@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Infrastructure.FoodProducts
 {
@@ -16,7 +18,14 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
 
         public async Task<FoodProduct> GetByIdAsync(int foodProductId)
         {
-            return await _context.FoodProducts.SingleOrDefaultAsync(f=> f.FoodProductId == foodProductId);
+            try
+            {
+                return await _context.FoodProducts.SingleAsync(f => f.FoodProductId == foodProductId);
+            }
+            catch
+            {
+                throw new DomainException("This FoodProduct does not exist.");
+            }
         }
 
         public async Task AddAsync(FoodProduct foodProduct)
@@ -31,7 +40,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
 
         public async Task DeleteAsync(int foodProductId)
         {
-            var foodProduct = await _context.FoodProducts.SingleAsync(x => x.FoodProductId == foodProductId);
+            var foodProduct = await GetByIdAsync(foodProductId);
             _context.FoodProducts.Remove(foodProduct);
         }
 
@@ -47,7 +56,15 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
 
         public async Task<Category> GetCategoryByIdAsync(int categoryId)
         {
-            return await _context.Categories.SingleOrDefaultAsync(c => c.CategoryId == categoryId);
+            try
+            {
+                return await _context.Categories.SingleAsync(c => c.CategoryId == categoryId);
+            }
+            catch
+            {
+                throw new DomainException("This category does not exist.");
+            }
+            
         }
     }
 }

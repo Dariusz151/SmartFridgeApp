@@ -23,7 +23,6 @@ namespace SmartFridgeApp.API.FridgeItems.RemoveFridgeItem
         {
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
-
             user.RemoveFridgeItem(command.FridgeItemId);
             
             await _unitOfWork.CommitAsync(cancellationToken);

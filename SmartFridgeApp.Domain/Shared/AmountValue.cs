@@ -1,6 +1,7 @@
 ﻿using SmartFridgeApp.Domain.SeedWork;
 using System;
 using Newtonsoft.Json;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Domain.Shared
 {
@@ -34,7 +35,7 @@ namespace SmartFridgeApp.Domain.Shared
         {
             if (value <= 0)
             {
-                throw new DomainException("Value of FridgeItem must be > 0");
+                throw new DomainException("Error while creating AmountValue","Value of FridgeItem must be > 0");
             }
             this.Value = value;
             this.Unit = unit;
@@ -54,7 +55,7 @@ namespace SmartFridgeApp.Domain.Shared
         {
             if (obj.Unit.CompareTo(this.Unit) != 0)
             {
-                throw new DomainException("AmountValues have other units. Can't compare them!");
+                throw new DomainException("Error comparing AmountValues", "AmountValues have other units. Can't compare them!");
             }
             else
             {

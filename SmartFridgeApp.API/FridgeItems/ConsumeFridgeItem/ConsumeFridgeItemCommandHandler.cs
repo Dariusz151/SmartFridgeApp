@@ -22,7 +22,6 @@ namespace SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem
 
         public async Task<Unit> Handle(ConsumeFridgeItemCommand command, CancellationToken cancellationToken)
         {
-            // TODO: Test if Consume FridgeItem works.
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
             

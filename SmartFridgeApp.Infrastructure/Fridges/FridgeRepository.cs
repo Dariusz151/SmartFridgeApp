@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.Models.Fridges;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
 {
@@ -18,17 +19,23 @@ namespace SmartFridgeApp.Infrastructure.Fridges
         {
             await _context.Fridges.AddAsync(fridge);
         }
-
-        public async Task<Fridge> GetByIdAsync(Guid id)
-        {
-            return await _context.Fridges.SingleAsync(x => x.Id == id);
-        }
         
         public async Task DeleteAsync(Guid fridgeId)
         {
-            var fridge = await _context.Fridges.SingleOrDefaultAsync(f => f.Id == fridgeId);
-
+            var fridge = await GetByIdAsync(fridgeId);
             _context.Fridges.Remove(fridge);
+        }
+
+        public async Task<Fridge> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                return await _context.Fridges.SingleAsync(x => x.Id == id);
+            }
+            catch
+            {
+                throw new InvalidFridgeIdException("This fridge id does not exist.");
+            }
         }
     }
 }

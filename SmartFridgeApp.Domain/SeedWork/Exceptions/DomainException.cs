@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartFridgeApp.Domain.SeedWork
+namespace SmartFridgeApp.Domain.SeedWork.Exceptions
 {
     public class DomainException : Exception
     {

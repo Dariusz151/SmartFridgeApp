@@ -6,10 +6,10 @@ namespace SmartFridgeApp.API.FridgeItems.GetFridgeItems
 {
     public class GetFridgeItemsQuery : IRequest<IEnumerable<FridgeItemDto>>
     {
-        public int UserId { get; }
+        public Guid UserId { get; }
         public Guid FridgeId { get; }
 
-        public GetFridgeItemsQuery(int userId, Guid fridgeId)
+        public GetFridgeItemsQuery(Guid userId, Guid fridgeId)
         {
             UserId = userId;
             FridgeId = fridgeId;

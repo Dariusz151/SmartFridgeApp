@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.Recipes.Events;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.Domain.Models.Recipes

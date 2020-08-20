@@ -4,6 +4,7 @@ using System.Linq;
 using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.Models.Users.Events;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.Domain.Models.Users
@@ -50,8 +51,8 @@ namespace SmartFridgeApp.Domain.Models.Users
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
-
-           // this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
+            
+            //this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
         
         public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
@@ -64,8 +65,15 @@ namespace SmartFridgeApp.Domain.Models.Users
         
         private FridgeItem GetFridgeItem(long fridgeItemId)
         {
-            var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
-            return fridgeItem;
+            try
+            {
+                var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
+                return fridgeItem;
+            }
+            catch
+            {
+                throw new FridgeItemNotExistException("Element with given id does not exist.");
+            }
         }
     }
 }

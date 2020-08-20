@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Models.Recipes;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Infrastructure.Recipes
 {
@@ -16,8 +18,15 @@ namespace SmartFridgeApp.Infrastructure.Recipes
 
         public async Task<Recipe> GetRecipeByIdAsync(int recipeId)
         {
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(x => x.RecipeId == recipeId);
-            return recipe;
+            try
+            {
+                var recipe = await _context.Recipes.SingleAsync(x => x.RecipeId == recipeId);
+                return recipe;
+            }
+            catch
+            {
+                throw new DomainException("This recipe does not exist.");
+            }
         }
 
         public async Task<List<Recipe>> GetAllRecipesAsync()
@@ -32,7 +41,7 @@ namespace SmartFridgeApp.Infrastructure.Recipes
 
         public async Task DeleteRecipeAsync(int recipeId)
         {
-            var recipe = await _context.Recipes.SingleOrDefaultAsync(x => x.RecipeId == recipeId);
+            var recipe = await GetRecipeByIdAsync(recipeId);
 
             _context.Recipes.Remove(recipe);
         }

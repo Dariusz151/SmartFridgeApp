@@ -1,5 +1,6 @@
 ﻿using SmartFridgeApp.Domain.Models.FoodProducts.Events;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.Domain.Models.FoodProducts
 {
