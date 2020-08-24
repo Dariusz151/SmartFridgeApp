@@ -1,7 +1,9 @@
-﻿namespace SmartFridgeApp.API.Recipes.DeleteRecipe
+﻿using System;
+
+namespace SmartFridgeApp.API.Recipes.DeleteRecipe
 {
     public class DeleteRecipeRequest
     {
-        public int RecipeId { get; set; }
+        public Guid RecipeId { get; set; }
     }
 }

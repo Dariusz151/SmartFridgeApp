@@ -45,9 +45,9 @@ namespace SmartFridgeApp.API.Recipes
         {
             var recipe = await _mediator.Send(new AddRecipeCommand(
                 request.Name, 
-                request.ProductIds,
+                request.Products,
                 request.Description,
-                request.Category
+                request.RecipeCategory
                 ));
 
             return Created(string.Empty, recipe);

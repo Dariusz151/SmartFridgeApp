@@ -1,5 +1,4 @@
-﻿using SmartFridgeApp.Domain.SeedWork;
-using System;
+﻿using System;
 using Newtonsoft.Json;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
@@ -7,23 +6,18 @@ namespace SmartFridgeApp.Domain.Shared
 {
     public class AmountValue
     {
-        //TODO: If in database is incorrect Unit value -> crash (500 Internal server error)
-        public float Value { get; private set; }
-        public Unit Unit { get; private set; }
+        private const float TOLERANCE = 0.001f;
 
+        // this setters should be private (domain driven design violate) -
+        // but don't know how to serialize to xml (maybe create Dto?)
+        public float Value { get; set; }
+        public Unit Unit { get; set; }
+        
         private AmountValue()
         {
 
         }
-
-        //[JsonConstructor]
-        //public AmountValue(float value, Unit unit)
-        //{
-        //    this.Value = value;
-        //    this.Unit = unit;
-        //}
-
-
+        
         public AmountValue(float value)
             :this(value, Unit.NotAssigned)
         {
@@ -57,24 +51,14 @@ namespace SmartFridgeApp.Domain.Shared
             {
                 throw new DomainException("Error comparing AmountValues", "AmountValues have other units. Can't compare them!");
             }
-            else
-            {
-                if (this.Value == obj.Value)
-                {
-                    return 0;
-                }
-                else
-                {
-                    if (this.Value > obj.Value)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                }
-            }
+
+            if (Math.Abs(Value - obj.Value) < TOLERANCE)
+                return 0;
+
+            if (Value > obj.Value)
+                return 1;
+
+            return -1;
         }
     }
 }

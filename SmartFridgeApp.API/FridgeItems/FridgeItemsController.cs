@@ -66,15 +66,15 @@ namespace SmartFridgeApp.API.FridgeItems
             }
             catch (InvalidFridgeIdException e)
             {
-                return BadRequest("Invalid fridge id.");
+                return BadRequest($"Invalid fridge id. Error:{e.Details}");
             }
             catch (UserNotExistException e)
             {
-                return BadRequest("User does not exist.");
+                return BadRequest($"User does not exist. Error:{e.Details}");
             }
             catch (FridgeItemNotExistException e)
             {
-                return BadRequest("Fridge item does not exist.");
+                return BadRequest($"Fridge item does not exist. Error:{e.Details}");
             }
             
             return NoContent();
@@ -96,15 +96,15 @@ namespace SmartFridgeApp.API.FridgeItems
             }
             catch (InvalidFridgeIdException e)
             {
-                return BadRequest("Invalid fridge id.");
+                return BadRequest($"Invalid fridge id. Error:{e.Details}");
             }
             catch (UserNotExistException e)
             {
-                return BadRequest("User does not exist.");
+                return BadRequest($"User does not exist. Error:{e.Details}");
             }
             catch (FridgeItemNotExistException e)
             {
-                return BadRequest("Fridge item does not exist.");
+                return BadRequest($"Fridge item does not exist. Error:{e.Details}");
             }
             catch (DomainException domainException)
             {

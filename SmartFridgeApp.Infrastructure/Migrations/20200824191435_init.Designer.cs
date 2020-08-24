@@ -10,7 +10,7 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20200820181453_init")]
+    [Migration("20200824191435_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,9 +86,8 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartFridgeApp.Domain.Models.Recipes.Recipe", b =>
                 {
-                    b.Property<int>("RecipeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("RecipeId")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
                         .HasColumnName("Description")

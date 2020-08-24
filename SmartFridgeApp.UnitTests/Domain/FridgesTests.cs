@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.Models.Users;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

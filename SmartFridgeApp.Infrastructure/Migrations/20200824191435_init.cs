@@ -78,8 +78,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    RecipeId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RecipeId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 5000, nullable: true),
                     Type = table.Column<string>(nullable: true),

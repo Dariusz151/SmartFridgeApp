@@ -15,7 +15,9 @@ namespace SmartFridgeApp.Infrastructure.Extensions
 
             using (TextWriter writer = new StringWriter(sb))
             {
-                serializer.Serialize(writer, objectInstance);
+                var xmlns = new XmlSerializerNamespaces();
+                xmlns.Add(string.Empty, string.Empty);
+                serializer.Serialize(writer, objectInstance, xmlns);
             }
 
             return sb.ToString();
