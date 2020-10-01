@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28714.193
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1145
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.UnitTests", "SmartFridgeApp.UnitTests\SmartFridgeApp.UnitTests.csproj", "{1D986608-3524-457D-9627-2B484A8D252A}"
 EndProject
@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 		pipeline.sh = pipeline.sh
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Blazor", "SmartFridgeApp.Blazor\SmartFridgeApp.Blazor.csproj", "{B00EE27E-8843-4173-9D31-082BA261E16B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,12 @@ Global
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Docker|Any CPU.Build.0 = Docker|Any CPU
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B00EE27E-8843-4173-9D31-082BA261E16B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
