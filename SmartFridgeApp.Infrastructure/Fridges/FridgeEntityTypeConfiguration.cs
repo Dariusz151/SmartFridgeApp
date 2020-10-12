@@ -30,7 +30,10 @@ namespace SmartFridgeApp.Infrastructure.Fridges
             {
                 x.ToTable("Users", SchemaNames.Application);
                 x.HasKey(u => u.Id);
-                x.HasForeignKey("FridgeId");
+                x.WithOwner()
+                    .HasConstraintName("FK_FridgeUsers");
+
+                //x.HasForeignKey("FridgeId");
 
                 x.Property("Name").HasColumnName("Name")
                     .IsRequired()
@@ -44,7 +47,8 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 {
                     f.ToTable("FridgeItems", SchemaNames.Application);
                     f.HasKey(k => k.Id);
-                    f.HasForeignKey("UserId");
+                    f.WithOwner()
+                        .HasConstraintName("FK_UsersFridgeItems");
 
                     f.Property("Note").HasColumnName("Note")
                         .HasMaxLength(1000);

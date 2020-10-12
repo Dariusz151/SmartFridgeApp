@@ -1,31 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
 using MediatR;
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
-using Autofac.Extras.CommonServiceLocator;
-using CommonServiceLocator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Impl;
 using SmartFridgeApp.API.InternalCommands;
 using SmartFridgeApp.API.Modules;
 using SmartFridgeApp.API.Outbox;
 using SmartFridgeApp.Infrastructure;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 namespace SmartFridgeApp.API
 {
@@ -36,7 +27,7 @@ namespace SmartFridgeApp.API
         private ISchedulerFactory _schedulerFactory;
         private IScheduler _scheduler;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             this.Configuration = new ConfigurationBuilder()
                 .SetBasePath((env.ContentRootPath))
@@ -49,9 +40,9 @@ namespace SmartFridgeApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddCors(options =>
             {
                 options.AddPolicy("CORS_Policy",
@@ -65,14 +56,8 @@ namespace SmartFridgeApp.API
                 });
             });
 
-            services
-                .AddMvc()
-                .AddJsonOptions(opt => opt.SerializerSettings.Converters.Add(
-                    new Newtonsoft.Json.Converters.StringEnumConverter()))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            
-            this.AddSwagger(services);
+            services.AddSwaggerGen();
 
             services
                .AddEntityFrameworkSqlServer()
@@ -81,13 +66,16 @@ namespace SmartFridgeApp.API
                    options
                        .UseSqlServer(this.Configuration[SmartFridgeAppConnectionString]);
                });
-            
-            return CreateAutofacServiceProvider(services);
+
+            services.AddControllers().AddJsonOptions(options => {
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter()
+                );
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime lifetime, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IHostApplicationLifetime lifetime, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -95,103 +83,77 @@ namespace SmartFridgeApp.API
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseCors("CORS_Policy");
-
+            app.UseRouting();
             app.UseHttpsRedirection();
-            app.UseMvc();
 
-            this.StartQuartz(serviceProvider);
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+            });
 
             ConfigureSwagger(app);
         }
 
-        private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
-        {
-            var container = new ContainerBuilder();
-
-            container.Populate(services);
-            container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
-            container.RegisterModule(new MediatorModule());
-
-            var buildContainer = container.Build();
-
-            //ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
-
-            return new AutofacServiceProvider(buildContainer);
-        }
-
-        public void StartQuartz(IServiceProvider serviceProvider)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
             this._schedulerFactory = new StdSchedulerFactory();
             this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
 
-            var container = new ContainerBuilder();
-
-            container.RegisterModule(new OutboxModule());
-            container.RegisterModule(new MediatorModule());
-            container.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
-
-            container.Register(c =>
+            builder.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
+            builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new OutboxModule());
+            builder.Register(c =>
             {
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder<SmartFridgeAppContext>();
                 dbContextOptionsBuilder.UseSqlServer(this.Configuration[SmartFridgeAppConnectionString]);
 
-                //dbContextOptionsBuilder
-                //    .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
-
                 return new SmartFridgeAppContext(dbContextOptionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();
 
-            _scheduler.JobFactory = new JobFactory(container.Build());
 
-            _scheduler.Start().GetAwaiter().GetResult();
+            // TODO: new JobFactory(IContainer) -< how to inject IContainer here? it was upgrade to net core 3.1 and now doesnt works
 
-            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var trigger =
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0/15 * * * * ?")
-                    .Build();
+            //_scheduler.JobFactory = new JobFactory();
+            //_scheduler.Start().GetAwaiter().GetResult();
 
-            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
+            //var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
+            //var trigger =
+            //    TriggerBuilder
+            //        .Create()
+            //        .StartNow()
+            //        .WithCronSchedule("0/15 * * * * ?")
+            //        .Build();
 
-            var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            var triggerCommandsProcessing =
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0/15 * * * * ?")
-                    //.WithCronSchedule("0 0/1 * * * ?")
-                    .Build();
-            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
+            //_scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
+
+            //var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
+            //var triggerCommandsProcessing =
+            //    TriggerBuilder
+            //        .Create()
+            //        .StartNow()
+            //        .WithCronSchedule("0/15 * * * * ?")
+            //        //.WithCronSchedule("0 0/1 * * * ?")
+            //        .Build();
+            //_scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
+
         }
-
         private static void ConfigureSwagger(IApplicationBuilder app)
         {
-            app.UseSwagger();
+            app.UseSwagger(
+                c => c.SerializeAsV2 = true
+            );
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartFridgeApp API V1");
-            });
-        }
-
-        private void AddSwagger(IServiceCollection services)
-        {
-            services.AddSwaggerGen(options =>
-            {
-                options.DescribeAllEnumsAsStrings();
-                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
-                {
-                    Title = "SmartFridgeApp",
-                    Version = "v1",
-                    Description = "Smart Fridge Application.",
-                });
+                c.RoutePrefix = string.Empty;
             });
         }
     }

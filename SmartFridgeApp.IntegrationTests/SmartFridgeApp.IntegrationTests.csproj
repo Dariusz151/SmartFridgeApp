@@ -37,4 +37,9 @@
     <ProjectReference Include="..\SmartFridgeApp.API\SmartFridgeApp.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ControllerTests\" />
+    <Folder Include="DatabaseTests\" />
+  </ItemGroup>
+
 </Project>

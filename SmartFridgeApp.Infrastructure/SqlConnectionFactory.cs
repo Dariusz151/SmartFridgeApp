@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -18,6 +18,7 @@ namespace SmartFridgeApp.Infrastructure
         {
             if (this._connection == null || this._connection.State != ConnectionState.Open)
             {
+
                 this._connection = new SqlConnection(_connectionString);
                 this._connection.Open();
             }
