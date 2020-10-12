@@ -2,7 +2,6 @@
 using System.Reflection;
 using Autofac;
 using MediatR;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
-using SmartFridgeApp.API.InternalCommands;
 using SmartFridgeApp.API.Modules;
-using SmartFridgeApp.API.Outbox;
 using SmartFridgeApp.Infrastructure;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
 namespace SmartFridgeApp.API
