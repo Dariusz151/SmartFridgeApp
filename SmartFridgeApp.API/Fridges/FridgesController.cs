@@ -28,7 +28,7 @@ namespace SmartFridgeApp.API.Fridges
         [HttpGet]
         [ProducesResponseType(typeof(List<FridgeDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllFridgesAsync()
-        {
+         {
             var fridges = await _mediator.Send(new GetFridgesQuery());
 
             return Ok(fridges);

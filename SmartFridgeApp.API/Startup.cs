@@ -43,6 +43,7 @@ namespace SmartFridgeApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddHealthChecks();
             services.AddCors(options =>
             {
                 options.AddPolicy("CORS_Policy",
@@ -96,6 +97,7 @@ namespace SmartFridgeApp.API
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHealthChecks("/healthcheck");
             });
 
             ConfigureSwagger(app);
