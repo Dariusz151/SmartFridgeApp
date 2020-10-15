@@ -1,6 +1,6 @@
 ﻿namespace SmartFridgeApp.IntegrationTests.Models
 {
-    public class ExpectedFoodProductCategoriesModel
+    public class ExpectedFoodProductCategoryModel
     {
         public string Name { get; set; }
     }

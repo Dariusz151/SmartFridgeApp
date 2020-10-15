@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
+using System.Net.Http.Json;
+using System;
 
 namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 {
@@ -19,15 +21,8 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 
         public FoodProductCategoriesTests(WebApplicationFactory<Startup> factory)
         {
-            _client = factory.CreateDefaultClient();
-        }
-
-        [Fact]
-        public async Task GetAllFoodProductCategories_ReturnsSuccessStatusCode()
-        {
-            var response = await _client.GetAsync("/api/foodproducts/categories");
-
-            response.EnsureSuccessStatusCode();
+            factory.ClientOptions.BaseAddress = new System.Uri("http://localhost/api/foodproducts/categories");
+            _client = factory.CreateClient();
         }
 
         [Fact]
@@ -38,12 +33,23 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
             "Słodycze", "Nabiał", "Makarony", 
             "Ryże", "Inne" };
 
-            var responseStream = await _client.GetStreamAsync("/api/foodproducts/categories");
+            // asserts Content, media types etc. in one method
+            var model = await _client.GetFromJsonAsync<List<ExpectedFoodProductCategoryModel>>("");
+            var modelArray = model.Select(x => x.Name).ToArray();
 
-            var model = await JsonSerializer.DeserializeAsync<List<ExpectedFoodProductCategoriesModel>>(responseStream,
-                JsonSerializerHelper.DefaultDeserialisationOptions);
+            Assert.True(modelArray.Length > 0);
+            Assert.Equal(expected.OrderBy(s => s), modelArray.OrderBy(x => x));
+        }
 
-            Assert.Equal(model.Count, expected.Count);
+        [Fact]
+        public async Task GetAllFoodProductCategories_SetsExpectedCacheControlHeader()
+        {
+            var response = await _client.GetAsync("");
+            var header = response.Headers.CacheControl;
+
+            Assert.True(header.MaxAge.HasValue);
+            Assert.Equal(TimeSpan.FromMinutes(5), header.MaxAge);
+            Assert.True(header.Public);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [Route("/api/foodProducts/categories")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
+        [ResponseCache(Duration = 300)]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
             var categories = await _mediator.Send(new GetCategoriesQuery());
