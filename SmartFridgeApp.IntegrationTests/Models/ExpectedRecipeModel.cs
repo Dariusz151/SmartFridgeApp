@@ -1,8 +1,8 @@
 ﻿namespace SmartFridgeApp.IntegrationTests.Models
 {
-    public class ExpectedFridgeModel
+    public class ExpectedRecipeModel
     {
-        public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

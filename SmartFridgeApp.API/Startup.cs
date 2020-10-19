@@ -101,8 +101,8 @@ namespace SmartFridgeApp.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            this._schedulerFactory = new StdSchedulerFactory();
-            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+            //this._schedulerFactory = new StdSchedulerFactory();
+            //this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
 
             builder.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
             builder.RegisterModule(new MediatorModule());

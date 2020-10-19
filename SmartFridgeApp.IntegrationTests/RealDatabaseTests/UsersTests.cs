@@ -18,26 +18,19 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 
         public UsersTests(WebApplicationFactory<Startup> factory)
         {
-            factory.ClientOptions.BaseAddress = new System.Uri("http://localhost/api/users");
-            _client = factory.CreateClient();
+            _client = factory.CreateDefaultClient();
         }
 
         [Fact]
         public async Task GetAllUsers_ReturnsSomeContent()
         {
-            //var expected = new List<string>
-            //{ "Mięso", "Warzywa", "Owoce",
-            //"Słodycze", "Nabiał", "Makarony",
-            //"Ryże", "Inne" };
+            var fridgesModel = await _client.GetFromJsonAsync<List<ExpectedFridgeModel>>("http://localhost/api/fridges");
+            string userId = fridgesModel.Select(x => x.Id).FirstOrDefault().ToString();
 
-            // asserts Content, media types etc. in one method
-            var model = await _client.GetFromJsonAsync<List<ExpectedFoodProductCategoryModel>>("");
-            var modelArray = model.Select(x => x.Name).ToArray();
+            var usersModel = await _client.GetFromJsonAsync<List<ExpectedUserModel>>($"http://localhost/api/fridgeUsers/{userId}");
+            var usersModelArray = usersModel.Select(x => x.Name).ToArray();
 
-            //Assert.True(modelArray.Length > 0);
-            //Assert.Equal(expected.OrderBy(s => s), modelArray.OrderBy(x => x));
+            Assert.True(usersModelArray.Length > 0);
         }
-
-       
     }
 }

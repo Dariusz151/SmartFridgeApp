@@ -1,9 +1,6 @@
-﻿
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using SmartFridgeApp.API;
 using SmartFridgeApp.IntegrationTests.Models;
-using SmartFridgeApp.IntegrationTests.TestHelpers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,7 +30,6 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
             "Słodycze", "Nabiał", "Makarony", 
             "Ryże", "Inne" };
 
-            // asserts Content, media types etc. in one method
             var model = await _client.GetFromJsonAsync<List<ExpectedFoodProductCategoryModel>>("");
             var modelArray = model.Select(x => x.Name).ToArray();
 
