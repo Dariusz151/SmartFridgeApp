@@ -2,8 +2,8 @@
 {
     public class Category
     {
-        public short CategoryId { get; set; }
         public string Name { get; set; }
+        public short CategoryId { get; set; }
 
         public Category(string name)
         {

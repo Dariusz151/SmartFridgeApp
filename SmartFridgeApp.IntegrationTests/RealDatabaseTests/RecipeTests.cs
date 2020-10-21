@@ -27,6 +27,10 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
         public async Task GetAllRecipes_ReturnsListOfRecipes()
         {
             var model = await _client.GetFromJsonAsync<List<ExpectedRecipeModel>>("");
+            var firstRecipe = model.FirstOrDefault();
+
+            Assert.True(firstRecipe.Name.Length > 0);
+            Assert.True(firstRecipe.FoodProducts.Count > 0);
 
             Assert.NotNull(model);
             Assert.True(model.Count > 0);

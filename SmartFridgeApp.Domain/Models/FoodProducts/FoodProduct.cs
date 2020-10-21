@@ -26,6 +26,12 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
             //this.AddDomainEvent(new FoodProductAddedEvent(this));
         }
 
+        public void UpdateFoodProduct(string newName, Category category)
+        {
+            this.UpdateProductName(newName);
+            this.UpdateProductCategory(category);
+        }
+
         public void UpdateProductName(string newName)
         {
             if (string.IsNullOrEmpty(newName))
@@ -34,7 +40,16 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 
             //this.AddDomainEvent(new FoodProductChangedEvent(this));
         }
-        
+
+        public void UpdateProductCategory(Category category)
+        {
+            if (string.IsNullOrEmpty(category.Name))
+                throw new DomainException("Product must have category with name!.");
+            Category = category;
+
+            //this.AddDomainEvent(new FoodProductChangedEvent(this));
+        }
+
         private string UppercaseFirst(string s)
         {
             if (string.IsNullOrEmpty(s))
