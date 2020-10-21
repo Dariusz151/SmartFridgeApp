@@ -10,5 +10,8 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         Task<List<Recipe>> GetAllRecipesAsync();
         Task AddRecipeAsync(Recipe recipe);
         Task DeleteRecipeAsync(Guid recipeId);
+        Task CreateRecipeCategoryAsync(RecipeCategory recipeCategory);
+        Task<IEnumerable<RecipeCategory>> GetAllRecipeCategoriesAsync();
+        Task<RecipeCategory> GetRecipeCategoryByIdAsync(int recipeCategoryId);
     }
 }

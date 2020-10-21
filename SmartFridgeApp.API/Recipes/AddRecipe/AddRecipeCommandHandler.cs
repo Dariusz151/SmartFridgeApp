@@ -34,10 +34,12 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
                 throw new DomainException("DomainException", "Some product id's does not exist in database.");
             }
 
+            var recipeCategory = await _recipeRepository.GetRecipeCategoryByIdAsync(command.RecipeCategory);
+
             var recipe = new Recipe(
                 command.Name,
                 command.Description,
-                command.RecipeCategory,
+                recipeCategory,
                 command.Products);
 
             await _recipeRepository.AddRecipeAsync(recipe);

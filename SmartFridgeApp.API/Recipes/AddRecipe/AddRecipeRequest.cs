@@ -8,7 +8,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string RecipeCategory { get; set; }
+        public int RecipeCategory { get; set; }
         public List<FoodProductDetails> Products { get; set; }
         //public List<int> ProductIds { get; set; }
     }

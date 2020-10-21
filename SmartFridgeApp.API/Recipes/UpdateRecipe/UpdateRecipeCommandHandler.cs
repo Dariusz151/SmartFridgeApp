@@ -24,9 +24,9 @@ namespace SmartFridgeApp.API.Recipes.UpdateRecipe
             // TODO: validate if recipe exists
 
             var recipe = await _recipeRepository.GetRecipeByIdAsync(command.RecipeId);
+            var newRecipeCategory = await _recipeRepository.GetRecipeCategoryByIdAsync(command.RecipeCategory);
 
-            recipe.UpdateRecipe(command.Name, command.Description, command.Category);
-            
+            recipe.UpdateRecipe(command.Name, command.Description, newRecipeCategory);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             return Unit.Value;
