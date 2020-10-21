@@ -1,4 +1,4 @@
-USE [dariusz151_smartfridge]
+USE [dariusz151_smartfridgeapp]
 GO
 
 INSERT INTO [app].[Fridges]
@@ -37,6 +37,18 @@ INSERT INTO [app].[Categories]
 		   ('Makarony'),
 		   ('Ry¿e'),
 		   ('Inne')
+
+GO
+
+INSERT INTO [app].[RecipeCategories]
+           ([Name])
+     VALUES
+           ('Obiad'), 
+		   ('Œniadanie'), 
+		   ('Kolacja'), 
+		   ('Przystawka'),
+		   ('Inne'),
+		   ('Deser')
 
 GO
 

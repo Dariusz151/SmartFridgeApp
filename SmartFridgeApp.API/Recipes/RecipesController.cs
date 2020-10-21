@@ -4,10 +4,13 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
+using SmartFridgeApp.API.Recipes.Categories.CreateCategory;
+using SmartFridgeApp.API.Recipes.Categories.GetCategories;
 using SmartFridgeApp.API.Recipes.DeleteRecipe;
 using SmartFridgeApp.API.Recipes.FindRecipes;
 using SmartFridgeApp.API.Recipes.GetRecipes;
 using SmartFridgeApp.API.Recipes.UpdateRecipe;
+using SmartFridgeApp.Domain.Models.Recipes;
 
 namespace SmartFridgeApp.API.Recipes
 {
@@ -97,6 +100,32 @@ namespace SmartFridgeApp.API.Recipes
             await _mediator.Send(new DeleteRecipeCommand(request.RecipeId));
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Get all available recipe categories .
+        /// </summary>
+        [Route("/api/recipes/categories")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<RecipeCategory>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllRecipeCategoriesAsync()
+        {
+            var categories = await _mediator.Send(new GetRecipeCategoriesQuery());
+
+            return Ok(categories);
+        }
+
+        /// <summary>
+        /// Create new recipe category.
+        /// </summary>
+        [Route("/api/recipes/categories")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> CreateRecipeCategoryAsync([FromBody]CreateRecipeCategoryRequest request)
+        {
+            await _mediator.Send(new CreateRecipeCategoryCommand(request.Name));
+
+            return Ok();
         }
     }
 }
