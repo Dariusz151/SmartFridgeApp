@@ -45,6 +45,13 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             //this.AddDomainEvent(new RecipeAddedEvent(this));
         }
 
+        public void UpdateRecipeCategory(RecipeCategory recipeCategory)
+        {
+            if (string.IsNullOrEmpty(recipeCategory.Name))
+                throw new DomainException("Cant update recipe with no name category!");
+            RecipeCategory = recipeCategory;
+        }
+
         public void UpdateRecipe(string name, string desc, RecipeCategory recipeCategory)
         {
             if (string.IsNullOrEmpty(name))
@@ -53,9 +60,8 @@ namespace SmartFridgeApp.Domain.Models.Recipes
 
             if (!string.IsNullOrEmpty(desc))
                 Description = desc;
-            
-            if (!string.IsNullOrEmpty(recipeCategory.Name))
-                RecipeCategory = recipeCategory;
+
+            this.UpdateRecipeCategory(recipeCategory);
 
             //this.AddDomainEvent(new RecipeUpdatedEvent(this));
         }
