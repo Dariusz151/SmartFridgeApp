@@ -12,10 +12,14 @@ namespace SmartFridgeApp.UnitTests.Domain
     [TestFixture]
     public class RecipesTests
     {
+        Category category;
+        FoodProductDetails foodProductDetails;
+
         [SetUp]
         public void BaseSetUp()
         {
-            
+            category = new Category("Mięso");
+            foodProductDetails = new FoodProductDetails(1, new AmountValue(10.0f, Unit.Mililiter));
         }
         
         [Test]
@@ -31,13 +35,13 @@ namespace SmartFridgeApp.UnitTests.Domain
         [Test]
         public void CreateNewRecipeWithoutNameShouldThrowException()
         {
-            //Recipe recipe;
-            //List<FoodProduct> list = new List<FoodProduct>();
+            Recipe recipe;
+            List<FoodProductDetails> list = new List<FoodProductDetails>();
 
-            //list.Add(new FoodProduct());
+            list.Add(foodProductDetails);
 
-            //Assert.Throws(typeof(DomainException),
-            //    () => recipe = new Recipe("", "desc", 2, 25, "category", list));
+            Assert.Throws(typeof(DomainException),
+                () => recipe = new Recipe(String.Empty, list));
         }
 
         [Test]

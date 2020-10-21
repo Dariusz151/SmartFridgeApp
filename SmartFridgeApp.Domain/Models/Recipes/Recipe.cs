@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.Recipes.Events;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
-using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.Domain.Models.Recipes
 {
@@ -13,7 +11,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         public Guid RecipeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string RecipeCategory { get; set; }
+        public RecipeCategory RecipeCategory { get; set; }
 
         public List<FoodProductDetails> FoodProducts { get; set; }
         
@@ -28,11 +26,11 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         }
 
         public Recipe(string name, string description, List<FoodProductDetails> products)
-            : this(name, description, String.Empty, products)
+            : this(name, description, new RecipeCategory("Undefined"), products)
         {
         }
         
-        public Recipe(string name, string description, string recipeCategory, List<FoodProductDetails> products)
+        public Recipe(string name, string description, RecipeCategory recipeCategory, List<FoodProductDetails> products)
         {
             if (products.Count == 0)
                 throw new DomainException("Recipe must have any products!");
@@ -47,7 +45,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             //this.AddDomainEvent(new RecipeAddedEvent(this));
         }
 
-        public void UpdateRecipe(string name, string desc, string recipeCategory)
+        public void UpdateRecipe(string name, string desc, RecipeCategory recipeCategory)
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Recipe must have name!");
@@ -56,7 +54,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             if (!string.IsNullOrEmpty(desc))
                 Description = desc;
             
-            if (!string.IsNullOrEmpty(recipeCategory))
+            if (!string.IsNullOrEmpty(recipeCategory.Name))
                 RecipeCategory = recipeCategory;
 
             //this.AddDomainEvent(new RecipeUpdatedEvent(this));
