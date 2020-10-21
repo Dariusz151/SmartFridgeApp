@@ -45,5 +45,27 @@ namespace SmartFridgeApp.Infrastructure.Recipes
 
             _context.Recipes.Remove(recipe);
         }
+
+        public async Task CreateRecipeCategoryAsync(RecipeCategory recipeCategory)
+        {
+            await _context.RecipeCategories.AddAsync(recipeCategory);
+        }
+
+        public async Task<IEnumerable<RecipeCategory>> GetAllRecipeCategoriesAsync()
+        {
+            return await _context.RecipeCategories.ToListAsync();
+        }
+
+        public async Task<RecipeCategory> GetRecipeCategoryByIdAsync(int recipeCategoryId)
+        {
+            try
+            {
+                return await _context.RecipeCategories.SingleAsync(c => c.RecipeCategoryId == recipeCategoryId);
+            }
+            catch
+            {
+                throw new InfrastructureException("This category id does not exist.");
+            }
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace SmartFridgeApp.Infrastructure
         public DbSet<FridgeItem> FridgeItems { get; set; }
 
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeCategory> RecipeCategories { get; set; }
+
         public DbSet<FoodProduct> FoodProducts { get; set; }
         public DbSet<Category> Categories { get; set; }
         
@@ -39,7 +41,7 @@ namespace SmartFridgeApp.Infrastructure
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new InternalCommandEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
-
+            modelBuilder.ApplyConfiguration(new RecipeCategoryEntityTypeConfiguration());
         }
     }
 }
