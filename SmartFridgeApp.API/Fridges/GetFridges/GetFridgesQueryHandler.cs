@@ -22,7 +22,9 @@ namespace SmartFridgeApp.API.Fridges.GetFridges
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                     "[Id], " +
-                                    "[Name] " +
+                                    "[Name], " +
+                                    "[Address], " +
+                                    "[Desc] " +
                                "FROM " +
                                     "[dbo].[v_Fridges]";
 
