@@ -22,14 +22,10 @@ namespace SmartFridgeApp.API.Fridges.AddFridge
         public async Task<FridgeDto> Handle(AddFridgeCommand command, CancellationToken cancellationToken)
         {
             var fridge = new Fridge(command.Name, command.Address, command.Desc);
-            
             await _fridgeRepository.AddAsync(fridge);
-
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            Console.WriteLine("CommitAsync UnitOfWork.");
-
-            return new FridgeDto { Id = fridge.Id, Name = fridge.Name };
+            return new FridgeDto { Id = fridge.Id, Name = fridge.Name, Address = fridge.Address, Desc = fridge.Desc };
         }
     }
 }

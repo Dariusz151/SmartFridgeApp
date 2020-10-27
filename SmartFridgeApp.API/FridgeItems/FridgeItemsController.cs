@@ -35,6 +35,17 @@ namespace SmartFridgeApp.API.FridgeItems
             return Ok(fridgeItems);
         }
 
+        [Route("{fridgeId}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetFridgeItemsByIdAsync(
+             [FromRoute]Guid fridgeId)
+        {
+            var fridgeItems = await _mediator.Send(new GetFridgeItemsByIdQuery(fridgeId));
+
+            return Ok(fridgeItems);
+        }
+
         /// <summary>
         /// Add FridgeItem to fridge (for user).
         /// </summary>
