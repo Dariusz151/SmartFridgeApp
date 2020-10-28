@@ -7,6 +7,6 @@ namespace SmartFridgeApp.Domain.DomainServices
 {
     public interface IRecipeFinderService
     {
-        Task<List<Recipe>> FindMatchingRecipes(List<int> foodProducts);
+        Task<List<Recipe>> FindMatchingRecipes(List<short> foodProducts);
     }
 }

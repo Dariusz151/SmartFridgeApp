@@ -7,9 +7,9 @@ namespace SmartFridgeApp.API.Recipes.FindRecipes
 {
     public class FindRecipesCommand : IRequest<IEnumerable<Recipe>>
     {
-        public List<int> FoodProducts { get; set; }
+        public List<short> FoodProducts { get; set; }
 
-        public FindRecipesCommand(List<int> foodProducts)
+        public FindRecipesCommand(List<short> foodProducts)
         {
             this.FoodProducts = foodProducts;
         }

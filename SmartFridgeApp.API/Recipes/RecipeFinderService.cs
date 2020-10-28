@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.Recipes;
-using SmartFridgeApp.Domain.Shared;
 
 namespace SmartFridgeApp.API.Recipes
 {
@@ -17,30 +15,18 @@ namespace SmartFridgeApp.API.Recipes
             _recipeRepository = recipeRepository;
         }
 
-        public async Task<List<Recipe>> FindMatchingRecipes(List<int> foodProducts)
+        public async Task<List<Recipe>> FindMatchingRecipes(List<short> foodProducts)
         {
             var recipes = await _recipeRepository.GetAllRecipesAsync();
 
             var recipesAvailable = new List<Recipe>();
-            //var productAgreedCounter = 0;
-
             foreach (var recipe in recipes)
             {
-                recipesAvailable.Add(recipe);
-
-                //// TODO: Convert into LINQ Expression
-                //foreach (var foodProduct in foodProducts)
-                //{
-                //    var result = recipe.RecipeFoodProducts.Where(x => x.FoodProductId == foodProduct).ToList();
-                //    if (result.Count > 0)
-                //        productAgreedCounter++;
-                //}
-
-                //if (productAgreedCounter >= recipe.RecipeFoodProducts.Count)
-                //{
-                //    recipesAvailable.Add(recipe);
-                //    productAgreedCounter = 0;
-                //}
+                var listOfIds = recipe.FoodProducts.Select(x => x.FoodProductId).ToList();
+                if (!listOfIds.Except(foodProducts).Any())
+                {
+                    recipesAvailable.Add(recipe);
+                }
             }
 
             return recipesAvailable;
