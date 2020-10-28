@@ -50,7 +50,9 @@ namespace SmartFridgeApp.API.Recipes
                 request.Name, 
                 request.Products,
                 request.Description,
-                request.RecipeCategory
+                request.RecipeCategory,
+                request.RequiredTime,
+                request.LevelOfDifficulty
                 ));
 
             return Created(string.Empty, recipe);
@@ -83,7 +85,9 @@ namespace SmartFridgeApp.API.Recipes
                 request.RecipeId,
                 request.Name,
                 request.Description,
-                request.Category
+                request.Category,
+                request.RequiredTime,
+                request.LevelOfDifficulty
             ));
 
             return Ok();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace SmartFridgeApp.Infrastructure.Extensions
@@ -16,7 +17,8 @@ namespace SmartFridgeApp.Infrastructure.Extensions
             using (TextWriter writer = new StringWriter(sb))
             {
                 var xmlns = new XmlSerializerNamespaces();
-                xmlns.Add(string.Empty, string.Empty);
+                xmlns.Add("","");
+                
                 serializer.Serialize(writer, objectInstance, xmlns);
             }
 

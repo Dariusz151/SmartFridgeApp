@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
@@ -27,11 +28,11 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         }
 
         public Recipe(string name, string description, List<FoodProductDetails> products)
-            : this(name, description, new RecipeCategory("Undefined"), products)
+            : this(name, description, new RecipeCategory("Undefined"), products, 0, 0)
         {
         }
         
-        public Recipe(string name, string description, RecipeCategory recipeCategory, List<FoodProductDetails> products)
+        public Recipe(string name, string description, RecipeCategory recipeCategory, List<FoodProductDetails> products, int requiredTime, int levelOfDifficulty)
         {
             if (products.Count == 0)
                 throw new DomainException("Recipe must have any products!");
@@ -41,6 +42,8 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             Name = name;
             Description = description;
             RecipeCategory = recipeCategory;
+            RequiredTime = requiredTime;
+            LevelOfDifficulty = (LevelOfDifficulty)levelOfDifficulty;
             FoodProducts = products;
 
             //this.AddDomainEvent(new RecipeAddedEvent(this));
@@ -53,7 +56,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
             RecipeCategory = recipeCategory;
         }
 
-        public void UpdateRecipe(string name, string desc, RecipeCategory recipeCategory)
+        public void UpdateRecipe(string name, string desc, RecipeCategory recipeCategory, int requiredTime, int levelOfDifficulty)
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Recipe must have name!");
@@ -61,6 +64,9 @@ namespace SmartFridgeApp.Domain.Models.Recipes
 
             if (!string.IsNullOrEmpty(desc))
                 Description = desc;
+
+            RequiredTime = requiredTime;
+            LevelOfDifficulty = (LevelOfDifficulty)levelOfDifficulty;
 
             this.UpdateRecipeCategory(recipeCategory);
 
