@@ -38,6 +38,10 @@ namespace SmartFridgeApp.Domain.Models.Recipes
                 throw new DomainException("Recipe must have any products!");
             if (String.IsNullOrEmpty(name))
                 throw new DomainException("Recipe has to have name!");
+            if (requiredTime <= 0)
+                throw new DomainException("Recipe required time should be more than 0 minutes!");
+            if (levelOfDifficulty < 0 && levelOfDifficulty > 3)
+                throw new DomainException("Recipe levelOfDifficulty should have proper value!");
             RecipeId = Guid.NewGuid();
             Name = name;
             Description = description;
@@ -60,11 +64,15 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         {
             if (string.IsNullOrEmpty(name))
                 throw new DomainException("Recipe must have name!");
-            Name = name;
-
+            if (requiredTime <= 0)
+                throw new DomainException("Recipe required time should be more than 0 minutes!");
+            if (levelOfDifficulty < 0 && levelOfDifficulty > 3)
+                throw new DomainException("Recipe levelOfDifficulty should have proper value!");
+           
             if (!string.IsNullOrEmpty(desc))
                 Description = desc;
 
+            Name = name;
             RequiredTime = requiredTime;
             LevelOfDifficulty = (LevelOfDifficulty)levelOfDifficulty;
 

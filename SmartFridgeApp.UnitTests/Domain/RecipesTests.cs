@@ -57,6 +57,21 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
+        public void CreateNewRecipeWithRequiredTimeandLevelOfDifficultyShouldBeFine()
+        {
+            Recipe recipe = null;
+            List<FoodProductDetails> list = new List<FoodProductDetails>();
+
+            list.Add(foodProductDetails);
+
+            recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Hard);
+
+            Assert.AreEqual(1, recipe.FoodProducts.Count);
+            Assert.AreEqual(30, recipe.RequiredTime);
+            Assert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
+        }
+
+        [Test]
         public void UpdateRecipeWithInvalidDetailsShouldThrowException()
         {
             Recipe recipe = null;
