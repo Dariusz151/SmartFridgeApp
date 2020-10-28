@@ -18,7 +18,8 @@ namespace SmartFridgeApp.Infrastructure.Recipes
             builder.Property("Name").HasColumnName("Name")
                 .IsRequired().HasMaxLength(100);
             builder.Property("Description").HasColumnName("Description").HasMaxLength(5000);
-           // builder.Property("RecipeCategory").HasColumnName("RecipeCategory");
+            builder.Property("RequiredTime").HasColumnName("RequiredTime");
+            builder.Property("LevelOfDifficulty").HasColumnName("LevelOfDifficulty");
 
             var converter = new ValueConverter<List<FoodProductDetails>, string>(v=>v.XmlSerializeToString().ToString(), v=>v.XmlDeserializeFromString<List<FoodProductDetails>>());
             

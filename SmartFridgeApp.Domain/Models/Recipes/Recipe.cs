@@ -11,8 +11,9 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         public Guid RecipeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int RequiredTime { get; set; }
+        public LevelOfDifficulty LevelOfDifficulty { get; set; }
         public RecipeCategory RecipeCategory { get; set; }
-
         public List<FoodProductDetails> FoodProducts { get; set; }
         
         private Recipe()
