@@ -28,7 +28,7 @@ namespace SmartFridgeApp.Domain.Models.Recipes
         }
 
         public Recipe(string name, string description, List<FoodProductDetails> products)
-            : this(name, description, new RecipeCategory("Undefined"), products, 0, 0)
+            : this(name, description, new RecipeCategory("Undefined"), products, 1, 0)
         {
         }
         

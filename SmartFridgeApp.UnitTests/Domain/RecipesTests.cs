@@ -139,9 +139,23 @@ namespace SmartFridgeApp.UnitTests.Domain
             Assert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
         }
 
+        [Test]
+        public void CreateNewRecipe_WithNameAndProducts_ShouldBeFine()
+        {
+            Recipe recipe = null;
+            List<FoodProductDetails> list = new List<FoodProductDetails>();
+
+            list.Add(foodProductDetails);
+
+            recipe = new Recipe("recipe", list);
+
+            Assert.AreEqual(1, recipe.FoodProducts.Count);
+            Assert.AreEqual(String.Empty, recipe.Description);
+            Assert.AreEqual("recipe", recipe.Name);
+        }
 
         [Test]
-        public void CreateNewRecipeWithNameAndProductsShouldBeFine()
+        public void CreateNewRecipe_WithNameDescAndProducts_ShouldBeFine()
         {
             Recipe recipe = null;
             List<FoodProductDetails> list = new List<FoodProductDetails>();
@@ -154,7 +168,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void CreateNewRecipeWithRequiredTimeandLevelOfDifficultyShouldBeFine()
+        public void CreateNewRecipe_WithRequiredTimeandLevelOfDifficulty_ShouldBeFine()
         {
             Recipe recipe = null;
             List<FoodProductDetails> list = new List<FoodProductDetails>();
@@ -167,7 +181,5 @@ namespace SmartFridgeApp.UnitTests.Domain
             Assert.AreEqual(30, recipe.RequiredTime);
             Assert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
         }
-
-       
     }
 }
