@@ -44,6 +44,8 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
         public void AddUser(User user)
         {
+            if (user is null)
+                throw new DomainException("User object cant be null to add to fridge.");
             if (_users.Count(u => u.Id == user.Id) > 0)
             {
                 throw new DomainException("Same user exists in this fridge.");
@@ -51,7 +53,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
 
             _users.Add(user);
 
-           // this.AddDomainEvent(new UserAddedEvent(user));
+            this.AddDomainEvent(new UserAddedEvent(user));
         }
 
         public void RemoveUser(Guid userId)
@@ -59,8 +61,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             var user = GetFridgeUser(userId);
             _users.Remove(user);
 
-            //this.AddDomainEvent(new UserRemovedEvent(user));
-           
+            this.AddDomainEvent(new UserRemovedEvent(user));
         }
         
         public List<Guid> GetFridgeUsers()
