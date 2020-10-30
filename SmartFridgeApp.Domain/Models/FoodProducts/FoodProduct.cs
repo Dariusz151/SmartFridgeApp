@@ -23,7 +23,7 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 
             Category = category;
 
-            //this.AddDomainEvent(new FoodProductAddedEvent(this));
+            this.AddDomainEvent(new FoodProductAddedEvent(this));
         }
 
         public void UpdateFoodProduct(string newName, Category category)

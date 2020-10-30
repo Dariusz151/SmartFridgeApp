@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.Models.FoodProducts.Events;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
@@ -22,20 +24,29 @@ namespace SmartFridgeApp.UnitTests.Domain
         [TestCase("mLEKO")]
         [TestCase("mLekO")]
         [TestCase("Mleko")]
-        public void CreateNewFoodProductShouldHaveCorrectFormattedName(string productName)
+        public void FoodProduct_CreateNew_ShouldHaveCorrectFormattedName(string productName)
         {
             FoodProduct foodProduct = new FoodProduct(productName, category);
             Assert.AreEqual(foodProduct.Name, "Mleko");
         }
 
         [Test]
-        public void CreateNewFoodProductWithEmptyStringShouldThrowException()
+        public void FoodProduct_CreateNew_ShouldHaveDomainEvent()
+        {
+            foodProduct = new FoodProduct("Bułka", category);
+
+            Assert.AreEqual(1, foodProduct.DomainEvents.Count);
+            Assert.AreEqual(typeof(FoodProductAddedEvent), foodProduct.DomainEvents.ElementAt(0).GetType());
+        }
+
+        [Test]
+        public void FoodProduct_CreateNewWithEmptyString_ShouldThrowException()
         {
             Assert.Throws(typeof(DomainException), () => foodProduct = new FoodProduct(String.Empty, category));
         }
 
         [Test]
-        public void UpdateFoodProductWithEmptyStringShouldThrowException()
+        public void FoodProduct_UpdateWithEmptyString_ShouldThrowException()
         {
             foodProduct = new FoodProduct("Bułka", category);
 
@@ -44,7 +55,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void UpdateFoodProductCategoryWitInvalidCategory_ShouldThrowException()
+        public void FoodProduct_UpdateCategoryWitInvalidCategory_ShouldThrowException()
         {
             foodProduct = new FoodProduct("Bułka", category);
             var newCategory = new Category(String.Empty);
@@ -53,7 +64,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void UpdateFoodProductName_ShouldChangeItsName()
+        public void FoodProduct_UpdateName_ShouldChangeItsName()
         {
             foodProduct = new FoodProduct("Bułka", category);
 
@@ -63,7 +74,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void UpdateFoodProductCategory_ShouldChangeItsCategory()
+        public void FoodProduct_UpdateCategory_ShouldChangeItsCategory()
         {
             foodProduct = new FoodProduct("Bułka", category);
             var newCategory = new Category("Warzywa");
@@ -73,7 +84,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void UpdateFoodProduct_ShouldChangeItsCategoryAndName()
+        public void FoodProduct_UpdateCategory_ShouldChangeItsCategoryAndName()
         {
             foodProduct = new FoodProduct("Bułka", category);
 
