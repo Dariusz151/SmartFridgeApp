@@ -12,6 +12,8 @@ using System.Text;
 using Newtonsoft.Json;
 using SmartFridgeApp.API.Users.AddFridgeUser;
 using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
+using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
+using System;
 
 namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 {
@@ -96,18 +98,24 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 
             //TODO : Delete all added objects in database
 
-            //RemoveFridgeItemRequest removeRequest = new RemoveFridgeItemRequest();
-            //removeRequest.FridgeItemId = fridge.Id;
-            //UserDto userDto = new UserDto();
-            //userDto.Name = "TestUser";
-            //userDto.Email = "TestEmail";
-            //userRequest.User = userDto;
 
-            //jsonObject = JsonConvert.SerializeObject(userRequest);
-            //content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
-            //await _client.PostAsync($"http://localhost/api/fridgeusers/{fridge.Id}", content);
+            var fridgeItems = fridgeItemsModel.Where(x => x.Note.Contains("Test")).ToList();
+            foreach (var el in fridgeItems)
+            {
+                RemoveFridgeItemRequest removeRequest = new RemoveFridgeItemRequest();
+                removeRequest.FridgeItemId = el.Id;
+                removeRequest.UserId = usersModelArray.Id;
 
-            //await _client.DeleteAsync($"http://localhost/api/fridgeitems/{fridge.Id}/remove");
+                jsonObject = JsonConvert.SerializeObject(removeRequest);
+
+                HttpRequestMessage request = new HttpRequestMessage
+                {
+                    Content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json"),
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri($"http://localhost/api/fridgeitems/{fridge.Id}/remove")
+                };
+                await _client.SendAsync(request);
+            }
         }
     }
 }
