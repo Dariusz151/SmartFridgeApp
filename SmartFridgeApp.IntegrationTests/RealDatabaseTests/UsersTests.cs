@@ -25,9 +25,9 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
         public async Task GetAllUsers_ReturnsSomeContent()
         {
             var fridgesModel = await _client.GetFromJsonAsync<List<ExpectedFridgeModel>>("http://localhost/api/fridges");
-            string userId = fridgesModel.Select(x => x.Id).FirstOrDefault().ToString();
+            string fridgeId = fridgesModel.Select(x => x.Id).FirstOrDefault().ToString();
 
-            var usersModel = await _client.GetFromJsonAsync<List<ExpectedUserModel>>($"http://localhost/api/fridgeUsers/{userId}");
+            var usersModel = await _client.GetFromJsonAsync<List<ExpectedUserModel>>($"http://localhost/api/fridgeUsers/{fridgeId}");
             var usersModelArray = usersModel.Select(x => x.Name).ToArray();
 
             Assert.True(usersModelArray.Length > 0);

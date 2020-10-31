@@ -8,6 +8,7 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
     {
         public int FoodProductId { get; set; }
         public float Value { get; set; }
+        public string Note { get; set; }
         public Unit Unit { get; set; }
     }
 }
