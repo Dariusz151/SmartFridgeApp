@@ -6,6 +6,7 @@ export default function Homepage() {
     <View style={styles.container}>
       <Text>Home Page</Text>
       <Text>Siemano</Text>
+      <Text>Siemano2</Text>
     </View>
   );
 }
