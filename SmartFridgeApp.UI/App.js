@@ -8,6 +8,8 @@ import { useFonts } from "expo-font";
 import { AppLoading } from "expo";
 import Header from "./components/Header";
 import { StatusBar } from "expo-status-bar";
+import Footer from "./components/Footer";
+import { navigationRef } from "./RootNavigation";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +26,7 @@ export default function App() {
         style={{
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
+        ref={navigationRef}
       >
         <Stack.Navigator initialRouteName="SmartFridgeApp" headerMode="screen">
           <Stack.Screen
@@ -34,6 +37,7 @@ export default function App() {
             }}
           />
         </Stack.Navigator>
+        <Footer />
       </NavigationContainer>
     );
   }
