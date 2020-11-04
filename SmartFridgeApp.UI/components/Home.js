@@ -11,14 +11,12 @@ import {
 
 export default function Homepage({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
-  const [newsData, setData] = useState([]);
+  const [fridgesData, setData] = useState([]);
 
   useEffect(() => {
-    fetch(
-      "https://newsapi.org/v2/everything?q=tech&apiKey=13fbf904b7914b86975c876833d97762"
-    )
+    fetch("https://localhost:5001/api/fridges")
       .then((response) => response.json())
-      .then((json) => setData(json.articles))
+      .then((json) => setData(json))
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
   }, []);
@@ -26,12 +24,13 @@ export default function Homepage({ navigation }) {
   const storyItem = ({ item }) => {
     return (
       <TouchableWithoutFeedback
-        onPress={() => navigation.navigate("NewsDetail", { url: item.url })}
+      // onPress={() => navigation.navigate("NewsDetail", { url: item.url })}
       >
         <View style={styles.listings}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Image style={styles.thumbnail} source={{ uri: item.urlToImage }} />
-          <Text style={styles.blurb}>{item.description}</Text>
+          <Text style={styles.title}>{item.name}</Text>
+          {/* <Image style={styles.thumbnail} source={{ uri: item.urlToImage }} /> */}
+          <Text style={styles.blurb}>{item.desc}</Text>
+          <Text style={styles.blurb}>{item.address}</Text>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -42,9 +41,9 @@ export default function Homepage({ navigation }) {
         <ActivityIndicator />
       ) : (
         <FlatList
-          data={newsData}
+          data={fridgesData}
           renderItem={storyItem}
-          keyExtractor={(item) => item.url}
+          keyExtractor={(item) => item.id}
         />
       )}
     </View>
