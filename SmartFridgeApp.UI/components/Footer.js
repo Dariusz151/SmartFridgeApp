@@ -7,18 +7,24 @@ export default function Footer() {
     <View style={styles.footer}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => RootNavigation.navigate("SmartFridgeApp")}
+        onPress={() => RootNavigation.navigate("Homepage")}
       >
         <Text>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>About</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => RootNavigation.navigate("FridgesPage")}
+      >
+        <Text>Fridges</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => RootNavigation.navigate("FridgesPage")}
+      >
+        <Text>FridgeUsers</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
-        <Text>Quote</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>Catalog</Text>
+        <Text>Recipes</Text>
       </TouchableOpacity>
     </View>
   );
