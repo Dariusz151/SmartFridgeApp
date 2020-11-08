@@ -28,7 +28,11 @@ export default function FridgesDashboard({ navigation }) {
         mode="outlined"
         compact={true}
         // onPress={() => console.log("Pressed")}
-        onPress={() => RootNavigation.navigate("FridgeDetail")}
+        onPress={() =>
+          navigation.navigate("FridgeDetail", {
+            fridgeId: item.id,
+          })
+        }
       >
         <View style={styles.listings}>
           <Text style={styles.fridgeName}>{item.name}</Text>
