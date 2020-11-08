@@ -9,14 +9,10 @@ import { AppLoading } from "expo";
 import Header from "./components/Header";
 import { StatusBar } from "expo-status-bar";
 import Footer from "./components/Footer";
-import {
-  Provider as PaperProvider,
-  DarkTheme,
-  DefaultTheme,
-  Theme,
-} from "react-native-paper";
+import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import { navigationRef } from "./RootNavigation";
 import FridgesDashboard from "./components/FridgesDashboard";
+import FridgeDetail from "./components/FridgeDetail";
 
 const Stack = createStackNavigator();
 
@@ -51,14 +47,21 @@ export default function App() {
               name="Homepage"
               component={Homepage}
               options={{
-                header: () => <Header headerDisplay="SmartfridgeHeader" />,
+                header: () => <Header headerDisplay="SmartFridgeApp" />,
               }}
             />
             <Stack.Screen
               name="FridgesPage"
               component={FridgesDashboard}
               options={{
-                header: () => <Header headerDisplay="SmartfridgeHeader" />,
+                header: () => <Header headerDisplay="SmartFridgeApp" />,
+              }}
+            />
+            <Stack.Screen
+              name="FridgeDetail"
+              component={FridgeDetail}
+              options={{
+                header: () => <Header headerDisplay="SmartFridgeApp" />,
               }}
             />
           </Stack.Navigator>

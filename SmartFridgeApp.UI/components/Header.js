@@ -8,7 +8,7 @@ export default function Header(props) {
       <View>
         <Text style={styles.text}>{props.headerDisplay}</Text>
       </View>
-      <Image source={logo} style={{ width: 35, height: 35 }} />
+      {/* <Image source={logo} style={{ width: 35, height: 35 }} /> */}
     </View>
   );
 }
@@ -22,5 +22,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "OpenSans",
+    fontSize: 20,
+    paddingTop: 10,
   },
 });

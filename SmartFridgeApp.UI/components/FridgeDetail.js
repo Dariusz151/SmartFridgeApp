@@ -2,14 +2,11 @@ import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import * as RootNavigation from "../RootNavigation";
 
-export default function Homepage({ navigation }) {
+export default function FridgeDetail({ navigation }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => RootNavigation.navigate("FridgesPage")}
-      >
-        <Text style={styles.title}>Home</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text>Hello</Text>
       </TouchableOpacity>
     </View>
   );
@@ -26,9 +23,5 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
   },
 });

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
+import * as RootNavigation from "../RootNavigation";
+import { StyleSheet, View, FlatList } from "react-native";
 import {
   Button,
   ActivityIndicator,
   Colors,
   Text,
   Title,
+  Divider,
 } from "react-native-paper";
 
 export default function FridgesDashboard({ navigation }) {
@@ -24,15 +26,14 @@ export default function FridgesDashboard({ navigation }) {
     return (
       <Button
         mode="outlined"
-        icon="fridge-outline"
         compact={true}
-        onPress={() => console.log("Pressed")}
-        // onPress={() => navigation.navigate("NewsDetail", { url: item.url })}
+        // onPress={() => console.log("Pressed")}
+        onPress={() => RootNavigation.navigate("FridgeDetail")}
       >
         <View style={styles.listings}>
           <Text style={styles.fridgeName}>{item.name}</Text>
-          {/* <Text style={styles.blurb}>{item.desc}</Text> */}
-          {/* <Text style={styles.blurb}>{item.address}</Text> */}
+          <Divider></Divider>
+          <Text style={styles.blurb}>{item.desc}</Text>
         </View>
       </Button>
     );
@@ -58,19 +59,15 @@ export default function FridgesDashboard({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#eee",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
     padding: 20,
   },
-  thumbnail: {
-    height: 100,
-    width: "98%",
-  },
   listings: {
     paddingTop: 15,
-    paddingBottom: 25,
+    paddingBottom: 15,
   },
   title: {
     paddingBottom: 10,
