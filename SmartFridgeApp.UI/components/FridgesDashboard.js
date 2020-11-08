@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import {
-  StyleSheet,
-  Text,
-  View,
+  Button,
   ActivityIndicator,
-  FlatList,
-  Image,
-  TouchableWithoutFeedback,
-} from "react-native";
+  Colors,
+  Text,
+  Title,
+} from "react-native-paper";
 
 export default function FridgesDashboard({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
@@ -23,28 +22,34 @@ export default function FridgesDashboard({ navigation }) {
 
   const storyItem = ({ item }) => {
     return (
-      <TouchableWithoutFeedback
-      // onPress={() => navigation.navigate("NewsDetail", { url: item.url })}
+      <Button
+        mode="outlined"
+        icon="fridge-outline"
+        compact={true}
+        onPress={() => console.log("Pressed")}
+        // onPress={() => navigation.navigate("NewsDetail", { url: item.url })}
       >
         <View style={styles.listings}>
-          <Text style={styles.title}>{item.name}</Text>
-          {/* <Image style={styles.thumbnail} source={{ uri: item.urlToImage }} /> */}
-          <Text style={styles.blurb}>{item.desc}</Text>
-          <Text style={styles.blurb}>{item.address}</Text>
+          <Text style={styles.fridgeName}>{item.name}</Text>
+          {/* <Text style={styles.blurb}>{item.desc}</Text> */}
+          {/* <Text style={styles.blurb}>{item.address}</Text> */}
         </View>
-      </TouchableWithoutFeedback>
+      </Button>
     );
   };
   return (
     <View style={styles.container}>
       {dataLoading ? (
-        <ActivityIndicator />
+        <ActivityIndicator animating={true} color={Colors.blue300} />
       ) : (
-        <FlatList
-          data={fridgesData}
-          renderItem={storyItem}
-          keyExtractor={(item) => item.id}
-        />
+        <View>
+          <Title style={styles.title}>Select fridge</Title>
+          <FlatList
+            data={fridgesData}
+            renderItem={storyItem}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
       )}
     </View>
   );
@@ -66,8 +71,6 @@ const styles = StyleSheet.create({
   listings: {
     paddingTop: 15,
     paddingBottom: 25,
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
   },
   title: {
     paddingBottom: 10,
@@ -77,5 +80,9 @@ const styles = StyleSheet.create({
   blurb: {
     fontFamily: "OpenSans",
     fontStyle: "italic",
+  },
+  fridgeName: {
+    fontSize: 22,
+    color: Colors.green900,
   },
 });
