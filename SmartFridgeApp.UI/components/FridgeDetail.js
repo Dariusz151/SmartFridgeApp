@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
 import * as RootNavigation from "../RootNavigation";
-import { ActivityIndicator, Button, Text, Colors } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  Colors,
+  DataTable,
+} from "react-native-paper";
 import FridgeUsers from "./FridgeUsers";
 
 export default function FridgeDetail({ route, navigation }) {
@@ -29,15 +35,45 @@ export default function FridgeDetail({ route, navigation }) {
             <ActivityIndicator animating={true} color={Colors.blue300} />
           ) : (
             <View>
-              <FlatList
-                data={fridgeItems}
-                renderItem={({ item }) => (
-                  <View>
-                    <Text>{item.productName}</Text>
-                  </View>
-                )}
-                keyExtractor={(item) => item.fridgeItemId}
-              />
+              <DataTable>
+                <DataTable.Header>
+                  <DataTable.Title>FridgeItemId</DataTable.Title>
+                  <DataTable.Title>Name</DataTable.Title>
+                  <DataTable.Title>Category</DataTable.Title>
+                </DataTable.Header>
+                {fridgeItems.map((fridgeItem) => {
+                  return (
+                    <DataTable.Row key={fridgeItem.fridgeItemId}>
+                      <DataTable.Cell>{fridgeItem.fridgeItemId}</DataTable.Cell>
+                      <DataTable.Cell>{fridgeItem.productName}</DataTable.Cell>
+                      <DataTable.Cell>{fridgeItem.categoryName}</DataTable.Cell>
+                    </DataTable.Row>
+                  );
+                })}
+              </DataTable>
+              {/* <DataTable>
+              
+                <DataTable.Row>
+                  <DataTable.Cell>Frozen yogurt</DataTable.Cell>
+                  <DataTable.Cell numeric>159</DataTable.Cell>
+                  <DataTable.Cell numeric>6.0</DataTable.Cell>
+                </DataTable.Row>
+
+                <DataTable.Row>
+                  <DataTable.Cell>Ice cream sandwich</DataTable.Cell>
+                  <DataTable.Cell numeric>237</DataTable.Cell>
+                  <DataTable.Cell numeric>8.0</DataTable.Cell>
+                </DataTable.Row>
+
+                <DataTable.Pagination
+                  page={1}
+                  numberOfPages={3}
+                  onPageChange={(page) => {
+                    console.log(page);
+                  }}
+                  label="1-2 of 6"
+                />
+              </DataTable> */}
             </View>
           )}
         </View>
