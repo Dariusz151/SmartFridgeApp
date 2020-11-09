@@ -1,57 +1,45 @@
 import React, { useEffect, useState } from "react";
 import * as RootNavigation from "../RootNavigation";
 import { StyleSheet, View, FlatList } from "react-native";
-import {
-  Button,
-  ActivityIndicator,
-  Colors,
-  Text,
-  Title,
-  Divider,
-} from "react-native-paper";
+import { ActivityIndicator, Colors, Text, Switch } from "react-native-paper";
 
-export default function FridgesDashboard({ navigation }) {
+export default function FridgeUsers(props) {
+  const { fridgeId } = props;
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   const [dataLoading, finishLoading] = useState(true);
-  const [fridgesData, setData] = useState([]);
+  const [fridgeUsers, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/fridges")
+    fetch("https://localhost:5001/api/fridgeUsers/" + fridgeId)
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
   }, []);
 
-  const storyItem = ({ item }) => {
-    return (
-      <Button
-        mode="outlined"
-        compact={true}
-        onPress={() =>
-          navigation.navigate("FridgeDetail", {
-            fridgeId: item.id,
-            fridgeName: item.name,
-          })
-        }
-      >
-        <View style={styles.listings}>
-          <Text style={styles.fridgeName}>{item.name}</Text>
-          <Divider></Divider>
-          <Text style={styles.blurb}>{item.desc}</Text>
-        </View>
-      </Button>
-    );
-  };
   return (
     <View style={styles.container}>
       {dataLoading ? (
         <ActivityIndicator animating={true} color={Colors.blue300} />
       ) : (
         <View>
-          <Title style={styles.title}>Select fridge</Title>
           <FlatList
-            data={fridgesData}
-            renderItem={storyItem}
+            data={fridgeUsers}
+            renderItem={({ item }) => (
+              <View>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+                <Text>{item.name}</Text>
+              </View>
+            )}
             keyExtractor={(item) => item.id}
           />
         </View>
