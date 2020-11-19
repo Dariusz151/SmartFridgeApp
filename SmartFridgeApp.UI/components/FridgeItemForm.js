@@ -15,38 +15,38 @@ export default function FridgeItemForm({ route, navigation }) {
   const [unit, setUnit] = useState("");
   const [country, setCountry] = useState("uk");
 
+  const [items, setItems] = useState([{ label: "", value: "" }]);
+
+  useEffect(() => {
+    async function getData() {
+      const response = await fetch("https://localhost:5001/api/foodProducts");
+      const body = await response.json();
+      setItems(
+        body.map((item) => ({
+          label: item.foodProductName,
+          value: item.foodProductId,
+        }))
+      );
+    }
+    getData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Title style={styles.titleText}>
         Add item to {fridgeName} to {fridgeId}
       </Title>
       <DropDownPicker
-        items={[
-          {
-            label: "USA",
-            value: "usa",
-            icon: () => <Icon name="flag" size={18} color="#900" />,
-            hidden: true,
-          },
-          {
-            label: "UK",
-            value: "uk",
-            icon: () => <Icon name="flag" size={18} color="#900" />,
-          },
-          {
-            label: "France",
-            value: "france",
-            icon: () => <Icon name="flag" size={18} color="#900" />,
-          },
-        ]}
-        defaultValue={country}
+        items={items}
         containerStyle={{ height: 40 }}
         style={{ backgroundColor: "#fafafa" }}
         itemStyle={{
           justifyContent: "flex-start",
         }}
         dropDownStyle={{ backgroundColor: "#fafafa" }}
-        onChangeItem={(item) => setCountry(item.value)}
+        onChangeItem={(item) => {
+          setFoodProduct(item.value);
+        }}
       />
       <FormInput
         labelName="Value"
