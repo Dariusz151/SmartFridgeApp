@@ -13,6 +13,7 @@ import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import { navigationRef } from "./RootNavigation";
 import FridgesDashboard from "./components/FridgesDashboard";
 import FridgeDetail from "./components/FridgeDetail";
+import FridgeItemForm from "./components/FridgeItemForm";
 
 const Stack = createStackNavigator();
 
@@ -62,6 +63,13 @@ export default function App() {
               component={FridgeDetail}
               options={{
                 header: () => <Header headerDisplay="SmartFridgeApp" />,
+              }}
+            />
+            <Stack.Screen
+              name="FridgeItemForm"
+              component={FridgeItemForm}
+              options={{
+                header: () => <Header headerDisplay="Add new item" />,
               }}
             />
           </Stack.Navigator>
