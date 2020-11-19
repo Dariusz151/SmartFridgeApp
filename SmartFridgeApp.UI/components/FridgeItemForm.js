@@ -3,25 +3,50 @@ import FormInput from "./common/FormInput";
 import FormButton from "./common/FormButton";
 import { View, StyleSheet } from "react-native";
 import { Title, IconButton } from "react-native-paper";
+import Icon from "react-native-vector-icons/Feather";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function FridgeItemForm({ route, navigation }) {
   const { fridgeName, fridgeId } = route.params;
 
-  const [foodProduct, setFoodProduct] = useState("");
+  const [foodProduct, setFoodProduct] = useState(0);
   const [value, setValue] = useState("");
   const [note, setNote] = useState("");
   const [unit, setUnit] = useState("");
+  const [country, setCountry] = useState("uk");
 
   return (
     <View style={styles.container}>
       <Title style={styles.titleText}>
         Add item to {fridgeName} to {fridgeId}
       </Title>
-      <FormInput
-        labelName="FoodProduct"
-        value={foodProduct}
-        autoCapitalize="none"
-        onChangeText={(foodProduct) => setFoodProduct(foodProduct)}
+      <DropDownPicker
+        items={[
+          {
+            label: "USA",
+            value: "usa",
+            icon: () => <Icon name="flag" size={18} color="#900" />,
+            hidden: true,
+          },
+          {
+            label: "UK",
+            value: "uk",
+            icon: () => <Icon name="flag" size={18} color="#900" />,
+          },
+          {
+            label: "France",
+            value: "france",
+            icon: () => <Icon name="flag" size={18} color="#900" />,
+          },
+        ]}
+        defaultValue={country}
+        containerStyle={{ height: 40 }}
+        style={{ backgroundColor: "#fafafa" }}
+        itemStyle={{
+          justifyContent: "flex-start",
+        }}
+        dropDownStyle={{ backgroundColor: "#fafafa" }}
+        onChangeItem={(item) => setCountry(item.value)}
       />
       <FormInput
         labelName="Value"
