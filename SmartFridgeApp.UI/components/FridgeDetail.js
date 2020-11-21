@@ -18,12 +18,16 @@ export default function FridgeDetail({ route, navigation }) {
   const [fridgeItems, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/fridgeitems/" + fridgeId)
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => console.error(error))
-      .finally(() => finishLoading(false));
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetch("https://localhost:5001/api/fridgeitems/" + fridgeId)
+        .then((response) => response.json())
+        .then((json) => setData(json))
+        .catch((error) => console.error(error))
+        .finally(() => finishLoading(false));
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.outerContainer}>
