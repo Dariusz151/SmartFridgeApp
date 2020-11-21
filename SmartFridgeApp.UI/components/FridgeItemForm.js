@@ -31,6 +31,27 @@ export default function FridgeItemForm({ route, navigation }) {
     getData();
   }, []);
 
+  function postData() {
+    const obj = {
+      userId: "72EFEE28-86A0-4929-ACE1-746D9B6B49D7",
+      fridgeItem: {
+        foodProductId: 3,
+        value: 10,
+        note: "test",
+        unit: "Grams",
+      },
+    };
+    console.log(JSON.stringify(obj));
+    fetch("https://localhost:5001/api/fridgeItems/" + fridgeId + "/add", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+    console.log("postData");
+  }
+
   return (
     <View style={styles.container}>
       <Title style={styles.titleText}>
@@ -68,7 +89,7 @@ export default function FridgeItemForm({ route, navigation }) {
         modeValue="contained"
         labelStyle={styles.loginButtonLabel}
         onPress={() => {
-          console.log(foodProduct);
+          postData();
         }}
       />
       <IconButton

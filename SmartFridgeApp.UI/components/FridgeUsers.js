@@ -37,7 +37,10 @@ export default function FridgeUsers(props) {
                   onValueChange={toggleSwitch}
                   value={isEnabled}
                 />
-                <Text>{item.name}</Text>
+                <Text>
+                  {item.name}
+                  {item.id}
+                </Text>
               </View>
             )}
             keyExtractor={(item) => item.id}
