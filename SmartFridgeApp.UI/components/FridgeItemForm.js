@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "./common/FormInput";
 import FormButton from "./common/FormButton";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { Title, IconButton } from "react-native-paper";
-import Icon from "react-native-vector-icons/Feather";
 import DropDownPicker from "react-native-dropdown-picker";
+
+const { width, height } = Dimensions.get("screen");
 
 export default function FridgeItemForm({ route, navigation }) {
   const { fridgeName, fridgeId } = route.params;
 
   const [foodProduct, setFoodProduct] = useState(0);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(1);
   const [note, setNote] = useState("");
   const [unit, setUnit] = useState("");
-  const [country, setCountry] = useState("uk");
 
   const [items, setItems] = useState([{ label: "", value: "" }]);
 
@@ -35,10 +35,10 @@ export default function FridgeItemForm({ route, navigation }) {
     const obj = {
       userId: "72EFEE28-86A0-4929-ACE1-746D9B6B49D7",
       fridgeItem: {
-        foodProductId: 3,
-        value: 10,
-        note: "test",
-        unit: "Grams",
+        foodProductId: foodProduct,
+        value: value,
+        note: note,
+        unit: unit,
       },
     };
     console.log(JSON.stringify(obj));
@@ -49,7 +49,6 @@ export default function FridgeItemForm({ route, navigation }) {
       },
       body: JSON.stringify(obj),
     });
-    console.log("postData");
   }
 
   return (
@@ -59,12 +58,22 @@ export default function FridgeItemForm({ route, navigation }) {
       </Title>
       <DropDownPicker
         items={items}
-        containerStyle={{ height: 40 }}
+        containerStyle={{ width: width / 1.5, height: height / 15 }}
         style={{ backgroundColor: "#fafafa" }}
         itemStyle={{
           justifyContent: "flex-start",
         }}
+        labelStyle={{
+          fontSize: 20,
+          textAlign: "left",
+          color: "#000",
+        }}
         dropDownStyle={{ backgroundColor: "#fafafa" }}
+        searchable={true}
+        searchablePlaceholder="Search for an item"
+        searchablePlaceholderTextColor="gray"
+        seachableStyle={{}}
+        searchableError={() => <Text>Not Found</Text>}
         onChangeItem={(item) => {
           setFoodProduct(item.value);
         }}
@@ -72,17 +81,36 @@ export default function FridgeItemForm({ route, navigation }) {
       <FormInput
         labelName="Value"
         value={value}
-        onChangeText={(value) => setValue(value)}
+        onChangeText={(stringNum) => {
+          setValue(parseInt(stringNum));
+        }}
       />
+
       <FormInput
         labelName="Note"
         value={note}
         onChangeText={(note) => setNote(note)}
       />
-      <FormInput
-        labelName="Unit"
-        value={unit}
-        onChangeText={(unit) => setUnit(unit)}
+      <DropDownPicker
+        items={[
+          { label: "Grams", value: "Grams" },
+          { label: "Mililiter", value: "Mililiter" },
+          { label: "NotAssigned", value: "NotAssigned" },
+        ]}
+        containerStyle={{ width: width / 1.5, height: height / 15 }}
+        style={{ backgroundColor: "#fafafa" }}
+        itemStyle={{
+          justifyContent: "flex-start",
+        }}
+        labelStyle={{
+          fontSize: 20,
+          textAlign: "left",
+          color: "#000",
+        }}
+        dropDownStyle={{ backgroundColor: "#fafafa" }}
+        onChangeItem={(item) => {
+          setUnit(item.value);
+        }}
       />
       <FormButton
         title="Add"
@@ -122,5 +150,10 @@ const styles = StyleSheet.create({
   },
   navButton: {
     marginTop: 10,
+  },
+  numericInputStyle: {
+    width: width,
+    height: height / 15,
+    fontSize: 20,
   },
 });
