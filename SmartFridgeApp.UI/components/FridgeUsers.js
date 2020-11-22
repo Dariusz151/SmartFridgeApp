@@ -4,22 +4,6 @@ import { StyleSheet, View, FlatList } from "react-native";
 import { ActivityIndicator, Colors, Text, Switch } from "react-native-paper";
 
 export default function FridgeUsers(props) {
-  const { fridgeId } = props;
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  const [dataLoading, finishLoading] = useState(true);
-  const [fridgeUsers, setData] = useState([]);
-
-  useEffect(() => {
-    fetch("https://localhost:5001/api/fridgeUsers/" + fridgeId)
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => console.error(error))
-      .finally(() => finishLoading(false));
-  }, []);
-
   return (
     <View style={styles.container}>
       {dataLoading ? (

@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Switch } from "react-native";
 import * as RootNavigation from "../RootNavigation";
 
 export default function Homepage({ navigation }) {

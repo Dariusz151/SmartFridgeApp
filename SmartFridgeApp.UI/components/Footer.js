@@ -23,7 +23,10 @@ export default function Footer() {
       >
         <Text>FridgeUsers</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => RootNavigation.navigate("RecipesDashboard")}
+      >
         <Text>Recipes</Text>
       </TouchableOpacity>
     </View>

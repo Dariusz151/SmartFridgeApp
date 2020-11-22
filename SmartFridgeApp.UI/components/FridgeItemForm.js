@@ -85,7 +85,6 @@ export default function FridgeItemForm({ route, navigation }) {
           setValue(parseInt(stringNum));
         }}
       />
-
       <FormInput
         labelName="Note"
         value={note}
