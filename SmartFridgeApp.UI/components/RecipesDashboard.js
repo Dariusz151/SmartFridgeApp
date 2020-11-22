@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Colors,
+  DataTable,
+  Button,
+} from "react-native-paper";
 
 export default function RecipesDashboard({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
@@ -28,6 +33,7 @@ export default function RecipesDashboard({ navigation }) {
               <DataTable.Title>Required time</DataTable.Title>
               <DataTable.Title>Level of difficulty</DataTable.Title>
               <DataTable.Title>Category</DataTable.Title>
+              <DataTable.Title>Details</DataTable.Title>
             </DataTable.Header>
             {recipesData.map((recipe) => {
               return (
@@ -37,6 +43,9 @@ export default function RecipesDashboard({ navigation }) {
                   <DataTable.Cell>{recipe.requiredTime}</DataTable.Cell>
                   <DataTable.Cell>{recipe.levelOfDifficulty}</DataTable.Cell>
                   <DataTable.Cell>{recipe.recipeCategory}</DataTable.Cell>
+                  <DataTable.Cell>
+                    <Button>Details</Button>
+                  </DataTable.Cell>
                 </DataTable.Row>
               );
             })}
