@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as RootNavigation from "../RootNavigation";
+import configData from ".././config.dev.json";
 import { StyleSheet, View, FlatList } from "react-native";
 import {
   Button,
@@ -15,7 +16,7 @@ export default function FridgesDashboard({ navigation }) {
   const [fridgesData, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/fridges")
+    fetch("https://" + configData.SERVER_URL + "/api/fridges")
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.error(error))
