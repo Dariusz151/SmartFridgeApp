@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   Colors,
   DataTable,
-  Button,
+  Divider,
 } from "react-native-paper";
 
 export default function RecipesDashboard({ navigation }) {
@@ -19,8 +19,12 @@ export default function RecipesDashboard({ navigation }) {
   const [recipesData, setData] = useState([]);
   const [recipeDetails, setRecipeDetails] = useState({
     recipeDescription: "desc",
-    foodProducts: "xml",
+    foodProducts: "items",
   });
+  const [foodProductsFormatted, setFoodProductsFormatted] = useState([
+    { foodProductId: "1" },
+    { foodProductId: "2" },
+  ]);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -30,6 +34,20 @@ export default function RecipesDashboard({ navigation }) {
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
   }, []);
+
+  function formatFoodProducts(foodProds) {
+    var foodProductsString = foodProds;
+    var jsonObj = JSON.parse(foodProductsString);
+    var foodProductsList = jsonObj.ArrayOfFoodProductDetails.FoodProductDetails;
+
+    setFoodProductsFormatted([]);
+    for (const [key, value] of Object.entries(foodProductsList)) {
+      setFoodProductsFormatted((oldArray) => [
+        ...oldArray,
+        { foodProductId: value.FoodProductId },
+      ]);
+    }
+  }
 
   return (
     <View>
@@ -64,6 +82,7 @@ export default function RecipesDashboard({ navigation }) {
                           foodProducts: recipe.foodProducts,
                         }));
                         setModalVisible(true);
+                        formatFoodProducts(recipe.foodProducts);
                       }}
                     >
                       <Text style={styles.textStyle}>Details</Text>
@@ -85,7 +104,13 @@ export default function RecipesDashboard({ navigation }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{recipeDetails.foodProducts}</Text>
+            <Text style={styles.modalTitle}>
+              {recipeDetails.recipeDescription}
+            </Text>
+            <Divider></Divider>
+            {foodProductsFormatted.map((foodProduct) => {
+              return <Text>{foodProduct.foodProductId}</Text>;
+            })}
 
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
@@ -137,6 +162,12 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
+    textAlign: "center",
+  },
+  modalTitle: {
+    marginBottom: 20,
+    marginTop: 5,
+    fontSize: 24,
     textAlign: "center",
   },
 });

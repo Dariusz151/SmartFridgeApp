@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 7268,
-  "expoServerNgrokUrl": "https://32-k4b.dariusz151.smartfridgeapp-ui.exp.direct",
-  "packagerNgrokUrl": "https://packager.32-k4b.dariusz151.smartfridgeapp-ui.exp.direct",
-  "ngrokPid": 6892,
-  "webpackServerPort": 19006
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }
