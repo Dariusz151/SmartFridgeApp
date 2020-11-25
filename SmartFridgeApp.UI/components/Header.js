@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { Colors } from "react-native-paper";
 import logo from "../assets/fridge2.png";
 
 export default function Header(props) {
@@ -19,6 +20,7 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.blueGrey50,
   },
   text: {
     fontFamily: "OpenSans",

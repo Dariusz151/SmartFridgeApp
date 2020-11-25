@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Colors } from "react-native-paper";
 import * as RootNavigation from "../RootNavigation";
 
 export default function Footer() {
@@ -19,9 +20,9 @@ export default function Footer() {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => RootNavigation.navigate("FridgesPage")}
+        onPress={() => RootNavigation.navigate("FoodProductsDashboard")}
       >
-        <Text>FridgeUsers</Text>
+        <Text>FoodProducts</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "center",
+    backgroundColor: Colors.blueGrey50,
   },
   button: {
     padding: 20,
