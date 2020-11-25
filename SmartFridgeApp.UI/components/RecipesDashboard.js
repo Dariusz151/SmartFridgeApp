@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
   TouchableHighlight,
   Modal,
   Text,
+  ScrollView,
+  Button,
 } from "react-native";
 import {
   ActivityIndicator,
@@ -28,11 +29,49 @@ export default function RecipesDashboard({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/recipes")
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => console.error(error))
-      .finally(() => finishLoading(false));
+    // fetch("https://localhost:5001/api/recipes")
+    //   .then((response) => response.json())
+    //   .then((json) => setData(json))
+    //   .catch((error) => console.error(error))
+    //   .finally(() => finishLoading(false));
+
+    const mockData = [
+      {
+        recipeId: "8aef7086-398e-470d-bcba-0b2f7c0bc777",
+        recipeName: "Recipe1",
+        description: "Recipe1",
+        requiredTime: 40,
+        levelOfDifficultyId: 2,
+        levelOfDifficulty: "Hard",
+        recipeCategory: "Kolacja",
+        foodProducts:
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"1","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"15","AmountValue":{"Value":"12","Unit":"Grams"}},{"FoodProductId":"16","AmountValue":{"Value":"30","Unit":"Grams"}},{"FoodProductId":"7","AmountValue":{"Value":"20","Unit":"Grams"}},{"FoodProductId":"4","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+      },
+      {
+        recipeId: "897e6753-61db-4c14-a933-16c88c995fa0",
+        recipeName: "Recipe2",
+        description: "Recipe2",
+        requiredTime: 50,
+        levelOfDifficultyId: 2,
+        levelOfDifficulty: "Hard",
+        recipeCategory: "Kolacja",
+        foodProducts:
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"4","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"5","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"6","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"13","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"14","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+      },
+      {
+        recipeId: "5f3f3e34-49c7-4960-b238-c3ded7edd8b3",
+        recipeName: "Recipe kurczak",
+        description: "Recipe kurczako",
+        requiredTime: 25,
+        levelOfDifficultyId: 0,
+        levelOfDifficulty: "Easy",
+        recipeCategory: null,
+        foodProducts:
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"2","AmountValue":{"Value":"10","Unit":"NotAssigned"}},{"FoodProductId":"5","AmountValue":{"Value":"60","Unit":"NotAssigned"}}]}}',
+      },
+    ];
+    setData(mockData);
+    finishLoading(false);
   }, []);
 
   function formatFoodProducts(foodProds) {
@@ -50,48 +89,56 @@ export default function RecipesDashboard({ navigation }) {
   }
 
   return (
-    <View>
-      <TouchableOpacity></TouchableOpacity>
+    <View style={styles.mainContainer}>
       {dataLoading ? (
         <ActivityIndicator animating={true} color={Colors.blue300} />
       ) : (
-        <View>
+        <View style={styles.dataTableStyle}>
           <DataTable>
             <DataTable.Header>
               <DataTable.Title>Name</DataTable.Title>
-              <DataTable.Title>Description</DataTable.Title>
-              <DataTable.Title>Required time</DataTable.Title>
+              {/* <DataTable.Title>Description</DataTable.Title> */}
+              {/* <DataTable.Title>Required time</DataTable.Title> */}
               <DataTable.Title>Level of difficulty</DataTable.Title>
               <DataTable.Title>Category</DataTable.Title>
               <DataTable.Title>Details</DataTable.Title>
             </DataTable.Header>
-            {recipesData.map((recipe) => {
-              return (
-                <DataTable.Row key={recipe.recipeId}>
-                  <DataTable.Cell>{recipe.recipeName}</DataTable.Cell>
-                  <DataTable.Cell>{recipe.description}</DataTable.Cell>
-                  <DataTable.Cell>{recipe.requiredTime}</DataTable.Cell>
-                  <DataTable.Cell>{recipe.levelOfDifficulty}</DataTable.Cell>
-                  <DataTable.Cell>{recipe.recipeCategory}</DataTable.Cell>
-                  <DataTable.Cell>
-                    <TouchableHighlight
-                      style={styles.openButton}
-                      onPress={() => {
-                        setRecipeDetails((item) => ({
-                          recipeDescription: recipe.description,
-                          foodProducts: recipe.foodProducts,
-                        }));
-                        setModalVisible(true);
-                        formatFoodProducts(recipe.foodProducts);
-                      }}
-                    >
-                      <Text style={styles.textStyle}>Details</Text>
-                    </TouchableHighlight>
-                  </DataTable.Cell>
-                </DataTable.Row>
-              );
-            })}
+            <ScrollView>
+              {recipesData.map((recipe) => {
+                return (
+                  <DataTable.Row key={recipe.recipeId}>
+                    <DataTable.Cell>{recipe.recipeName}</DataTable.Cell>
+                    {/* <DataTable.Cell>{recipe.description}</DataTable.Cell> */}
+                    {/* <DataTable.Cell>{recipe.requiredTime}</DataTable.Cell> */}
+                    <DataTable.Cell>{recipe.levelOfDifficulty}</DataTable.Cell>
+                    <DataTable.Cell>{recipe.recipeCategory}</DataTable.Cell>
+                    <DataTable.Cell>
+                      <TouchableHighlight
+                        style={styles.openButton}
+                        onPress={() => {
+                          setRecipeDetails((item) => ({
+                            recipeDescription: recipe.description,
+                            foodProducts: recipe.foodProducts,
+                          }));
+                          setModalVisible(true);
+                          formatFoodProducts(recipe.foodProducts);
+                        }}
+                      >
+                        <Text style={styles.textStyle}>Details</Text>
+                      </TouchableHighlight>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })}
+            </ScrollView>
           </DataTable>
+          <Button
+            onPress={() => {
+              console.log("siema");
+            }}
+            title="Add new"
+            color={Colors.blueGrey600}
+          ></Button>
         </View>
       )}
       <Modal
@@ -109,7 +156,11 @@ export default function RecipesDashboard({ navigation }) {
             </Text>
             <Divider></Divider>
             {foodProductsFormatted.map((foodProduct) => {
-              return <Text>{foodProduct.foodProductId}</Text>;
+              return (
+                <Text key={foodProduct.foodProductId}>
+                  {foodProduct.foodProductId}
+                </Text>
+              );
             })}
 
             <TouchableHighlight
@@ -128,6 +179,16 @@ export default function RecipesDashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    height: "80%",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  dataTableStyle: {
+    flex: 1,
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -150,7 +211,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   openButton: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.green400,
     borderRadius: 20,
     padding: 10,
     elevation: 2,

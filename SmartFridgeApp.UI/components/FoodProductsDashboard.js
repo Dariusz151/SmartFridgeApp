@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   Modal,
+  Button,
 } from "react-native";
 import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
 

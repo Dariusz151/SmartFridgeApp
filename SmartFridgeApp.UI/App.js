@@ -46,7 +46,8 @@ export default function App() {
           ref={navigationRef}
         >
           <Stack.Navigator
-            initialRouteName="FoodProductsDashboard"
+            // initialRouteName="FoodProductsDashboard"
+            initialRouteName="RecipesDashboard"
             headerMode="screen"
           >
             <Stack.Screen
