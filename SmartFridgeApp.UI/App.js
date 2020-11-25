@@ -45,7 +45,10 @@ export default function App() {
           }}
           ref={navigationRef}
         >
-          <Stack.Navigator initialRouteName="Homepage" headerMode="screen">
+          <Stack.Navigator
+            initialRouteName="FoodProductsDashboard"
+            headerMode="screen"
+          >
             <Stack.Screen
               name="Homepage"
               component={Homepage}
