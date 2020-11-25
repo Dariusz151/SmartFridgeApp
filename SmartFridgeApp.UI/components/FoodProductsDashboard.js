@@ -12,6 +12,10 @@ import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
 export default function FoodProductsDashboard({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
   const [foodProductsData, setData] = useState([]);
+  const [selectedFoodProduct, selectFoodProduct] = useState({
+    foodProductId: 1,
+    foodProductName: "FoodProduct",
+  });
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -163,8 +167,11 @@ export default function FoodProductsDashboard({ navigation }) {
                       <TouchableHighlight
                         style={styles.openButton}
                         onPress={() => {
+                          selectFoodProduct({
+                            foodProductId: item.foodProductId,
+                            foodProductName: item.foodProductName,
+                          });
                           setModalVisible(true);
-                          console.log("siema");
                         }}
                       >
                         <Text style={styles.textStyle}>Edit</Text>
@@ -188,8 +195,11 @@ export default function FoodProductsDashboard({ navigation }) {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Edit food product</Text>
-
+              <Text style={styles.modalText}>
+                Edit {selectedFoodProduct.foodProductName} with index{" "}
+                {selectedFoodProduct.foodProductId}
+              </Text>
+              <Text style={styles.modalText}>TODO FORM</Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                 onPress={() => {
