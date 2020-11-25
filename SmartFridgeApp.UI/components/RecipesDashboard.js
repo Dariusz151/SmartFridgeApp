@@ -19,12 +19,13 @@ export default function RecipesDashboard({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
   const [recipesData, setData] = useState([]);
   const [recipeDetails, setRecipeDetails] = useState({
+    recipeName: "recipe",
     recipeDescription: "desc",
     foodProducts: "items",
   });
   const [foodProductsFormatted, setFoodProductsFormatted] = useState([
-    { foodProductId: "1" },
-    { foodProductId: "2" },
+    { foodProductId: "1", AmountValue: { Value: "1", Unit: "Grams" } },
+    { foodProductId: "2", AmountValue: { Value: "2", Unit: "Grams" } },
   ]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -79,11 +80,19 @@ export default function RecipesDashboard({ navigation }) {
     var jsonObj = JSON.parse(foodProductsString);
     var foodProductsList = jsonObj.ArrayOfFoodProductDetails.FoodProductDetails;
 
+    console.log(foodProductsList);
+
     setFoodProductsFormatted([]);
     for (const [key, value] of Object.entries(foodProductsList)) {
       setFoodProductsFormatted((oldArray) => [
         ...oldArray,
-        { foodProductId: value.FoodProductId },
+        {
+          FoodProductId: value.FoodProductId,
+          AmountValue: {
+            Value: value.AmountValue.Value,
+            Unit: value.AmountValue.Unit,
+          },
+        },
       ]);
     }
   }
@@ -96,27 +105,30 @@ export default function RecipesDashboard({ navigation }) {
         <View style={styles.dataTableStyle}>
           <DataTable>
             <DataTable.Header>
+              <DataTable.Title>Id</DataTable.Title>
               <DataTable.Title>Name</DataTable.Title>
               {/* <DataTable.Title>Description</DataTable.Title> */}
               {/* <DataTable.Title>Required time</DataTable.Title> */}
-              <DataTable.Title>Level of difficulty</DataTable.Title>
+              {/* <DataTable.Title>Level of difficulty</DataTable.Title> */}
               <DataTable.Title>Category</DataTable.Title>
               <DataTable.Title>Details</DataTable.Title>
             </DataTable.Header>
             <ScrollView>
-              {recipesData.map((recipe) => {
+              {recipesData.map((recipe, index) => {
                 return (
                   <DataTable.Row key={recipe.recipeId}>
+                    <DataTable.Cell>{index + 1}</DataTable.Cell>
                     <DataTable.Cell>{recipe.recipeName}</DataTable.Cell>
                     {/* <DataTable.Cell>{recipe.description}</DataTable.Cell> */}
                     {/* <DataTable.Cell>{recipe.requiredTime}</DataTable.Cell> */}
-                    <DataTable.Cell>{recipe.levelOfDifficulty}</DataTable.Cell>
+                    {/* <DataTable.Cell>{recipe.levelOfDifficulty}</DataTable.Cell> */}
                     <DataTable.Cell>{recipe.recipeCategory}</DataTable.Cell>
                     <DataTable.Cell>
                       <TouchableHighlight
                         style={styles.openButton}
                         onPress={() => {
                           setRecipeDetails((item) => ({
+                            recipeName: recipe.recipeName,
                             recipeDescription: recipe.description,
                             foodProducts: recipe.foodProducts,
                           }));
@@ -151,14 +163,16 @@ export default function RecipesDashboard({ navigation }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>
+            <Text style={styles.modalTitle}>{recipeDetails.recipeName}</Text>
+            <Text style={styles.modalText}>
               {recipeDetails.recipeDescription}
             </Text>
             <Divider></Divider>
             {foodProductsFormatted.map((foodProduct) => {
               return (
-                <Text key={foodProduct.foodProductId}>
-                  {foodProduct.foodProductId}
+                <Text key={foodProduct.FoodProductId}>
+                  {foodProduct.FoodProductId} {foodProduct.AmountValue.Value}{" "}
+                  {foodProduct.AmountValue.Unit}
                 </Text>
               );
             })}
