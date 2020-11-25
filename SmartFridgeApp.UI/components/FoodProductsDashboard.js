@@ -5,6 +5,7 @@ import {
   TouchableHighlight,
   Text,
   ScrollView,
+  Modal,
 } from "react-native";
 import { ActivityIndicator, Colors, DataTable } from "react-native-paper";
 
@@ -162,6 +163,7 @@ export default function FoodProductsDashboard({ navigation }) {
                       <TouchableHighlight
                         style={styles.openButton}
                         onPress={() => {
+                          setModalVisible(true);
                           console.log("siema");
                         }}
                       >
@@ -175,6 +177,31 @@ export default function FoodProductsDashboard({ navigation }) {
           </DataTable>
         </View>
       )}
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Edit food product</Text>
+
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Close</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   );
 }
@@ -196,6 +223,31 @@ const styles = StyleSheet.create({
   textStyle: {
     color: Colors.grey50,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
     textAlign: "center",
   },
 });
