@@ -24,8 +24,16 @@ export default function RecipesDashboard({ navigation }) {
     foodProducts: "items",
   });
   const [foodProductsFormatted, setFoodProductsFormatted] = useState([
-    { foodProductId: "1", AmountValue: { Value: "1", Unit: "Grams" } },
-    { foodProductId: "2", AmountValue: { Value: "2", Unit: "Grams" } },
+    {
+      foodProductId: "1",
+      foodProductName: "fpName1",
+      AmountValue: { Value: "1", Unit: "Grams" },
+    },
+    {
+      foodProductId: "2",
+      foodProductName: "fpName2",
+      AmountValue: { Value: "2", Unit: "Grams" },
+    },
   ]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -46,7 +54,7 @@ export default function RecipesDashboard({ navigation }) {
         levelOfDifficulty: "Hard",
         recipeCategory: "Kolacja",
         foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"1","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"15","AmountValue":{"Value":"12","Unit":"Grams"}},{"FoodProductId":"16","AmountValue":{"Value":"30","Unit":"Grams"}},{"FoodProductId":"7","AmountValue":{"Value":"20","Unit":"Grams"}},{"FoodProductId":"4","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"1","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"15","FoodProductName":"fpName3","AmountValue":{"Value":"12","Unit":"Grams"}},{"FoodProductId":"16","FoodProductName":"fpName3","AmountValue":{"Value":"30","Unit":"Grams"}},{"FoodProductId":"7","FoodProductName":"fpName3","AmountValue":{"Value":"20","Unit":"Grams"}},{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
       },
       {
         recipeId: "897e6753-61db-4c14-a933-16c88c995fa0",
@@ -57,18 +65,18 @@ export default function RecipesDashboard({ navigation }) {
         levelOfDifficulty: "Hard",
         recipeCategory: "Kolacja",
         foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"4","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"5","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"6","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"13","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"14","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"5","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"6","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"13","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"14","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
       },
       {
         recipeId: "5f3f3e34-49c7-4960-b238-c3ded7edd8b3",
-        recipeName: "Recipe kurczak",
-        description: "Recipe kurczako",
+        recipeName: "Recipe 3",
+        description: "Recipe 3",
         requiredTime: 25,
         levelOfDifficultyId: 0,
         levelOfDifficulty: "Easy",
         recipeCategory: null,
         foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"2","AmountValue":{"Value":"10","Unit":"NotAssigned"}},{"FoodProductId":"5","AmountValue":{"Value":"60","Unit":"NotAssigned"}}]}}',
+          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"2","FoodProductName":"fpName3","AmountValue":{"Value":"10","Unit":"NotAssigned"}},{"FoodProductId":"5","FoodProductName":"fpName1","AmountValue":{"Value":"60","Unit":"NotAssigned"}}]}}',
       },
     ];
     setData(mockData);
@@ -88,6 +96,7 @@ export default function RecipesDashboard({ navigation }) {
         ...oldArray,
         {
           FoodProductId: value.FoodProductId,
+          FoodProductName: value.FoodProductName,
           AmountValue: {
             Value: value.AmountValue.Value,
             Unit: value.AmountValue.Unit,
@@ -171,7 +180,7 @@ export default function RecipesDashboard({ navigation }) {
             {foodProductsFormatted.map((foodProduct) => {
               return (
                 <Text key={foodProduct.FoodProductId}>
-                  {foodProduct.FoodProductId} {foodProduct.AmountValue.Value}{" "}
+                  {foodProduct.FoodProductName} {foodProduct.AmountValue.Value}{" "}
                   {foodProduct.AmountValue.Unit}
                 </Text>
               );
