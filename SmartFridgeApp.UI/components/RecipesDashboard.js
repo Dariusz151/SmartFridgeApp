@@ -155,7 +155,7 @@ export default function RecipesDashboard({ navigation }) {
           </DataTable>
           <Button
             onPress={() => {
-              console.log("siema");
+              navigation.navigate("RecipeForm");
             }}
             title="Add new"
             color={Colors.blueGrey600}

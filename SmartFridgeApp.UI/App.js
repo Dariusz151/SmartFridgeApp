@@ -14,6 +14,7 @@ import { navigationRef } from "./RootNavigation";
 import FridgesDashboard from "./components/FridgesDashboard";
 import FridgeDetail from "./components/FridgeDetail";
 import FridgeItemForm from "./components/FridgeItemForm";
+import RecipeForm from "./components/RecipeForm";
 import RecipesDashboard from "./components/RecipesDashboard";
 import FoodProductsDashboard from "./components/FoodProductsDashboard";
 
@@ -47,7 +48,7 @@ export default function App() {
         >
           <Stack.Navigator
             // initialRouteName="FoodProductsDashboard"
-            initialRouteName="RecipesDashboard"
+            initialRouteName="RecipeForm"
             headerMode="screen"
           >
             <Stack.Screen
@@ -90,6 +91,13 @@ export default function App() {
               component={FridgeItemForm}
               options={{
                 header: () => <Header headerDisplay="Add new item" />,
+              }}
+            />
+            <Stack.Screen
+              name="RecipeForm"
+              component={RecipeForm}
+              options={{
+                header: () => <Header headerDisplay="SmartFridgeApp" />,
               }}
             />
           </Stack.Navigator>
