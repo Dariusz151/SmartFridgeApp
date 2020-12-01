@@ -11,7 +11,6 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
         public int RecipeCategory { get; set; }
         public int RequiredTime { get; set; }
         public int LevelOfDifficulty { get; set; }
-        public List<FoodProductDetails> Products { get; set; }
-        //public List<int> ProductIds { get; set; }
+        public List<FoodProductDetailsDto> Products { get; set; }
     }
 }

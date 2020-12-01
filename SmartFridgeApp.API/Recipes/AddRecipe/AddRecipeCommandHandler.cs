@@ -32,13 +32,26 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
                 throw new DomainException("DomainException", "Some product id's does not exist in database.");
             }
 
+            //
+            // TODO: violate DRY principle ! Change it!
+            //
+            var allFoodProducts = await _foodProductRepository.GetAllAsync();
+
+            List<FoodProductDetails> productsDetails = new List<FoodProductDetails>();
+            foreach (var item in command.Products)
+            {
+                var foodProductName = allFoodProducts.SingleOrDefault(x => x.FoodProductId == item.FoodProductId).Name;
+                FoodProductDetails fpd = new FoodProductDetails(item.FoodProductId, foodProductName, item.AmountValue);
+                productsDetails.Add(fpd);
+            }
+            
             var recipeCategory = await _recipeRepository.GetRecipeCategoryByIdAsync(command.RecipeCategory);
 
             var recipe = new Recipe(
                 command.Name,
                 command.Description,
                 recipeCategory,
-                command.Products,
+                productsDetails,
                 command.RequiredTime,
                 command.LevelOfDifficulty);
 
