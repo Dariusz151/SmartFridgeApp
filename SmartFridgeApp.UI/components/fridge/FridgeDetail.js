@@ -6,7 +6,7 @@ import {
   FlatList,
   Switch,
 } from "react-native";
-import * as RootNavigation from "../RootNavigation";
+import * as RootNavigation from "../../RootNavigation";
 import {
   ActivityIndicator,
   Button,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as RootNavigation from "../RootNavigation";
+import * as RootNavigation from "../../RootNavigation";
 import { StyleSheet, View, FlatList } from "react-native";
 import { ActivityIndicator, Colors, Text, Switch } from "react-native-paper";
 

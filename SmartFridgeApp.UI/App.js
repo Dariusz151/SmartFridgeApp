@@ -11,12 +11,12 @@ import { StatusBar } from "expo-status-bar";
 import Footer from "./components/Footer";
 import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import { navigationRef } from "./RootNavigation";
-import FridgesDashboard from "./components/FridgesDashboard";
-import FridgeDetail from "./components/FridgeDetail";
-import FridgeItemForm from "./components/FridgeItemForm";
-import RecipeForm from "./components/RecipeForm";
-import RecipesDashboard from "./components/RecipesDashboard";
-import FoodProductsDashboard from "./components/FoodProductsDashboard";
+import FridgesDashboard from "./components/fridge/FridgesDashboard";
+import FridgeDetail from "./components/fridge/FridgeDetail";
+import FridgeItemForm from "./components/fridge-item/FridgeItemForm";
+import RecipeForm from "./components/recipe/RecipeForm";
+import RecipesDashboard from "./components/recipe/RecipesDashboard";
+import FoodProductsDashboard from "./components/food-product/FoodProductsDashboard";
 
 const Stack = createStackNavigator();
 

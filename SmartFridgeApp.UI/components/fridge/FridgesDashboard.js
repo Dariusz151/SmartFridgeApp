@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import * as RootNavigation from "../RootNavigation";
-import configData from ".././config.dev.json";
+import * as RootNavigation from "../../RootNavigation";
+import configData from "../../config.dev.json";
 import { StyleSheet, View, FlatList } from "react-native";
 import {
   Button,

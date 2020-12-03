@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import FormInput from "./common/FormInput";
-import FormButton from "./common/FormButton";
+import FormInput from "../common/FormInput";
+import FormButton from "../common/FormButton";
 import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { Title, IconButton } from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
