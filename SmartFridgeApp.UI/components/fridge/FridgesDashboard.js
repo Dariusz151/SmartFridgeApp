@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as RootNavigation from "../../RootNavigation";
 import configData from "../../config.dev.json";
-import { StyleSheet, View, FlatList, TouchableHighlight } from "react-native";
-import {
-  Button,
-  ActivityIndicator,
-  Colors,
-  Text,
-  Title,
-  Divider,
-  DataTable,
-} from "react-native-paper";
+import { StyleSheet, View, Button, TouchableHighlight } from "react-native";
+import { ActivityIndicator, Colors, Text, DataTable } from "react-native-paper";
 
 export default function FridgesDashboard({ navigation }) {
   const [dataLoading, finishLoading] = useState(true);
@@ -45,46 +37,57 @@ export default function FridgesDashboard({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.mainContainer}>
-      {dataLoading ? (
-        <ActivityIndicator animating={true} color={Colors.blue300} />
-      ) : (
-        <View>
-          {/* <Title>Select fridge</Title> */}
-          <DataTable>
-            <DataTable.Header>
-              <DataTable.Title>Id</DataTable.Title>
-              <DataTable.Title>Name</DataTable.Title>
-              <DataTable.Title>Desc</DataTable.Title>
-              <DataTable.Title></DataTable.Title>
-            </DataTable.Header>
-            {fridgesData.map((item, index) => {
-              return (
-                <DataTable.Row key={item.id}>
-                  <DataTable.Cell>{index + 1}</DataTable.Cell>
-                  <DataTable.Cell>
-                    <Text>{item.name}</Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell>{item.desc}</DataTable.Cell>
-                  <DataTable.Cell>
-                    <TouchableHighlight
-                      style={styles.openButton}
-                      onPress={() =>
-                        navigation.navigate("FridgeDetail", {
-                          fridgeId: item.id,
-                          fridgeName: item.name,
-                        })
-                      }
-                    >
-                      <Text style={styles.textStyle}>Edit</Text>
-                    </TouchableHighlight>
-                  </DataTable.Cell>
-                </DataTable.Row>
-              );
-            })}
-          </DataTable>
-        </View>
-      )}
+    <View>
+      <View style={styles.mainContainer}>
+        {dataLoading ? (
+          <ActivityIndicator animating={true} color={Colors.blue300} />
+        ) : (
+          <View>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title>Id</DataTable.Title>
+                <DataTable.Title>Name</DataTable.Title>
+                <DataTable.Title>Desc</DataTable.Title>
+                <DataTable.Title></DataTable.Title>
+              </DataTable.Header>
+              {fridgesData.map((item, index) => {
+                return (
+                  <DataTable.Row key={item.id}>
+                    <DataTable.Cell>{index + 1}</DataTable.Cell>
+                    <DataTable.Cell>
+                      <Text>{item.name}</Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell>{item.desc}</DataTable.Cell>
+                    <DataTable.Cell>
+                      <TouchableHighlight
+                        style={styles.openButton}
+                        onPress={() =>
+                          navigation.navigate("FridgeDetail", {
+                            fridgeId: item.id,
+                            fridgeName: item.name,
+                          })
+                        }
+                      >
+                        <Text style={styles.textStyle}>Edit</Text>
+                      </TouchableHighlight>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })}
+            </DataTable>
+            <Button
+              style={styles.newButton}
+              onPress={() => {
+                navigation.navigate("CreateFridgeForm");
+              }}
+              title="Add new"
+              color={Colors.blueGrey600}
+            >
+              Add new
+            </Button>
+          </View>
+        )}
+      </View>
     </View>
   );
 }
@@ -108,4 +111,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  newButton: { width: "50%" },
 });

@@ -22,8 +22,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 .expo/
-
+packager-info.json
 [Pp]ublish/
+
 
 #appsettings.Development.json
 #appsettings.Production.json

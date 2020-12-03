@@ -17,6 +17,7 @@ import FridgeItemForm from "./components/fridge-item/FridgeItemForm";
 import RecipeForm from "./components/recipe/RecipeForm";
 import RecipesDashboard from "./components/recipe/RecipesDashboard";
 import FoodProductsDashboard from "./components/food-product/FoodProductsDashboard";
+import CreateFridgeForm from "./components/fridge/CreateFridgeForm";
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,13 @@ export default function App() {
             <Stack.Screen
               name="RecipeForm"
               component={RecipeForm}
+              options={{
+                header: () => <Header headerDisplay="SmartFridgeApp" />,
+              }}
+            />
+            <Stack.Screen
+              name="CreateFridgeForm"
+              component={CreateFridgeForm}
               options={{
                 header: () => <Header headerDisplay="SmartFridgeApp" />,
               }}
