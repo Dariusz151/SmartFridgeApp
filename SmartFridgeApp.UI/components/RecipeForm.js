@@ -16,19 +16,40 @@ export default function RecipeForm({ navigation }) {
   const [categories, setCategories] = useState([{ label: "", value: "" }]);
 
   useEffect(() => {
-    async function getData() {
-      const response = await fetch(
-        "https://localhost:5001/api/recipes/categories"
-      );
-      const body = await response.json();
-      setCategories(
-        body.map((item) => ({
-          label: item.name,
-          value: item.recipeCategoryId,
-        }))
-      );
-    }
-    getData();
+    // async function getData() {
+    //   const response = await fetch(
+    //     "https://localhost:5001/api/recipes/categories"
+    //   );
+    //   const body = await response.json();
+    //   setCategories(
+    //     body.map((item) => ({
+    //       label: item.name,
+    //       value: item.recipeCategoryId,
+    //     }))
+    //   );
+    // }
+    // getData();
+
+    const mockData = [
+      {
+        name: "Kolacja",
+        recipeCategoryId: 1,
+      },
+      {
+        name: "Obiad",
+        recipeCategoryId: 2,
+      },
+      {
+        name: "Śniadanie",
+        recipeCategoryId: 3,
+      },
+    ];
+    setCategories(
+      mockData.map((item) => ({
+        label: item.name,
+        value: item.recipeCategoryId,
+      }))
+    );
   }, []);
 
   function postData() {
@@ -91,11 +112,6 @@ export default function RecipeForm({ navigation }) {
           color: "#000",
         }}
         dropDownStyle={{ backgroundColor: "#fafafa" }}
-        searchable={true}
-        searchablePlaceholder="Search for an item"
-        searchablePlaceholderTextColor="gray"
-        seachableStyle={{}}
-        searchableError={() => <Text>Not Found</Text>}
         onChangeItem={(item) => {
           setCategory(parseInt(item.value));
         }}

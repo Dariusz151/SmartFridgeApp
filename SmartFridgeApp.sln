@@ -3,6 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{236166EB-0372-4433-A48F-34846FE675AB}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		build.sh = build.sh
+		Dockerfile = Dockerfile
+		pipeline.sh = pipeline.sh
+		readme.md = readme.md
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.UnitTests", "SmartFridgeApp.UnitTests\SmartFridgeApp.UnitTests.csproj", "{1D986608-3524-457D-9627-2B484A8D252A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Domain", "SmartFridgeApp.Domain\SmartFridgeApp.Domain.csproj", "{898FE9B8-29E8-4ABA-BE82-9542D17C920A}"
@@ -12,15 +21,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.API", "SmartFridgeApp.API\SmartFridgeApp.API.csproj", "{15D6B819-3B6C-4002-8BF3-8E655C436C08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.IntegrationTests", "SmartFridgeApp.IntegrationTests\SmartFridgeApp.IntegrationTests.csproj", "{464904F6-F2E1-4DA6-B063-C83732B31172}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{236166EB-0372-4433-A48F-34846FE675AB}"
-	ProjectSection(SolutionItems) = preProject
-		.travis.yml = .travis.yml
-		build.sh = build.sh
-		Dockerfile = Dockerfile
-		pipeline.sh = pipeline.sh
-		readme.md = readme.md
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
