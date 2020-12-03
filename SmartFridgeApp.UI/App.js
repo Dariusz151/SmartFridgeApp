@@ -48,7 +48,7 @@ export default function App() {
         >
           <Stack.Navigator
             // initialRouteName="FoodProductsDashboard"
-            initialRouteName="RecipeForm"
+            initialRouteName="FridgesPage"
             headerMode="screen"
           >
             <Stack.Screen
