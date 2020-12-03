@@ -9,32 +9,35 @@ export default function FridgesDashboard({ navigation }) {
   const [fridgesData, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://" + configData.SERVER_URL + "/api/fridges")
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => console.error(error))
-      .finally(() => finishLoading(false));
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetch("https://" + configData.SERVER_URL + "/api/fridges")
+        .then((response) => response.json())
+        .then((json) => setData(json))
+        .catch((error) => console.error(error))
+        .finally(() => finishLoading(false));
 
-    // const mockData = [
-    //   {
-    //     id: "B3BE3EF2-5A86-4705-D13D-A67135DDA55F",
-    //     name: "Fridge1",
-    //     desc: "Fridge1",
-    //   },
-    //   {
-    //     id: "A3BE7EF8-9A86-4705-B87D-A16990DDA55F",
-    //     name: "Fridge2",
-    //     desc: "Fridge2",
-    //   },
-    //   {
-    //     id: "A3BF4EF8-9A86-4705-B87D-B16990DDA55F",
-    //     name: "Fridge3",
-    //     desc: "Fridge3",
-    //   },
-    // ];
-    // setData(mockData);
-    // finishLoading(false);
-  }, []);
+      // const mockData = [
+      //   {
+      //     id: "B3BE3EF2-5A86-4705-D13D-A67135DDA55F",
+      //     name: "Fridge1",
+      //     desc: "Fridge1",
+      //   },
+      //   {
+      //     id: "A3BE7EF8-9A86-4705-B87D-A16990DDA55F",
+      //     name: "Fridge2",
+      //     desc: "Fridge2",
+      //   },
+      //   {
+      //     id: "A3BF4EF8-9A86-4705-B87D-B16990DDA55F",
+      //     name: "Fridge3",
+      //     desc: "Fridge3",
+      //   },
+      // ];
+      // setData(mockData);
+      // finishLoading(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View>

@@ -1,50 +1,38 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "../common/FormInput";
 import FormButton from "../common/FormButton";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Text, Dimensions, ToastAndroid } from "react-native";
 import { Title, IconButton } from "react-native-paper";
-import DropDownPicker from "react-native-dropdown-picker";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function CreateFridgeForm({ navigation }) {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [address, setAddress] = useState("");
 
   useEffect(() => {}, []);
 
   function postData() {
     const obj = {
       name: name,
-      description: desc,
-      recipeCategory: category,
-      requiredTime: reqTime,
-      levelOfDifficulty: difficulty,
-      products: [
-        {
-          foodProductId: 1,
-          amountValue: {
-            value: 1,
-            unit: "NotAssigned",
-          },
-        },
-        {
-          foodProductId: 2,
-          amountValue: {
-            value: 3,
-            unit: "NotAssigned",
-          },
-        },
-      ],
+      desc: desc,
+      address: address,
     };
-    console.log(JSON.stringify(obj));
-    fetch("https://localhost:5001/api/recipes/", {
+    fetch("https://localhost:5001/api/fridges/", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
-    });
+    })
+      //   .then(ToastAndroid.show("Fridge created!", ToastAndroid.SHORT))
+      .then(navigation.goBack())
+      .catch((error) => {
+        setName("");
+        setDesc("");
+        setAddress("");
+      });
   }
 
   return (
@@ -59,6 +47,11 @@ export default function CreateFridgeForm({ navigation }) {
         labelName="Description"
         value={desc}
         onChangeText={(desc) => setDesc(desc)}
+      />
+      <FormInput
+        labelName="Address"
+        value={address}
+        onChangeText={(address) => setAddress(address)}
       />
       <FormButton
         title="Add"

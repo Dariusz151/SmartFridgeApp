@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Switch,
-} from "react-native";
+import { StyleSheet, View, TouchableHighlight } from "react-native";
 import * as RootNavigation from "../../RootNavigation";
 import {
   ActivityIndicator,
@@ -20,19 +14,17 @@ export default function FridgeDetail({ route, navigation }) {
   const { fridgeId, fridgeName } = route.params;
   const [dataLoading, finishLoading] = useState(true);
 
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
   const [fridgeItems, setFridgeData] = useState([]);
   const [fridgeUsers, setUsersData] = useState([]);
+  const [selectedUserId, selectUser] = useState("");
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      fetch("https://localhost:5001/api/fridgeitems/" + fridgeId)
-        .then((response) => response.json())
-        .then((json) => setFridgeData(json))
-        .catch((error) => console.error(error))
-        .finally(() => finishLoading(false));
+      // fetch("https://localhost:5001/api/fridgeitems/" + fridgeId)
+      //   .then((response) => response.json())
+      //   .then((json) => setFridgeData(json))
+      //   .catch((error) => console.error(error))
+      //   .finally(() => finishLoading(false));
 
       fetch("https://localhost:5001/api/fridgeUsers/" + fridgeId)
         .then((response) => response.json())
@@ -44,13 +36,40 @@ export default function FridgeDetail({ route, navigation }) {
     return unsubscribe;
   }, [navigation]);
 
+  function getFridgeItemsByUser(userId) {
+    fetch("https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId)
+      .then((response) => response.json())
+      .then((json) => setFridgeData(json))
+      .catch((error) => console.error(error))
+      .finally(() => finishLoading(false));
+  }
+
   return (
     <View style={styles.outerContainer}>
+      {fridgeUsers.map((item) => {
+        return (
+          <TouchableHighlight
+            key={item.id}
+            onPress={() => {
+              console.log(item.id);
+              selectUser(item.id);
+              getFridgeItemsByUser(item.id);
+            }}
+          >
+            <Text style={styles.textStyle}>{item.name}</Text>
+          </TouchableHighlight>
+        );
+      })}
+      <TouchableHighlight
+        onPress={() => {
+          console.log("All");
+          getFridgeItemsByUser("");
+        }}
+      >
+        <Text style={styles.textStyle}>All</Text>
+      </TouchableHighlight>
       <View style={styles.innerContainer}>
         <View style={styles.fridgeItemsPane}>
-          <TouchableOpacity>
-            <Text>Hello {fridgeName}</Text>
-          </TouchableOpacity>
           {dataLoading ? (
             <ActivityIndicator animating={true} color={Colors.blue300} />
           ) : (
@@ -76,29 +95,6 @@ export default function FridgeDetail({ route, navigation }) {
             </View>
           )}
         </View>
-        <View style={styles.container}>
-          {dataLoading ? (
-            <ActivityIndicator animating={true} color={Colors.blue300} />
-          ) : (
-            <View>
-              <FlatList
-                data={fridgeUsers}
-                renderItem={({ item }) => (
-                  <View>
-                    <Switch
-                      trackColor={{ false: "#767577", true: "#81b0ff" }}
-                      thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                      onValueChange={toggleSwitch}
-                      value={isEnabled}
-                    />
-                    <Text>{item.name}</Text>
-                  </View>
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          )}
-        </View>
       </View>
       <Button
         onPress={() =>
@@ -108,7 +104,7 @@ export default function FridgeDetail({ route, navigation }) {
           })
         }
       >
-        Add
+        Add new item
       </Button>
       <IconButton
         icon="keyboard-backspace"
@@ -172,5 +168,18 @@ const styles = StyleSheet.create({
   fridgeName: {
     fontSize: 22,
     color: Colors.green900,
+  },
+  openButton: {
+    backgroundColor: Colors.green400,
+    borderRadius: 14,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    backgroundColor: Colors.green400,
+    color: Colors.grey50,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 22,
   },
 });
