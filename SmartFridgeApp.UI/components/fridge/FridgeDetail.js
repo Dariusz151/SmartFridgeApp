@@ -20,15 +20,12 @@ export default function FridgeDetail({ route, navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      // fetch("https://localhost:5001/api/fridgeitems/" + fridgeId)
-      //   .then((response) => response.json())
-      //   .then((json) => setFridgeData(json))
-      //   .catch((error) => console.error(error))
-      //   .finally(() => finishLoading(false));
-
       fetch("https://localhost:5001/api/fridgeUsers/" + fridgeId)
         .then((response) => response.json())
-        .then((json) => setUsersData(json))
+        .then((json) => {
+          const additionalElement = { id: "All", name: "All" };
+          setUsersData([...json, additionalElement]);
+        })
         .catch((error) => console.error(error))
         .finally(() => finishLoading(false));
     });
@@ -37,6 +34,9 @@ export default function FridgeDetail({ route, navigation }) {
   }, [navigation]);
 
   function getFridgeItemsByUser(userId) {
+    if (userId === "All") {
+      userId = "";
+    }
     fetch("https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId)
       .then((response) => response.json())
       .then((json) => setFridgeData(json))
@@ -44,30 +44,30 @@ export default function FridgeDetail({ route, navigation }) {
       .finally(() => finishLoading(false));
   }
 
+  function renderButton(itemId, itemName) {
+    if (itemId === selectedUserId) {
+      return <Text style={styles.selectedUserButton}>{itemName}</Text>;
+    } else {
+      return <Text style={styles.userButton}>{itemName}</Text>;
+    }
+  }
+
   return (
     <View style={styles.outerContainer}>
+      <Text>Hello {selectedUserId}</Text>
       {fridgeUsers.map((item) => {
         return (
           <TouchableHighlight
             key={item.id}
             onPress={() => {
-              console.log(item.id);
               selectUser(item.id);
               getFridgeItemsByUser(item.id);
             }}
           >
-            <Text style={styles.textStyle}>{item.name}</Text>
+            {renderButton(item.id, item.name)}
           </TouchableHighlight>
         );
       })}
-      <TouchableHighlight
-        onPress={() => {
-          console.log("All");
-          getFridgeItemsByUser("");
-        }}
-      >
-        <Text style={styles.textStyle}>All</Text>
-      </TouchableHighlight>
       <View style={styles.innerContainer}>
         <View style={styles.fridgeItemsPane}>
           {dataLoading ? (
@@ -169,17 +169,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: Colors.green900,
   },
-  openButton: {
-    backgroundColor: Colors.green400,
+  selectedUserButton: {
     borderRadius: 14,
     padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
     backgroundColor: Colors.green400,
-    color: Colors.grey50,
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 22,
+  },
+  userButton: {
+    borderRadius: 14,
+    padding: 10,
+    backgroundColor: Colors.grey600,
   },
 });
