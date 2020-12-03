@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, TouchableHighlight } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableHighlight,
+  DeviceEventEmitter,
+} from "react-native";
 import * as RootNavigation from "../../RootNavigation";
 import {
   ActivityIndicator,
@@ -16,32 +21,87 @@ export default function FridgeDetail({ route, navigation }) {
 
   const [fridgeItems, setFridgeData] = useState([]);
   const [fridgeUsers, setUsersData] = useState([]);
-  const [selectedUserId, selectUser] = useState("");
+  const [selectedUserId, selectUser] = useState("None");
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    DeviceEventEmitter.addListener("FridgeItemAddedListener", (e) => {
+      console.log("listener");
+      console.log(e);
+      let userId = e.userId;
+      console.log(userId);
+      getFridgeItemsByUser(userId);
+    });
+  }, []);
+
+  useEffect(
+    () => {
+      // const unsubscribe = navigation.addListener("focus", () => {
+      console.log("on navigation change");
       fetch("https://localhost:5001/api/fridgeUsers/" + fridgeId)
         .then((response) => response.json())
         .then((json) => {
           const additionalElement = { id: "All", name: "All" };
-          setUsersData([...json, additionalElement]);
+          const initialElement = { id: "None", name: "None" };
+          setUsersData([initialElement, ...json, additionalElement]);
         })
         .catch((error) => console.error(error))
         .finally(() => finishLoading(false));
-    });
 
-    return unsubscribe;
-  }, [navigation]);
+      getFridgeItemsByUser(selectedUserId);
+
+      // let userId = selectedUserId;
+      // if (selectedUserId != "None") {
+      //   if (selectedUserId === "All") {
+      //     userId = "";
+      //   }
+
+      //   fetch(
+      //     "https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId
+      //   )
+      //     .then((response) => response.json())
+      //     .then((json) => setFridgeData(json))
+      //     .catch((error) => console.error(error))
+      //     .finally(() => finishLoading(false));
+      // } else {
+      //   setFridgeData([]);
+      // }
+    },
+
+    // return unsubscribe;
+    // }
+    [navigation, selectedUserId]
+  );
+
+  // useEffect(() => {
+  //   console.log("useEffect on SelectedUserId changed");
+  //   let userId = selectedUserId;
+  //   if (selectedUserId != "None") {
+  //     if (selectedUserId === "All") {
+  //       userId = "";
+  //     }
+
+  //     fetch("https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId)
+  //       .then((response) => response.json())
+  //       .then((json) => setFridgeData(json))
+  //       .catch((error) => console.error(error))
+  //       .finally(() => finishLoading(false));
+  //   }
+  // }, [selectedUserId]);
 
   function getFridgeItemsByUser(userId) {
-    if (userId === "All") {
-      userId = "";
+    if (userId != "None") {
+      if (userId === "All") {
+        userId = "";
+      }
+
+      fetch("https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId)
+        .then((response) => response.json())
+        .then((json) => setFridgeData(json))
+        .catch((error) => console.error(error))
+        .finally(() => finishLoading(false));
+    } else {
+      setFridgeData([]);
     }
-    fetch("https://localhost:5001/api/fridgeitems/" + fridgeId + "/" + userId)
-      .then((response) => response.json())
-      .then((json) => setFridgeData(json))
-      .catch((error) => console.error(error))
-      .finally(() => finishLoading(false));
   }
 
   function renderButton(itemId, itemName) {
@@ -61,7 +121,7 @@ export default function FridgeDetail({ route, navigation }) {
             key={item.id}
             onPress={() => {
               selectUser(item.id);
-              getFridgeItemsByUser(item.id);
+              // getFridgeItemsByUser(item.id);
             }}
           >
             {renderButton(item.id, item.name)}
@@ -96,16 +156,21 @@ export default function FridgeDetail({ route, navigation }) {
           )}
         </View>
       </View>
-      <Button
-        onPress={() =>
-          navigation.navigate("FridgeItemForm", {
-            fridgeId: fridgeId,
-            fridgeName: fridgeName,
-          })
-        }
-      >
-        Add new item
-      </Button>
+      {selectedUserId != "None" && selectedUserId != "All" ? (
+        <Button
+          onPress={() =>
+            navigation.navigate("FridgeItemForm", {
+              fridgeId: fridgeId,
+              fridgeName: fridgeName,
+              userId: selectedUserId,
+            })
+          }
+        >
+          Add new item
+        </Button>
+      ) : (
+        <Text>Choose a user</Text>
+      )}
       <IconButton
         icon="keyboard-backspace"
         size={50}

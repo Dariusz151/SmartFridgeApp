@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "../common/FormInput";
 import FormButton from "../common/FormButton";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  DeviceEventEmitter,
+} from "react-native";
 import { Title, IconButton } from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function FridgeItemForm({ route, navigation }) {
-  const { fridgeName, fridgeId } = route.params;
+  const { fridgeName, fridgeId, userId } = route.params;
 
   const [foodProduct, setFoodProduct] = useState(0);
   const [value, setValue] = useState(1);
@@ -33,7 +39,7 @@ export default function FridgeItemForm({ route, navigation }) {
 
   function postData() {
     const obj = {
-      userId: "72EFEE28-86A0-4929-ACE1-746D9B6B49D7",
+      userId: userId,
       fridgeItem: {
         foodProductId: foodProduct,
         value: value,
@@ -49,6 +55,9 @@ export default function FridgeItemForm({ route, navigation }) {
       },
       body: JSON.stringify(obj),
     });
+
+    DeviceEventEmitter.emit("FridgeItemAddedListener", {userId});
+    navigation.goBack();
   }
 
   return (
@@ -124,7 +133,9 @@ export default function FridgeItemForm({ route, navigation }) {
         size={70}
         style={styles.navButton}
         color="#6646ee"
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          navigation.goBack();
+        }}
       />
     </View>
   );
