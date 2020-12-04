@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FormInput from "../common/FormInput";
-import FormButton from "../common/FormButton";
+
 import {
   View,
   StyleSheet,
@@ -9,6 +8,8 @@ import {
   DeviceEventEmitter,
 } from "react-native";
 import { Title, IconButton } from "react-native-paper";
+import FormInput from "../common/FormInput";
+import FormButton from "../common/FormButton";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const { width, height } = Dimensions.get("screen");
