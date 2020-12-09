@@ -116,6 +116,7 @@ namespace SmartFridgeApp.API
             }).AsSelf().InstancePerLifetimeScope();
 
 
+
             // TODO: new JobFactory(IContainer) -< how to inject IContainer here? it was upgrade to net core 3.1 and now doesnt works
 
             //_scheduler.JobFactory = new JobFactory();
