@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct
 {
@@ -20,7 +21,6 @@ namespace SmartFridgeApp.API.FoodProducts.AddFoodProduct
         public async Task<Unit> Handle(AddFoodProductCommand command, CancellationToken cancellationToken)
         {
             var category = await _foodProductRepository.GetCategoryByIdAsync(command.CategoryId);
-
             var foodProduct = new FoodProduct(command.Name, category);
 
             await _foodProductRepository.AddAsync(foodProduct);

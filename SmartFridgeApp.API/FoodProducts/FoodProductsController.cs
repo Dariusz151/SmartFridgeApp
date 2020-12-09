@@ -10,6 +10,7 @@ using SmartFridgeApp.API.FoodProducts.DeleteFoodProduct;
 using SmartFridgeApp.API.FoodProducts.GetFoodProducts;
 using SmartFridgeApp.API.FoodProducts.UpdateFoodProduct;
 using SmartFridgeApp.Domain.Models.FoodProducts;
+using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.API.FoodProducts
 {
@@ -59,6 +60,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [Route("/api/foodProducts/categories")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateCategoryAsync([FromBody]CreateCategoryRequest request)
         {
             await _mediator.Send(new CreateCategoryCommand(request.Name));
@@ -74,8 +76,14 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
-            await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
-
+            try
+            {
+                await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
+            }
+            catch (DomainException domainException)
+            {
+                return BadRequest($"Cant create this product: {domainException.Message}");
+            }
             return Ok();
         }
 
