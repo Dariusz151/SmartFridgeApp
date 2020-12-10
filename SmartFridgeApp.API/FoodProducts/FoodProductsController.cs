@@ -59,8 +59,8 @@ namespace SmartFridgeApp.API.FoodProducts
         [Authorize]
         [Route("/api/foodProducts/categories")]
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> CreateCategoryAsync([FromBody]CreateCategoryRequest request)
         {
@@ -72,9 +72,12 @@ namespace SmartFridgeApp.API.FoodProducts
         /// <summary>
         /// Create new food product.
         /// </summary>
+        [Authorize]
         [Route("")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
             try
@@ -91,22 +94,39 @@ namespace SmartFridgeApp.API.FoodProducts
         /// <summary>
         /// Update foodProduct name by given id.
         /// </summary>
+        [Authorize]
         [Route("")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> UpdateFoodProductAsync([FromBody]UpdateFoodProductRequest request)
         {
-            await _mediator.Send(new UpdateFoodProductCommand(request.FoodProductId, request.FoodProductName));
-
+            try
+            {
+                await _mediator.Send(new UpdateFoodProductCommand(request.FoodProductId, request.FoodProductName));
+            }
+            catch (FoodProductNotFoundException exception)
+            {
+                return BadRequest($"Cant update this product: {exception.Message}");
+            }
+            catch (DomainException domainException)
+            {
+                return BadRequest($"Cant update this product: {domainException.Message}");
+            }
+            
             return Ok();
         }
 
         /// <summary>
         /// Delete foodProduct by given id. Only if foodProduct isn't connected with any recipe.
         /// </summary>
+        [Authorize]
         [Route("")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> DeleteFoodProductAsync([FromBody]DeleteFoodProductRequest request)
         {
             try
