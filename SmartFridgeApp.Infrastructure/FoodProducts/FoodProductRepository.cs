@@ -24,7 +24,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
             catch
             {
-                throw new DomainException("This FoodProduct does not exist.");
+                throw new FoodProductNotFoundException("This FoodProduct does not exist.");
             }
         }
 
@@ -62,7 +62,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
             catch
             {
-                throw new DomainException("This category does not exist.");
+                throw new InvalidFoodProductCategoryException("This category does not exist.");
             }
             
         }

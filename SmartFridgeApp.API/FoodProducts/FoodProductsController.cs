@@ -80,9 +80,9 @@ namespace SmartFridgeApp.API.FoodProducts
             {
                 await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
             }
-            catch (DomainException domainException)
+            catch (InvalidFoodProductCategoryException exception)
             {
-                return BadRequest($"Cant create this product: {domainException.Message}");
+                return BadRequest($"Cant create this product: {exception.Message}");
             }
             return Ok();
         }
@@ -108,7 +108,14 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteFoodProductAsync([FromBody]DeleteFoodProductRequest request)
         {
-            await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));
+            try
+            {
+                await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));
+            }
+            catch (FoodProductNotFoundException exception)
+            {
+                return BadRequest($"Cant delete this product: {exception.Message}");
+            }
 
             return NoContent();
         }
