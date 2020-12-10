@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
 using SmartFridgeApp.API.FoodProducts.Categories.CreateCategory;
@@ -52,15 +53,15 @@ namespace SmartFridgeApp.API.FoodProducts
             return Ok(foodProducts);
         }
 
-       
-
         /// <summary>
         /// Create new food product category.
         /// </summary>
+        [Authorize]
         [Route("/api/foodProducts/categories")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> CreateCategoryAsync([FromBody]CreateCategoryRequest request)
         {
             await _mediator.Send(new CreateCategoryCommand(request.Name));

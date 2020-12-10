@@ -13,6 +13,9 @@ using SmartFridgeApp.API.Modules;
 using SmartFridgeApp.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace SmartFridgeApp.API
 {
@@ -53,6 +56,29 @@ namespace SmartFridgeApp.API
                 });
             });
 
+            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]);
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                    };
+                });
+
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddSwaggerGen();
 
@@ -85,6 +111,8 @@ namespace SmartFridgeApp.API
 
             app.UseCors("CORS_Policy");
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseHttpsRedirection();
 
             app.UseEndpoints(endpoints =>
