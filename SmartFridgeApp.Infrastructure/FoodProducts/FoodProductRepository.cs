@@ -28,6 +28,18 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
         }
 
+        public async Task<FoodProduct> GetByNameAsync(string foodProductName)
+        {
+            try
+            {
+                return await _context.FoodProducts.SingleAsync(f => f.Name == foodProductName);
+            }
+            catch
+            {
+                throw new FoodProductNotFoundException("This FoodProduct does not exist.");
+            }
+        }
+
         public async Task AddAsync(FoodProduct foodProduct)
         {
             await _context.FoodProducts.AddAsync(foodProduct);

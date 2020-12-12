@@ -17,11 +17,11 @@ using SmartFridgeApp.Domain.Models.Users;
 
 namespace SmartFridgeApp.API
 {
-    [Route("api/init")]
+    
     [ApiController]
     public class InitializationController : Controller
     {
-        //private readonly IFoodProductRepository _foodProductRepository;
+        private readonly IFoodProductRepository _foodProductRepository;
         private readonly SmartFridgeAppContext _context;
         //private readonly IUnitOfWork _unitOfWork;
         private static List<FoodProduct> foodProducts;
@@ -33,7 +33,7 @@ namespace SmartFridgeApp.API
             IUnitOfWork unitOfWork, IFoodProductRepository foodProductRepository, SmartFridgeAppContext context)
         {
             //_unitOfWork = unitOfWork;
-            //_foodProductRepository = foodProductRepository;
+            _foodProductRepository = foodProductRepository;
             _context = context;
             foodProducts = new List<FoodProduct>();
 
@@ -43,12 +43,12 @@ namespace SmartFridgeApp.API
         }
 
         /// <summary>
-        /// Init Database. This class is just for testing and development purposes (only for admin)!!
+        /// Init FoodProduct and Fridges Database. This class is just for testing and development purposes (only for admin)!!
         /// </summary>
-        [Route("")]
-        [HttpGet]
+        [Route("api/init/fridges")]
+        [HttpPost]
         [ProducesResponseType(typeof(IActionResult), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> InitDatabase()
+        public async Task<IActionResult> InitFoodProductFridgesDatabase()
         {
             var foodProducts = GenerateFoodProducts();
             foreach (var fp in foodProducts)
@@ -56,16 +56,30 @@ namespace SmartFridgeApp.API
                 await _context.FoodProducts.AddAsync(fp);
             }
 
-            var recipes = GenerateRecipes();
-
-            foreach (var recipe in recipes){
-                await _context.Recipes.AddAsync(recipe);
-            }
-
             var fridges = GenerateFridges();
             foreach (var fridge in fridges)
             {
                 await _context.Fridges.AddAsync(fridge);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Init Recipes Database. This class is just for testing and development purposes (only for admin)!!
+        /// </summary>
+        [Route("api/init/recipes")]
+        [HttpPost]
+        [ProducesResponseType(typeof(IActionResult), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> InitRecipesDatabase()
+        {
+            var dbfoodProducts = await _foodProductRepository.GetAllAsync();
+            var recipes = GenerateRecipes(dbfoodProducts);
+
+            foreach (var recipe in recipes){
+                await _context.Recipes.AddAsync(recipe);
             }
 
             await _context.SaveChangesAsync();
@@ -108,7 +122,7 @@ namespace SmartFridgeApp.API
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(), "z wioski", new AmountValue(10, Unit.Pieces)));
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Dorsz")).SingleOrDefault(), "filet", new AmountValue(250, Unit.Grams)));
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(), "", new AmountValue(500, Unit.Grams)));
-            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pomidory")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ryż basmati")).SingleOrDefault(), "", new AmountValue(400, Unit.Grams)));
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Makaron spaghetti")).SingleOrDefault(), "", new AmountValue(600, Unit.Grams)));
             user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Natka pietruszki")).SingleOrDefault(), "zamrożona", new AmountValue(600, Unit.Grams)));
@@ -120,7 +134,7 @@ namespace SmartFridgeApp.API
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Piwo")).SingleOrDefault(), "harnaś", new AmountValue(500, Unit.Mililiter)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(), "łowicz", new AmountValue(500, Unit.Grams)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
-            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Bułka")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Bułki")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Margaryna")).SingleOrDefault(), "", new AmountValue(200, Unit.Grams)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
@@ -145,13 +159,13 @@ namespace SmartFridgeApp.API
             return fridges;
         }
 
-        private IEnumerable<Recipe> GenerateRecipes()
+        private IEnumerable<Recipe> GenerateRecipes(IEnumerable<FoodProduct> list)
         {
             var recipes = new List<Recipe>();
 
-            recipes.Add(KurczakSlodkoKwasny());
-            recipes.Add(PiersKurczakaWPanierce());
-            recipes.Add(LeczoZTofu());
+            recipes.Add(KurczakSlodkoKwasny(list));
+            recipes.Add(PiersKurczakaWPanierce(list));
+            recipes.Add(LeczoZTofu(list));
             
             return recipes;
         }
@@ -360,19 +374,20 @@ namespace SmartFridgeApp.API
         }
 
     
-        private Recipe KurczakSlodkoKwasny()
+        private Recipe KurczakSlodkoKwasny(IEnumerable<FoodProduct> list)
         {
+
             var kurczak = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
                 new AmountValue(250, Unit.Grams));
             var ryz = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault().FoodProductId,
                 new AmountValue(100, Unit.Grams));
             var cebula = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
                 new AmountValue(1, Unit.Pieces));
             var sos_slodko_kwasny = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault().FoodProductId,
                new AmountValue(200, Unit.Grams));
 
             var _foodProducts = new List<FoodProductDetails>();
@@ -388,22 +403,22 @@ namespace SmartFridgeApp.API
             return recipe;
         }
 
-        private Recipe PiersKurczakaWPanierce()
+        private Recipe PiersKurczakaWPanierce(IEnumerable<FoodProduct> list)
         {
             var kurczak = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
                 new AmountValue(250, Unit.Grams));
             var ziemniaki = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault().FoodProductId,
                 new AmountValue(300, Unit.Grams));
             var bulka_tarta = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Bułka tarta")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Bułka tarta")).SingleOrDefault().FoodProductId,
                new AmountValue(50, Unit.Grams));
             var maka = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault().FoodProductId,
                new AmountValue(50, Unit.Grams));
             var jajo = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault().FoodProductId,
                new AmountValue(1, Unit.Pieces));
 
 
@@ -421,25 +436,25 @@ namespace SmartFridgeApp.API
             return recipe;
         }
 
-        private Recipe LeczoZTofu()
+        private Recipe LeczoZTofu(IEnumerable<FoodProduct> list)
         {
             var tofu = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Tofu")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Tofu")).SingleOrDefault().FoodProductId,
                 new AmountValue(300, Unit.Grams));
             var cukinia = new FoodProductDetails(
-                foodProducts.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault().FoodProductId,
                 new AmountValue(1, Unit.Pieces));
             var papryka = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Papryka")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Papryka")).SingleOrDefault().FoodProductId,
                new AmountValue(1, Unit.Pieces));
             var cebula = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
                new AmountValue(1, Unit.Pieces));
             var czosnek = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault().FoodProductId,
                new AmountValue(2, Unit.Pieces));
             var pomidory = new FoodProductDetails(
-               foodProducts.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault().FoodProductId,
                new AmountValue(3, Unit.Pieces));
 
             var _foodProducts = new List<FoodProductDetails>();
