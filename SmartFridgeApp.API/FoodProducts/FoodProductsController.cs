@@ -129,6 +129,7 @@ namespace SmartFridgeApp.API.FoodProducts
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> DeleteFoodProductAsync([FromBody]DeleteFoodProductRequest request)
         {
+            //TODO: check if any recipe contains this given food product
             try
             {
                 await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));

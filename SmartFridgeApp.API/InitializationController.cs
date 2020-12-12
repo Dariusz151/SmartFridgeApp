@@ -7,6 +7,13 @@ using SmartFridgeApp.Domain.SeedWork;
 using System.Threading;
 using System.Collections.Generic;
 using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Domain.Models.Recipes;
+using System.Linq;
+using SmartFridgeApp.Domain.Shared;
+using System;
+using SmartFridgeApp.Domain.Models.Fridges;
+using SmartFridgeApp.Domain.Models.FridgeItems;
+using SmartFridgeApp.Domain.Models.Users;
 
 namespace SmartFridgeApp.API
 {
@@ -14,20 +21,29 @@ namespace SmartFridgeApp.API
     [ApiController]
     public class InitializationController : Controller
     {
-        private readonly IFoodProductRepository _foodProductRepository;
+        //private readonly IFoodProductRepository _foodProductRepository;
         private readonly SmartFridgeAppContext _context;
-        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IUnitOfWork _unitOfWork;
+        private static List<FoodProduct> foodProducts;
+        RecipeCategory categorySniadanie;
+        RecipeCategory categoryObiad;
+        RecipeCategory categoryKolacja;
 
         public InitializationController(
             IUnitOfWork unitOfWork, IFoodProductRepository foodProductRepository, SmartFridgeAppContext context)
         {
-            _unitOfWork = unitOfWork;
-            _foodProductRepository = foodProductRepository;
+            //_unitOfWork = unitOfWork;
+            //_foodProductRepository = foodProductRepository;
             _context = context;
+            foodProducts = new List<FoodProduct>();
+
+            categorySniadanie = new RecipeCategory("Śniadanie");
+            categoryObiad = new RecipeCategory("Obiad");
+            categoryKolacja = new RecipeCategory("Kolacja");
         }
 
         /// <summary>
-        /// Init Database
+        /// Init Database. This class is just for testing and development purposes (only for admin)!!
         /// </summary>
         [Route("")]
         [HttpGet]
@@ -39,10 +55,105 @@ namespace SmartFridgeApp.API
             {
                 await _context.FoodProducts.AddAsync(fp);
             }
-           
+
+            var recipes = GenerateRecipes();
+
+            foreach (var recipe in recipes){
+                await _context.Recipes.AddAsync(recipe);
+            }
+
+            var fridges = GenerateFridges();
+            foreach (var fridge in fridges)
+            {
+                await _context.Fridges.AddAsync(fridge);
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        private IEnumerable<Fridge> GenerateFridges()
+        {
+            var fridges = new List<Fridge>();
+
+            var user1 = new User("Dariusz", "dariusz@dariusz.pl");
+            var user2 = new User("Olga", "olga@olga.pl");
+            var user3 = new User("Andrzej", "rischan@andrzej.pl");
+
+            var user1FridgeItems = new List<FridgeItem>();
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault(), "Z biedry", new AmountValue(500, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault(), "Z lidla", new AmountValue(400, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(), "łowicz", new AmountValue(500, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault(), "", new AmountValue(1, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault(), "", new AmountValue(15, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Twaróg")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Papryka")).SingleOrDefault(), "", new AmountValue(1, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Cytryna")).SingleOrDefault(), "", new AmountValue(3, Unit.Pieces)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ser żółty")).SingleOrDefault(), "", new AmountValue(200, Unit.Grams)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(), "", new AmountValue(1000, Unit.Mililiter)));
+            user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Wino")).SingleOrDefault(), "", new AmountValue(500, Unit.Mililiter)));
+
+            var user2FridgeItems = new List<FridgeItem>();
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault(), "Z biedry", new AmountValue(500, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(), "łowicz", new AmountValue(500, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault(), "", new AmountValue(1, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault(), "", new AmountValue(15, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault(), "trzeba go zjeść", new AmountValue(10, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(), "z wioski", new AmountValue(10, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Dorsz")).SingleOrDefault(), "filet", new AmountValue(250, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(), "", new AmountValue(500, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pomidory")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ryż basmati")).SingleOrDefault(), "", new AmountValue(400, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Makaron spaghetti")).SingleOrDefault(), "", new AmountValue(600, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Natka pietruszki")).SingleOrDefault(), "zamrożona", new AmountValue(600, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ser żółty")).SingleOrDefault(), "", new AmountValue(200, Unit.Grams)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(), "mlekowita ", new AmountValue(1000, Unit.Mililiter)));
+            user2.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault(), "", new AmountValue(500, Unit.Grams)));
+
+            var user3FridgeItems = new List<FridgeItem>();
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Piwo")).SingleOrDefault(), "harnaś", new AmountValue(500, Unit.Mililiter)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(), "łowicz", new AmountValue(500, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Bułka")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Margaryna")).SingleOrDefault(), "", new AmountValue(200, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(), "", new AmountValue(10, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(), "", new AmountValue(500, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ser żółty")).SingleOrDefault(), "gouda", new AmountValue(200, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(), "", new AmountValue(1000, Unit.Mililiter)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Por")).SingleOrDefault(), "", new AmountValue(1, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Marchew")).SingleOrDefault(), "", new AmountValue(3, Unit.Pieces)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mięso mielone wieprzowe")).SingleOrDefault(), "z promki było dużo", new AmountValue(750, Unit.Grams)));
+            user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Kiełbasa")).SingleOrDefault(), "podwawelska", new AmountValue(3, Unit.Pieces)));
+
+            var fridgeDragana = new Fridge("Dragana", "Dragana", "Dragana");
+            fridgeDragana.AddUser(user1);
+            fridgeDragana.AddUser(user2);
+
+            var fridgeElk = new Fridge("Ełk", "Ełk", "Ełk");
+            fridgeElk.AddUser(user3);
+
+            fridges.Add(fridgeDragana);
+            fridges.Add(fridgeElk);
+
+            return fridges;
+        }
+
+        private IEnumerable<Recipe> GenerateRecipes()
+        {
+            var recipes = new List<Recipe>();
+
+            recipes.Add(KurczakSlodkoKwasny());
+            recipes.Add(PiersKurczakaWPanierce());
+            recipes.Add(LeczoZTofu());
+            
+            return recipes;
         }
 
         private IEnumerable<FoodProduct> GenerateFoodProducts()
@@ -59,8 +170,6 @@ namespace SmartFridgeApp.API
             var categoryOrzechy = new Category("Orzechy i nasiona");
             var categoryTluszcze = new Category("Tłuszcze");
             var categoryInne = new Category("Inne");
-
-            List<FoodProduct> foodProducts = new List<FoodProduct>();
 
             foodProducts.Add(new FoodProduct("Ciecierzyca", categoryInne));
             foodProducts.Add(new FoodProduct("Soczewica", categoryInne));
@@ -79,6 +188,10 @@ namespace SmartFridgeApp.API
             foodProducts.Add(new FoodProduct("Imbir", categoryInne));
             foodProducts.Add(new FoodProduct("Ziele angielskie", categoryInne));
             foodProducts.Add(new FoodProduct("Zioła prowansalskie", categoryInne));
+            foodProducts.Add(new FoodProduct("Sos słodko-kwaśny", categoryInne));
+            foodProducts.Add(new FoodProduct("Bułka tarta", categoryInne));
+            foodProducts.Add(new FoodProduct("Mąka", categoryInne));
+            foodProducts.Add(new FoodProduct("Tofu", categoryInne));
 
             foodProducts.Add(new FoodProduct("Oliwa z oliwek", categoryTluszcze));
             foodProducts.Add(new FoodProduct("Olej", categoryTluszcze));
@@ -195,7 +308,7 @@ namespace SmartFridgeApp.API
             foodProducts.Add(new FoodProduct("Ogórek kiszony", categoryWarzywa));
             foodProducts.Add(new FoodProduct("Oliwki", categoryWarzywa));
             foodProducts.Add(new FoodProduct("Papryka", categoryWarzywa));
-            foodProducts.Add(new FoodProduct("Marchewka", categoryWarzywa));
+            foodProducts.Add(new FoodProduct("Marchew", categoryWarzywa));
             foodProducts.Add(new FoodProduct("Pomidor", categoryWarzywa));
             foodProducts.Add(new FoodProduct("Rzodkiewka", categoryWarzywa));
             foodProducts.Add(new FoodProduct("Sałata", categoryWarzywa));
@@ -246,5 +359,102 @@ namespace SmartFridgeApp.API
             return foodProducts;
         }
 
+    
+        private Recipe KurczakSlodkoKwasny()
+        {
+            var kurczak = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                new AmountValue(250, Unit.Grams));
+            var ryz = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault().FoodProductId,
+                new AmountValue(100, Unit.Grams));
+            var cebula = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+                new AmountValue(1, Unit.Pieces));
+            var sos_slodko_kwasny = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault().FoodProductId,
+               new AmountValue(200, Unit.Grams));
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(kurczak);
+            _foodProducts.Add(ryz);
+            _foodProducts.Add(cebula);
+            _foodProducts.Add(sos_slodko_kwasny);
+
+            var desc = "Pierś z kurczaka pokroić w kostkę, przyprawić i wstawić na 30 min do lodówki. Ryż zagotować. Obrac cebulę, pokroić w kostkę. Pokroić czosnek (lub dodać czosnek granulowany). Razem z cebulą podsmażyć na oleju/maśle przez minutę. Dodać kawałki kurczaka i smażyć razem 5-6 minut. Dodać sos słodok-kwaśny i całość dusić jeszcze przez 10 min. Podawać razem z ryżem.";
+
+            var recipe = new Recipe("Kurczak w sosie słodko-kwaśnym", desc, categoryObiad, _foodProducts, 30, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
+
+        private Recipe PiersKurczakaWPanierce()
+        {
+            var kurczak = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                new AmountValue(250, Unit.Grams));
+            var ziemniaki = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault().FoodProductId,
+                new AmountValue(300, Unit.Grams));
+            var bulka_tarta = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Bułka tarta")).SingleOrDefault().FoodProductId,
+               new AmountValue(50, Unit.Grams));
+            var maka = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault().FoodProductId,
+               new AmountValue(50, Unit.Grams));
+            var jajo = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Jaja")).SingleOrDefault().FoodProductId,
+               new AmountValue(1, Unit.Pieces));
+
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(kurczak);
+            _foodProducts.Add(ziemniaki);
+            _foodProducts.Add(bulka_tarta);
+            _foodProducts.Add(maka);
+            _foodProducts.Add(jajo);
+
+            var desc = "Pierś z kurczaka pokroic na kotlety (można delikatnie rozbić młotkiem), przyprawić i wstawić na 30 min do lodówki. Ziemniaki wstawić do gotowania. Przygotować mąke, bułkę tartą i jajka w naczyniach. Na patelni rozgrzać olej i smażyć kotlety (umoczone najpierw w mące, potem w jaju i na koniec w bułce tartej). Podawać z surówka/mizerią.";
+
+            var recipe = new Recipe("Kotlety schabowe z piersi kurczaka", desc, categoryObiad, _foodProducts, 40, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
+
+        private Recipe LeczoZTofu()
+        {
+            var tofu = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Tofu")).SingleOrDefault().FoodProductId,
+                new AmountValue(300, Unit.Grams));
+            var cukinia = new FoodProductDetails(
+                foodProducts.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault().FoodProductId,
+                new AmountValue(1, Unit.Pieces));
+            var papryka = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Papryka")).SingleOrDefault().FoodProductId,
+               new AmountValue(1, Unit.Pieces));
+            var cebula = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+               new AmountValue(1, Unit.Pieces));
+            var czosnek = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault().FoodProductId,
+               new AmountValue(2, Unit.Pieces));
+            var pomidory = new FoodProductDetails(
+               foodProducts.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault().FoodProductId,
+               new AmountValue(3, Unit.Pieces));
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(tofu);
+            _foodProducts.Add(cukinia);
+            _foodProducts.Add(papryka);
+            _foodProducts.Add(cebula);
+            _foodProducts.Add(czosnek);
+            _foodProducts.Add(pomidory);
+
+            var desc = "Tofu pokroić w kostkę, przyprawić i zostawić na trochę w lodówce. Cukinię pokroić w półtalarki, paprykę w kostkę, pomidora na małe kawałki (żeby puścił sok). Cebulę i czonske kroimy i podsmażamy na oliwie w garnku. Po minucie dodajemy cukinie, dodajemy 100ml wody, dusimy przez 3 min. Dodajemy pomidory i dalej dusimy. Podsmażamy tofu na patelni - w międzyczasie dorzucamy paprykę do lecza (w zależności jak chcemy żeby była twarda). Jak tofu jest podsmażone, miezsamy wszystko w garnku.";
+
+            var recipe = new Recipe("Leczo z tofu, cukinii i papryki", desc, categoryObiad, _foodProducts, 35, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
     }
 }
