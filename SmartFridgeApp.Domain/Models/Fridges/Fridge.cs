@@ -88,7 +88,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Fridge should have a name.");
             Name = name;
 
-            //this.AddDomainEvent(new FridgeUpdatedEvent(this));
+            this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
 
         public void ChangeFridgeDesc(string desc)
@@ -97,7 +97,7 @@ namespace SmartFridgeApp.Domain.Models.Fridges
                 throw new DomainException("Fridge should have a description.");
             Desc = desc;
 
-            //this.AddDomainEvent(new FridgeUpdatedEvent(this));
+            this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
     }
 }

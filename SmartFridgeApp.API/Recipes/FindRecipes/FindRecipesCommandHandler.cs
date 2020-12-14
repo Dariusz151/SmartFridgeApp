@@ -21,6 +21,8 @@ namespace SmartFridgeApp.API.Recipes.FindRecipes
         {
             var recipes = await _recipeFinderService.FindMatchingRecipes(command.FoodProducts);
 
+
+
             return recipes.AsEnumerable();
         }
     }

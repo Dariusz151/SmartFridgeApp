@@ -38,49 +38,49 @@ export default function RecipesDashboard({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    // fetch("https://localhost:5001/api/recipes")
-    //   .then((response) => response.json())
-    //   .then((json) => setData(json))
-    //   .catch((error) => console.error(error))
-    //   .finally(() => finishLoading(false));
+    fetch("https://localhost:5001/api/recipes")
+      .then((response) => response.json())
+      .then((json) => setData(json))
+      .catch((error) => console.error(error))
+      .finally(() => finishLoading(false));
 
-    const mockData = [
-      {
-        recipeId: "8aef7086-398e-470d-bcba-0b2f7c0bc777",
-        recipeName: "Recipe1",
-        description: "Recipe1",
-        requiredTime: 40,
-        levelOfDifficultyId: 2,
-        levelOfDifficulty: "Hard",
-        recipeCategory: "Kolacja",
-        foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"1","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"15","FoodProductName":"fpName3","AmountValue":{"Value":"12","Unit":"Grams"}},{"FoodProductId":"16","FoodProductName":"fpName3","AmountValue":{"Value":"30","Unit":"Grams"}},{"FoodProductId":"7","FoodProductName":"fpName3","AmountValue":{"Value":"20","Unit":"Grams"}},{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
-      },
-      {
-        recipeId: "897e6753-61db-4c14-a933-16c88c995fa0",
-        recipeName: "Recipe2",
-        description: "Recipe2",
-        requiredTime: 50,
-        levelOfDifficultyId: 2,
-        levelOfDifficulty: "Hard",
-        recipeCategory: "Kolacja",
-        foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"5","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"6","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"13","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"14","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
-      },
-      {
-        recipeId: "5f3f3e34-49c7-4960-b238-c3ded7edd8b3",
-        recipeName: "Recipe 3",
-        description: "Recipe 3",
-        requiredTime: 25,
-        levelOfDifficultyId: 0,
-        levelOfDifficulty: "Easy",
-        recipeCategory: null,
-        foodProducts:
-          '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"2","FoodProductName":"fpName3","AmountValue":{"Value":"10","Unit":"NotAssigned"}},{"FoodProductId":"5","FoodProductName":"fpName1","AmountValue":{"Value":"60","Unit":"NotAssigned"}}]}}',
-      },
-    ];
-    setData(mockData);
-    finishLoading(false);
+    // const mockData = [
+    //   {
+    //     recipeId: "8aef7086-398e-470d-bcba-0b2f7c0bc777",
+    //     recipeName: "Recipe1",
+    //     description: "Recipe1",
+    //     requiredTime: 40,
+    //     levelOfDifficultyId: 2,
+    //     levelOfDifficulty: "Hard",
+    //     recipeCategory: "Kolacja",
+    //     foodProducts:
+    //       '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"1","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"15","FoodProductName":"fpName3","AmountValue":{"Value":"12","Unit":"Grams"}},{"FoodProductId":"16","FoodProductName":"fpName3","AmountValue":{"Value":"30","Unit":"Grams"}},{"FoodProductId":"7","FoodProductName":"fpName3","AmountValue":{"Value":"20","Unit":"Grams"}},{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+    //   },
+    //   {
+    //     recipeId: "897e6753-61db-4c14-a933-16c88c995fa0",
+    //     recipeName: "Recipe2",
+    //     description: "Recipe2",
+    //     requiredTime: 50,
+    //     levelOfDifficultyId: 2,
+    //     levelOfDifficulty: "Hard",
+    //     recipeCategory: "Kolacja",
+    //     foodProducts:
+    //       '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"4","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"5","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"6","FoodProductName":"fpName3","AmountValue":{"Value":"3","Unit":"Grams"}},{"FoodProductId":"13","FoodProductName":"fpName3","AmountValue":{"Value":"2","Unit":"Grams"}},{"FoodProductId":"14","FoodProductName":"fpName3","AmountValue":{"Value":"8","Unit":"Grams"}}]}}',
+    //   },
+    //   {
+    //     recipeId: "5f3f3e34-49c7-4960-b238-c3ded7edd8b3",
+    //     recipeName: "Recipe 3",
+    //     description: "Recipe 3",
+    //     requiredTime: 25,
+    //     levelOfDifficultyId: 0,
+    //     levelOfDifficulty: "Easy",
+    //     recipeCategory: null,
+    //     foodProducts:
+    //       '{"?xml":{"@version":"1.0","@encoding":"utf-16"},"ArrayOfFoodProductDetails":{"FoodProductDetails":[{"FoodProductId":"2","FoodProductName":"fpName3","AmountValue":{"Value":"10","Unit":"NotAssigned"}},{"FoodProductId":"5","FoodProductName":"fpName1","AmountValue":{"Value":"60","Unit":"NotAssigned"}}]}}',
+    //   },
+    // ];
+    // setData(mockData);
+    // finishLoading(false);
   }, []);
 
   function formatFoodProducts(foodProds) {

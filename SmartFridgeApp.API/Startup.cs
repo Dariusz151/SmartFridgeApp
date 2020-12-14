@@ -16,6 +16,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SmartFridgeApp.API.Outbox;
 
 namespace SmartFridgeApp.API
 {
@@ -129,8 +130,8 @@ namespace SmartFridgeApp.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //this._schedulerFactory = new StdSchedulerFactory();
-            //this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+            this._schedulerFactory = new StdSchedulerFactory();
+            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
 
             builder.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
             builder.RegisterModule(new MediatorModule());
@@ -144,21 +145,21 @@ namespace SmartFridgeApp.API
             }).AsSelf().InstancePerLifetimeScope();
 
 
+            IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
+                .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
+                .Build();
 
-            // TODO: new JobFactory(IContainer) -< how to inject IContainer here? it was upgrade to net core 3.1 and now doesnt works
+            ITrigger trigger = TriggerBuilder
+                .Create()
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInSeconds(60)
+                    .RepeatForever())
+                .Build();
 
-            //_scheduler.JobFactory = new JobFactory();
-            //_scheduler.Start().GetAwaiter().GetResult();
+            _scheduler.Start().GetAwaiter().GetResult();
 
-            //var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            //var trigger =
-            //    TriggerBuilder
-            //        .Create()
-            //        .StartNow()
-            //        .WithCronSchedule("0/15 * * * * ?")
-            //        .Build();
-
-            //_scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
+            _scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
 
             //var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
             //var triggerCommandsProcessing =
