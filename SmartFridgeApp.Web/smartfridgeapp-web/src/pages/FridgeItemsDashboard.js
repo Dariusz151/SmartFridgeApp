@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import configData from "../config_url.json";
 import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import { useParams } from "react-router-dom";
@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import NumericInput from "react-numeric-input";
 
 import TextField from "@material-ui/core/TextField";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
@@ -18,7 +19,7 @@ const FridgeItemsDashboard = () => {
   const [newFridgeItemDialogState, setNewFridgeItemDialogState] = useState(
     false
   );
-  const [amount, setAmount] = useState("");
+  const amount = useRef(0);
   const [usersLoading, finishUsersLoading] = useState(true);
   const [fridgeItemsLoading, finishFridgeItemsLoading] = useState(true);
   const [fridgeUsers, setUsersData] = useState([]);
@@ -31,17 +32,21 @@ const FridgeItemsDashboard = () => {
       value: 10,
       unit: "unit",
       consume: (
-        <div>
-          <Button gradient="aqua" size="sm">
+        <span>
+          <NumericInput min={0} max={100} />
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<FastfoodIcon />}
+          >
             Consume
           </Button>
-        </div>
+        </span>
       ),
     },
   ]);
 
   useEffect(() => {
-    console.log("useEffect fridgeItem");
     if (selectedUserId != "None") {
       fetch(
         configData.SERVER_URL +
@@ -60,14 +65,12 @@ const FridgeItemsDashboard = () => {
             unit: item.unit,
             consume: (
               <span>
-                <TextField
-                  name="amount"
-                  label="Amount"
-                  fullWidth
-                  onChange={handleNumberChange}
-                  value={amount}
-                ></TextField>
-
+                <NumericInput
+                  min={0}
+                  max={10000}
+                  // value={0}
+                  onChange={handleChange}
+                />
                 <Button
                   variant="contained"
                   color="primary"
@@ -106,22 +109,19 @@ const FridgeItemsDashboard = () => {
     rerender(dummyState + 1);
   };
 
-  const handleNumberChange = (e) => {
+  const handleChange = (e) => {
     const re = /^[0-9\b]+$/;
-    if (e.target.value === "" || re.test(e.target.value)) {
-      console.log(e.target.value);
-      //setAmount("");
+    if (e === "" || re.test(e)) {
+      amount.current = e;
     }
   };
-
   const handleConsume = (fridgeItemId, unit) => {
-    //TODO: get value from user (dialog)
-
+    console.log(amount.current);
     const obj = {
       fridgeItemId: fridgeItemId,
       userId: selectedUserId,
       amountValue: {
-        value: 0,
+        value: amount.current,
         unit: unit,
       },
     };

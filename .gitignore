@@ -33,6 +33,7 @@ SmartFridgeApp.API/Properties/PublishProfiles/
 SmartFridgeApp.API/web.config
 SmartFridgeApp.API/wwwroot/
 SmartFridgeApp.API/.config/
+SmartFridgeApp.Web/smartfridgeapp-web/build
 
 # Visual Studio 2015 cache/options directory
 .vs/
