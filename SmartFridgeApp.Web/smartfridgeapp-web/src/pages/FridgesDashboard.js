@@ -16,6 +16,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FridgesDashboard = () => {
   const [dataLoading, finishLoading] = useState(true);
@@ -66,8 +68,24 @@ const FridgesDashboard = () => {
       },
       body: JSON.stringify(obj),
     })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant add fridge!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        toast.success("Added new fridge!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
+
+        return response;
+      })
       .then(refreshForm())
-      .then(setOpen(false));
+      .then(setOpen(false))
+      .catch((error) => console.log(error));
   };
 
   const handleDelete = (fridgeId) => {
@@ -81,7 +99,23 @@ const FridgesDashboard = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
-    });
+    })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant delete fridge!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        toast.success("Fridge deleted!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
+
+        return response;
+      })
+      .catch((error) => console.log(error));
   };
 
   const refreshForm = () => {
@@ -131,6 +165,7 @@ const FridgesDashboard = () => {
 
   return (
     <div>
+      <ToastContainer />
       <Dialog
         open={open}
         onClose={handleClose}

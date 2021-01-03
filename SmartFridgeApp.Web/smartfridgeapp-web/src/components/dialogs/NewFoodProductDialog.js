@@ -7,7 +7,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import SnackBar from "@material-ui/core/Snackbar";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import { ToastContainer, toast } from "react-toastify";
@@ -31,7 +30,6 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
     });
   };
 
-  const toastify = (val) => toast(val);
   const onSelectChange = (event, val) => {
     if (val != undefined && val != null) setCategory(val.foodProductId);
   };
@@ -51,10 +49,23 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
     })
       .then(function (response) {
         if (!response.ok) {
-          toastify("Cant add food product.");
+          if (response.status === 401) {
+            toast.error("Unauthorized operation!", {
+              position: "bottom-center",
+              autoClose: 1500,
+            });
+          } else {
+            toast.error("Cant add food product!", {
+              position: "bottom-center",
+              autoClose: 1500,
+            });
+          }
           throw Error(response.statusText);
         }
-        toastify("Food product added.");
+        toast.success("Food product added!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
         return response;
       })
       .then(refreshForm())

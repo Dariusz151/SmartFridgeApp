@@ -15,6 +15,9 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Typography from "@material-ui/core/Typography";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const NewFridgeItemDialog = ({
   fridgeId,
   selectedUserId,
@@ -45,21 +48,12 @@ const NewFridgeItemDialog = ({
       .catch((error) => console.error(error));
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-  };
-
   const handleNumberChange = (e) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
       const { name, value } = e.target;
       setValues({ ...values, [name]: value });
     }
-  };
-
-  const handleUnit = (event, unit) => {
-    setUnit(unit);
   };
 
   const onSelectChange = (event, val) => {
@@ -85,9 +79,7 @@ const NewFridgeItemDialog = ({
         unit: unit,
       },
     };
-    console.log(obj);
 
-    //if (obj.value != NaN && obj.value > 0) {
     fetch(configData.SERVER_URL + "/api/fridgeItems/" + fridgeId + "/add", {
       method: "post",
       headers: {
@@ -95,86 +87,106 @@ const NewFridgeItemDialog = ({
       },
       body: JSON.stringify(obj),
     })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant add fridge item!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        toast.success("Added new fridge item!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
+
+        return response;
+      })
       .then(refreshForm())
-      .then(console.log("Success"))
-      .then(() => handleClose());
-    //}
+      .then(() => handleClose())
+      .catch((error) => console.log(error));
   };
 
   return (
-    <Dialog
-      open={state}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Add Fridge item</DialogTitle>
-      <DialogContent>
-        <Autocomplete
-          id="foodproducts-combobox"
-          options={foodProducts}
-          getOptionLabel={(option) => option.foodProductName}
-          style={{ width: "100%" }}
-          onChange={onSelectChange}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Select food product"
-              variant="outlined"
-            />
-          )}
-        />
-        <br />
-        <TextField
-          name="value"
-          label="Value"
-          fullWidth
-          onChange={handleNumberChange}
-          value={values.value}
-        />
-        <br />
-        <br />
-        <br />
-        <ToggleButtonGroup
-          value={unit}
-          exclusive
-          onChange={handleUnit}
-          aria-label="text alignment"
-        >
-          <ToggleButton value="Grams" aria-label="left aligned">
-            <Typography variant="body1">Grams</Typography>
-          </ToggleButton>
-          <ToggleButton value="Pieces" aria-label="centered">
-            <Typography>Pieces</Typography>
-          </ToggleButton>
-          <ToggleButton value="Mililiter" aria-label="right aligned">
-            <Typography>Mililiter</Typography>
-          </ToggleButton>
-          <ToggleButton value="NotAssigned" aria-label="justified">
-            <Typography>None</Typography>
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <br />
-        <br />
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleClose}
-          color="secondary"
-          variant="outlined"
-          startIcon={<CloseIcon />}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleAdd}
-          color="primary"
-          startIcon={<AddIcon />}
-          variant="outlined"
-        >
-          Add
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <React.Fragment>
+      <ToastContainer />
+
+      <Dialog
+        open={state}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Add Fridge item</DialogTitle>
+        <DialogContent>
+          <Autocomplete
+            id="foodproducts-combobox"
+            options={foodProducts}
+            getOptionLabel={(option) => option.foodProductName}
+            style={{ width: "100%" }}
+            onChange={onSelectChange}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select food product"
+                variant="outlined"
+              />
+            )}
+          />
+          <br />
+          <TextField
+            name="value"
+            label="Value"
+            fullWidth
+            onChange={handleNumberChange}
+            value={values.value}
+          />
+          <br />
+          <br />
+          <br />
+          <ToggleButtonGroup
+            value={unit}
+            exclusive
+            onChange={(event, unit) => {
+              setUnit(unit);
+            }}
+            aria-label="text alignment"
+          >
+            <ToggleButton value="Grams" aria-label="left aligned">
+              <Typography variant="body1">Grams</Typography>
+            </ToggleButton>
+            <ToggleButton value="Pieces" aria-label="centered">
+              <Typography>Pieces</Typography>
+            </ToggleButton>
+            <ToggleButton value="Mililiter" aria-label="right aligned">
+              <Typography>Mililiter</Typography>
+            </ToggleButton>
+            <ToggleButton value="NotAssigned" aria-label="justified">
+              <Typography>None</Typography>
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <br />
+          <br />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleAdd}
+            color="primary"
+            startIcon={<AddIcon />}
+            variant="outlined"
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 };
 

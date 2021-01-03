@@ -9,6 +9,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const NewUserDialog = ({ fridgeId, state, handleClose }) => {
   const [values, setValues] = useState({
     name: "",
@@ -39,52 +42,71 @@ const NewUserDialog = ({ fridgeId, state, handleClose }) => {
       },
       body: JSON.stringify(obj),
     })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant add user!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        toast.success("Added new user!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
+
+        return response;
+      })
       .then(refreshForm())
-      .then(() => handleClose());
+      .then(() => handleClose())
+      .catch((error) => console.log(error));
   };
 
   return (
-    <Dialog
-      open={state}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Add user</DialogTitle>
-      <DialogContent>
-        <TextField
-          name="name"
-          label="Name"
-          fullWidth
-          onChange={handleInputChange}
-          value={values.name}
-        />
-        <TextField
-          name="email"
-          label="Email"
-          fullWidth
-          onChange={handleInputChange}
-          value={values.email}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleClose}
-          color="secondary"
-          variant="outlined"
-          startIcon={<CloseIcon />}
-        >
-          Cancel
-        </Button>
-        <Button
-          color="primary"
-          startIcon={<AddIcon />}
-          variant="outlined"
-          onClick={handleAdd}
-        >
-          Add
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <React.Fragment>
+      <ToastContainer />
+      <Dialog
+        open={state}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Add user</DialogTitle>
+        <DialogContent>
+          <TextField
+            name="name"
+            label="Name"
+            fullWidth
+            onChange={handleInputChange}
+            value={values.name}
+          />
+          <TextField
+            name="email"
+            label="Email"
+            fullWidth
+            onChange={handleInputChange}
+            value={values.email}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            color="secondary"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="primary"
+            startIcon={<AddIcon />}
+            variant="outlined"
+            onClick={handleAdd}
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 };
 

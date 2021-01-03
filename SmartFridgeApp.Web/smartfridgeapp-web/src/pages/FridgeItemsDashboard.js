@@ -7,10 +7,11 @@ import FastfoodIcon from "@material-ui/icons/Fastfood";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import NumericInput from "react-numeric-input";
-
-import TextField from "@material-ui/core/TextField";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
 import NewFridgeItemDialog from "../components/dialogs/NewFridgeItemDialog";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FridgeItemsDashboard = () => {
   const { fridgeId } = useParams();
@@ -68,7 +69,7 @@ const FridgeItemsDashboard = () => {
                 <NumericInput
                   min={0}
                   max={10000}
-                  // value={0}
+                  value={amount.curent}
                   onChange={handleChange}
                 />
                 <Button
@@ -91,7 +92,6 @@ const FridgeItemsDashboard = () => {
   }, [selectedUserId, dummyState]);
 
   useEffect(() => {
-    console.log("useEffect users");
     fetch(configData.SERVER_URL + "/api/fridgeUsers/" + fridgeId)
       .then((response) => response.json())
       .then((json) => {
@@ -105,18 +105,23 @@ const FridgeItemsDashboard = () => {
       .finally(() => finishUsersLoading(false));
   }, [dummyState]);
 
-  const handleRefresh = () => {
-    rerender(dummyState + 1);
-  };
-
   const handleChange = (e) => {
     const re = /^[0-9\b]+$/;
     if (e === "" || re.test(e)) {
       amount.current = e;
+    } else {
+      amount.current = 0;
     }
   };
   const handleConsume = (fridgeItemId, unit) => {
     console.log(amount.current);
+    if (amount.current < 1) {
+      toast.error("Invalid amount!", {
+        position: "bottom-center",
+        autoClose: 1500,
+      });
+      return;
+    }
     const obj = {
       fridgeItemId: fridgeItemId,
       userId: selectedUserId,
@@ -126,37 +131,49 @@ const FridgeItemsDashboard = () => {
       },
     };
 
-    console.log(obj);
-
     fetch(configData.SERVER_URL + "/api/fridgeItems/" + fridgeId + "/consume", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(obj),
-    }).then(console.log("Success Consume"));
-  };
-
-  const handleCloseUserDialog = () => {
-    setNewUserDialogState(false);
-  };
-
-  const handleCloseFridgeItemDialog = () => {
-    setNewFridgeItemDialogState(false);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant consume fridge item!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        toast.success("Consumed!", {
+          position: "bottom-center",
+          autoClose: 1500,
+        });
+        amount.current = 0;
+        rerender(dummyState + 1);
+        return response;
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
     <div>
+      <ToastContainer />
       <NewUserDialog
         fridgeId={fridgeId}
         state={newUserDialogState}
-        handleClose={handleCloseUserDialog}
+        handleClose={() => {
+          setNewUserDialogState(false);
+        }}
       />
       <NewFridgeItemDialog
         fridgeId={fridgeId}
         selectedUserId={selectedUserId}
         state={newFridgeItemDialogState}
-        handleClose={handleCloseFridgeItemDialog}
+        handleClose={() => {
+          setNewFridgeItemDialogState(false);
+        }}
       />
       {usersLoading ? (
         <div>
@@ -198,7 +215,9 @@ const FridgeItemsDashboard = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={handleRefresh}
+            onClick={() => {
+              rerender(dummyState + 1);
+            }}
             startIcon={<RefreshIcon />}
           >
             Refresh
