@@ -45,6 +45,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
                 productsDetails.Add(fpd);
             }
             
+            // TODO: throw Infrastrcutre Exception!! If category doesnt exist - 500 Internal Server Error.
             var recipeCategory = await _recipeRepository.GetRecipeCategoryByIdAsync(command.RecipeCategory);
 
             var recipe = new Recipe(

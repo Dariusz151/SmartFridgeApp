@@ -8,16 +8,23 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import DoneIcon from "@material-ui/icons/Done";
+import AddIcon from "@material-ui/icons/Add";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DialogContentText from "@material-ui/core/DialogContentText";
-
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+import NewRecipeDialog from "../components/dialogs/NewRecipeDialog";
 
 const Recipes = () => {
   const [dataLoading, finishLoading] = useState(true);
+  const [dummyState, rerender] = useState(1);
   const [open, setOpen] = useState(false);
+  const [newRecipeDialog, setNewRecipeDialog] = useState(false);
   const [rows, setRows] = useState([
     {
       id: 1,
@@ -42,25 +49,31 @@ const Recipes = () => {
     {
       foodProductId: "1",
       foodProductName: "fpName1",
-      AmountValue: { Value: "1", Unit: "Grams" },
+      amountValue: { value: "1", unit: "Grams" },
     },
   ]);
 
+  const handleRefresh = () => {
+    rerender(dummyState + 1);
+  };
+
   function formatFoodProducts(foodProds) {
+    console.log(foodProds);
     var foodProductsString = foodProds;
     var jsonObj = JSON.parse(foodProductsString);
     var foodProductsList = jsonObj.ArrayOfFoodProductDetails.FoodProductDetails;
 
     setFoodProductsFormatted([]);
     for (const [key, value] of Object.entries(foodProductsList)) {
+      console.log(value);
       setFoodProductsFormatted((oldArray) => [
         ...oldArray,
         {
-          FoodProductId: value.FoodProductId,
-          FoodProductName: value.FoodProductName,
-          AmountValue: {
-            Value: value.AmountValue.Value,
-            Unit: value.AmountValue.Unit,
+          foodProductId: value.FoodProductId,
+          foodProductName: value.FoodProductName,
+          amountValue: {
+            value: value.AmountValue.Value,
+            unit: value.AmountValue.Unit,
           },
         },
       ]);
@@ -117,10 +130,14 @@ const Recipes = () => {
       })
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
-  }, []);
+  }, [dummyState]);
 
   return (
     <div>
+      <NewRecipeDialog
+        state={newRecipeDialog}
+        handleClose={() => setNewRecipeDialog(false)}
+      />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -133,11 +150,16 @@ const Recipes = () => {
           <List component="nav" aria-label="secondary mailbox folders">
             {foodProductsFormatted.map((foodProduct) => {
               return (
-                <ListItem key={foodProduct.FoodProductId}>
+                <ListItem key={foodProduct.foodProductId}>
+                  <ListItemIcon>
+                    <DoneIcon fontSize="small" />
+                  </ListItemIcon>
                   <ListItemText>
-                    - {foodProduct.foodProductName}{" "}
-                    {foodProduct.AmountValue.Value}{" "}
-                    {foodProduct.AmountValue.Unit}
+                    {foodProduct.foodProductName}{" "}
+                    <span style={{ color: "#345131", paddingLeft: 10 }}>
+                      {foodProduct.amountValue.value}{" "}
+                      {foodProduct.amountValue.unit}
+                    </span>
                   </ListItemText>
                 </ListItem>
               );
@@ -162,6 +184,28 @@ const Recipes = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <div className="btn-group">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            setNewRecipeDialog(true);
+          }}
+          startIcon={<AddIcon />}
+        >
+          Add new
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleRefresh}
+          startIcon={<RefreshIcon />}
+        >
+          Refresh
+        </Button>
+      </div>
+
       {dataLoading ? (
         <div>
           <CircularProgress />

@@ -50,6 +50,7 @@ const FridgesDashboard = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     refreshForm();
     setOpen(false);
