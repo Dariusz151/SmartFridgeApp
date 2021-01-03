@@ -7,6 +7,33 @@
   pointer-events: none;
 }
 
+main {
+  flex: 1 0 auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+.active {
+  color: rgb(20, 175, 20);
+}
+
+.header-links {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
+
+.footer {
+  background: crimson;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -1,72 +1,50 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import "./App.css";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import FridgesDashboard from "./pages/FridgesDashboard";
+import FridgeItemsDashboard from "./pages/FridgeItemsDashboard";
+import FoodProducts from "./pages/FoodProducts";
+import Recipes from "./pages/Recipes";
+import Header from "./components/Header";
 
-import FridgesDashboard from "./components/FridgesDashboard";
-import RecipesDashboard from "./components/RecipesDashboard";
-import Home from "./components/Home";
-
-export default function App() {
-  const classes = useStyles();
-
+function App() {
   return (
-    <div className={classes.root}>
+    <div className="App">
       <Router>
-        <Switch>
-          <Container component="main" className={classes.main} maxWidth="sm">
-            <Home />
+        <div>
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/fridges" />
+            </Route>
+            <Route path="/recipes">
+              <Recipes />
+            </Route>
             <Route path="/fridges">
               <FridgesDashboard />
             </Route>
-            <Route path="/recipes">
-              <RecipesDashboard />
+            <Route path="/foodProducts">
+              <FoodProducts />
             </Route>
-          </Container>
-        </Switch>
-        <footer className={classes.footer}>
-          <Container maxWidth="xs">
-            <Typography>
-              <Link className={classes.linkStyle} href="/fridges">
-                Fridges
-              </Link>
-              <Link className={classes.linkStyle} href="/foodProducts">
-                FoodProducts
-              </Link>
-              <Link className={classes.linkStyle} href="/recipes">
-                Recipes
-              </Link>
-            </Typography>
-          </Container>
-        </footer>
+
+            <Route path="/fridgeitems/:fridgeId">
+              <FridgeItemsDashboard />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+          </Switch>
+        </div>
       </Router>
     </div>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-  },
-  main: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(2),
-  },
-  linkStyle: {
-    marginleft: 15,
-    marginRight: 15,
-  },
-  footer: {
-    padding: theme.spacing(3, 2),
-    marginTop: "auto",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[800],
-  },
-}));
+export default App;
