@@ -34,7 +34,7 @@ namespace SmartFridgeApp.API
                 .AddJsonFile("appsettings.json", optional:false, reloadOnChange:true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
-                .AddUserSecrets<Startup>()
+                //.AddUserSecrets<Startup>()
                 .Build();
         }
 
@@ -57,6 +57,7 @@ namespace SmartFridgeApp.API
                 });
             });
 
+           
             var key = Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]);
             services
                 .AddAuthentication(options =>
@@ -110,12 +111,20 @@ namespace SmartFridgeApp.API
                 app.UseHsts();
             }
 
+            Console.WriteLine(env.EnvironmentName);
+
             app.UseCors("CORS_Policy");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();
 
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(options);
+            app.UseStaticFiles();
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -181,7 +190,7 @@ namespace SmartFridgeApp.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartFridgeApp API V1");
-                c.RoutePrefix = string.Empty;
+                c.RoutePrefix = "docs";
             });
         }
     }

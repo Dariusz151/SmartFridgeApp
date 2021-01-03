@@ -27,8 +27,12 @@ packager-info.json
 [Pp]ublish/
 
 
-#appsettings.Development.json
-#appsettings.Production.json
+appsettings.Development.json
+appsettings.Production.json
+SmartFridgeApp.API/Properties/PublishProfiles/
+SmartFridgeApp.API/web.config
+SmartFridgeApp.API/wwwroot/
+SmartFridgeApp.API/.config/
 
 # Visual Studio 2015 cache/options directory
 .vs/
