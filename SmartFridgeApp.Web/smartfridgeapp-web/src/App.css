@@ -63,3 +63,20 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.box {
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.btn-box {
+  margin-left: 10px;
+  margin-right: 10px;
+  /* width: 130px; */
+  display: inline-block;
+}
+.ml10 {
+  margin-left: 10px;
+}
+.mr10 {
+  margin-right: 10px;
+}
