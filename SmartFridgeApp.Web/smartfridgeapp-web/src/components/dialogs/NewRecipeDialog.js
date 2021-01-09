@@ -34,26 +34,6 @@ const NewRecipeDialog = ({ state, handleClose }) => {
     { foodProductId: 0, foodProductName: "", amount: "" },
   ]);
 
-  // const handleInputChange = (e, index) => {
-  //   const { name, value } = e.target;
-  //   const list = [...inputList];
-  //   list[index][name] = value;
-  //   setInputList(list);
-  // };
-
-  // const handleRemoveClick = (index) => {
-  //   const list = [...inputList];
-  //   list.splice(index, 1);
-  //   setInputList(list);
-  // };
-
-  // const handleAddClick = () => {
-  //   setInputList([
-  //     ...inputList,
-  //     { foodProductId: 0, foodProductName: "", amount: "" },
-  //   ]);
-  // };
-
   useEffect(() => {
     console.log("food products fetch");
     fetch(configData.SERVER_URL + "/api/foodProducts")
@@ -67,19 +47,6 @@ const NewRecipeDialog = ({ state, handleClose }) => {
       })
       .catch((error) => console.error(error));
   }, []);
-
-  //   useEffect(() => {
-  //     // fetch(configData.SERVER_URL + "/api/recipes")
-  //     //   .then((response) => response.json())
-  //     //   .then((json) => {
-  //     //     const items = json.map((item, index) => ({
-  //     //       foodProductId: item.foodProductId,
-  //     //       foodProductName: item.foodProductName,
-  //     //     }));
-  //     //     setFoodProducts(items);
-  //     //   })
-  //     //   .catch((error) => console.error(error));
-  //   }, []);
 
   const refreshForm = () => {
     setRecipeName("");

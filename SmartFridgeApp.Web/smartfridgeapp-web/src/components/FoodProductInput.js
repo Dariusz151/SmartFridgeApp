@@ -6,15 +6,8 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import Typography from "@material-ui/core/Typography";
 
 const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
-  //   const [inputList, setInputList] = useState([
-  //     { foodProductId: 0, foodProductName: "", amount: "" },
-  //   ]);
-
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
@@ -38,29 +31,31 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
   return inputList.map((x, i) => {
     return (
       <React.Fragment>
-        <Autocomplete
-          id="foodproducts-combobox"
-          options={foodProducts}
-          getOptionLabel={(option) => option.foodProductName}
-          onChange={(e, val) => {
-            const list = [...inputList];
-            list[i].foodProductId = val.foodProductId;
-            setInputList(list);
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Select food product"
-              variant="outlined"
-            />
-          )}
-        />
-        <TextField
-          name="amount"
-          placeholder="Enter Amount"
-          value={x.amount}
-          onChange={(e) => handleInputChange(e, i)}
-        />
+        <div>
+          <Autocomplete
+            id="foodproducts-combobox"
+            options={foodProducts}
+            getOptionLabel={(option) => option.foodProductName}
+            onChange={(e, val) => {
+              const list = [...inputList];
+              list[i].foodProductId = val.foodProductId;
+              setInputList(list);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select food product"
+                variant="outlined"
+              />
+            )}
+          />
+          <TextField
+            name="amount"
+            placeholder="Enter Amount"
+            value={x.amount}
+            onChange={(e) => handleInputChange(e, i)}
+          />
+        </div>
         <div className="btn-box">
           {inputList.length !== 1 && (
             <Button

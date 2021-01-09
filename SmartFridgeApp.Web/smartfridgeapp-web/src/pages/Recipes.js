@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import configData from "../config_url.json";
 import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import Button from "@material-ui/core/Button";
@@ -18,13 +19,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import NewRecipeDialog from "../components/dialogs/NewRecipeDialog";
-
 const Recipes = () => {
+  let history = useHistory();
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
   const [open, setOpen] = useState(false);
-  const [newRecipeDialog, setNewRecipeDialog] = useState(false);
   const [rows, setRows] = useState([
     {
       id: 1,
@@ -39,6 +38,10 @@ const Recipes = () => {
       ),
     },
   ]);
+
+  const redirect = () => {
+    history.push("/recipes/add");
+  };
 
   const [recipeDetails, setRecipeDetails] = useState({
     recipeName: "recipe",
@@ -134,10 +137,6 @@ const Recipes = () => {
 
   return (
     <div>
-      <NewRecipeDialog
-        state={newRecipeDialog}
-        handleClose={() => setNewRecipeDialog(false)}
-      />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -189,9 +188,7 @@ const Recipes = () => {
         <Button
           variant="outlined"
           color="primary"
-          onClick={() => {
-            setNewRecipeDialog(true);
-          }}
+          onClick={redirect}
           startIcon={<AddIcon />}
         >
           Add new
