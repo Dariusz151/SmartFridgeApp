@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import configData from "../config_url.json";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+
+import { MDBDataTable } from "mdbreact";
 import { Link } from "react-router-dom";
 import KitchenIcon from "@material-ui/icons/Kitchen";
 import AddIcon from "@material-ui/icons/Add";
@@ -12,7 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { Container, Typography, Paper } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -247,10 +248,18 @@ const FridgesDashboard = () => {
             <p>Loading fridges</p>
           </div>
         ) : (
-          <MDBTable btn>
-            <MDBTableHead columns={columns} />
-            <MDBTableBody rows={rows} />
-          </MDBTable>
+          <MDBDataTable
+            paging={true}
+            searchTop
+            pagingTop
+            searchBottom={false}
+            hover
+            entriesOptions={[5, 10, 20]}
+            entries={5}
+            pagesAmount={3}
+            data={{ columns: columns, rows: rows }}
+            fullPagination
+          ></MDBDataTable>
         )}
       </Container>
     </div>

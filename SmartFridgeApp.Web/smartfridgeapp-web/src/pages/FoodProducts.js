@@ -60,11 +60,6 @@ const FoodProducts = () => {
     setNewFoodProductDialog(false);
   };
 
-  // const [datatable, setDatatable] = React.useState({
-  //   columns: columns,
-  //   rows: rows,
-  // });
-
   return (
     <div>
       <NewFoodProductDialog

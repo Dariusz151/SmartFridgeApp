@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import configData from "../config_url.json";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+import { MDBDataTable } from "mdbreact";
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
@@ -239,10 +239,18 @@ const FridgeItemsDashboard = () => {
         {fridgeItemsLoading ? (
           <p>Select user</p>
         ) : (
-          <MDBTable>
-            <MDBTableHead columns={columns} />
-            <MDBTableBody rows={rows} />
-          </MDBTable>
+          <MDBDataTable
+            paging={true}
+            searchTop
+            pagingTop
+            searchBottom={false}
+            hover
+            entriesOptions={[10, 20, 40, 100]}
+            entries={20}
+            pagesAmount={8}
+            data={{ columns: columns, rows: rows }}
+            fullPagination
+          ></MDBDataTable>
         )}
       </Container>
     </div>
