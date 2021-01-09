@@ -16,6 +16,7 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Typography from "@material-ui/core/Typography";
 
+import FoodProductInput from "../FoodProductInput";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,25 +34,25 @@ const NewRecipeDialog = ({ state, handleClose }) => {
     { foodProductId: 0, foodProductName: "", amount: "" },
   ]);
 
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
-  };
+  // const handleInputChange = (e, index) => {
+  //   const { name, value } = e.target;
+  //   const list = [...inputList];
+  //   list[index][name] = value;
+  //   setInputList(list);
+  // };
 
-  const handleRemoveClick = (index) => {
-    const list = [...inputList];
-    list.splice(index, 1);
-    setInputList(list);
-  };
+  // const handleRemoveClick = (index) => {
+  //   const list = [...inputList];
+  //   list.splice(index, 1);
+  //   setInputList(list);
+  // };
 
-  const handleAddClick = () => {
-    setInputList([
-      ...inputList,
-      { foodProductId: 0, foodProductName: "", amount: "" },
-    ]);
-  };
+  // const handleAddClick = () => {
+  //   setInputList([
+  //     ...inputList,
+  //     { foodProductId: 0, foodProductName: "", amount: "" },
+  //   ]);
+  // };
 
   useEffect(() => {
     console.log("food products fetch");
@@ -81,7 +82,12 @@ const NewRecipeDialog = ({ state, handleClose }) => {
   //   }, []);
 
   const refreshForm = () => {
-    console.log("TODO: clear all form values.");
+    setRecipeName("");
+    setRecipeDesc("");
+    setRecipeCategory("");
+    setDifficulty("");
+    setRequiredTime("");
+    setInputList([{ foodProductId: 0, foodProductName: "", amount: "" }]);
   };
 
   const handleAdd = () => {
@@ -145,59 +151,11 @@ const NewRecipeDialog = ({ state, handleClose }) => {
         <DialogTitle id="form-dialog-title">Add Recipe</DialogTitle>
         <DialogActions></DialogActions>
         <DialogContent>
-          {inputList.map((x, i) => {
-            return (
-              <div className="box">
-                <Autocomplete
-                  id="foodproducts-combobox"
-                  options={foodProducts}
-                  getOptionLabel={(option) => option.foodProductName}
-                  // style={{ width: "40%" }}
-                  onChange={(e, val) => {
-                    const list = [...inputList];
-                    list[i].foodProductId = val.foodProductId;
-                    setInputList(list);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select food product"
-                      variant="outlined"
-                    />
-                  )}
-                />
-                <TextField
-                  // style={{ width: "40%" }}
-                  // className="ml10"
-                  name="amount"
-                  placeholder="Enter Amount"
-                  value={x.amount}
-                  onChange={(e) => handleInputChange(e, i)}
-                />
-                <div className="btn-box">
-                  {inputList.length !== 1 && (
-                    <Button
-                      color="default"
-                      variant="contained"
-                      className="mr10"
-                      onClick={() => handleRemoveClick(i)}
-                    >
-                      <RemoveIcon />
-                    </Button>
-                  )}
-                  {inputList.length - 1 === i && (
-                    <Button
-                      color="default"
-                      variant="contained"
-                      onClick={handleAddClick}
-                    >
-                      <AddIcon />
-                    </Button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          <FoodProductInput
+            foodProducts={foodProducts}
+            inputList={inputList}
+            setInputList={setInputList}
+          />
           <TextField
             name="recipeName"
             label="Recipe name"

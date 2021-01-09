@@ -6,8 +6,6 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
-import Home from "./pages/Home";
-import About from "./pages/About";
 import FridgesDashboard from "./pages/FridgesDashboard";
 import FridgeItemsDashboard from "./pages/FridgeItemsDashboard";
 import FoodProducts from "./pages/FoodProducts";
@@ -36,9 +34,6 @@ function App() {
 
             <Route path="/fridgeitems/:fridgeId">
               <FridgeItemsDashboard />
-            </Route>
-            <Route path="/about">
-              <About />
             </Route>
           </Switch>
         </div>
