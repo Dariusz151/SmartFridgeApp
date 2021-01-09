@@ -4,13 +4,13 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Typography from "@material-ui/core/Typography";
 
-const UnitSelector = ({ unit, setUnit }) => {
+const UnitSelector = ({ unit, handleChangeUnit }) => {
   return (
     <ToggleButtonGroup
       value={unit}
       exclusive
       onChange={(event, unit) => {
-        setUnit(unit);
+        handleChangeUnit(unit);
       }}
       aria-label="text alignment"
     >

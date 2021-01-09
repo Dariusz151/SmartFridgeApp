@@ -26,7 +26,7 @@ const AddNewRecipe = () => {
     { foodProductId: 1, foodProductName: "fp" },
   ]);
   const [inputList, setInputList] = useState([
-    { foodProductId: 0, foodProductName: "", amount: "" },
+    { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
   ]);
 
   const handleClose = () => {
@@ -34,7 +34,6 @@ const AddNewRecipe = () => {
   };
 
   useEffect(() => {
-    console.log("food products fetch");
     fetch(configData.SERVER_URL + "/api/foodProducts")
       .then((response) => response.json())
       .then((json) => {
@@ -53,7 +52,9 @@ const AddNewRecipe = () => {
     setRecipeCategory("");
     setDifficulty("");
     setRequiredTime("");
-    setInputList([{ foodProductId: 0, foodProductName: "", amount: "" }]);
+    setInputList([
+      { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
+    ]);
   };
 
   const handleAdd = () => {
@@ -61,7 +62,7 @@ const AddNewRecipe = () => {
     inputList.map((item) => {
       const newProduct = {
         foodProductId: item.foodProductId,
-        amountValue: { value: parseInt(item.amount), unit: "NotAssigned" },
+        amountValue: { value: parseInt(item.amount), unit: item.unit },
       };
       products.push(newProduct);
       return true;

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { Grid, TextField, Box, Button } from "@material-ui/core";
+import { Grid, TextField, Button } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -9,7 +9,12 @@ import AddIcon from "@material-ui/icons/Add";
 import UnitSelector from "./UnitSelector";
 
 const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
-  const [unit, setUnit] = useState("NotAssigned");
+  const handleChangeUnit = (val, i) => {
+    const list = [...inputList];
+    list[i].unit = val;
+    setInputList(list);
+  };
+
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
@@ -26,7 +31,7 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
   const handleAddClick = () => {
     setInputList([
       ...inputList,
-      { foodProductId: 0, foodProductName: "", amount: "" },
+      { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
     ]);
   };
 
@@ -64,9 +69,12 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
                 options={foodProducts}
                 getOptionLabel={(option) => option.foodProductName}
                 onChange={(e, val) => {
-                  const list = [...inputList];
-                  list[i].foodProductId = val.foodProductId;
-                  setInputList(list);
+                  if (val != null) {
+                    const list = [...inputList];
+                    list[i].foodProductId = val.foodProductId;
+                    list[i].foodProductName = val.foodProductName;
+                    setInputList(list);
+                  }
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -86,7 +94,10 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
               />
             </Grid>
             <Grid item xs={4}>
-              <UnitSelector unit={unit} setUnit={setUnit} />
+              <UnitSelector
+                unit={inputList[i].unit}
+                handleChangeUnit={(e) => handleChangeUnit(e, i)}
+              />
             </Grid>
           </Grid>
         </div>
