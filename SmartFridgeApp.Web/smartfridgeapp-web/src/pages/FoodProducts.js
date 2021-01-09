@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import configData from "../config_url.json";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+import { MDBDataTable } from "mdbreact";
 import NewFoodProductDialog from "../components/dialogs/NewFoodProductDialog";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import SnackBar from "@material-ui/core/Snackbar";
+import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
 const FoodProducts = () => {
@@ -60,6 +60,11 @@ const FoodProducts = () => {
     setNewFoodProductDialog(false);
   };
 
+  // const [datatable, setDatatable] = React.useState({
+  //   columns: columns,
+  //   rows: rows,
+  // });
+
   return (
     <div>
       <NewFoodProductDialog
@@ -67,32 +72,42 @@ const FoodProducts = () => {
         state={newFoodProductDialog}
         handleClose={handleCloseNewFoodProductDialog}
       />
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => setNewFoodProductDialog(true)}
-      >
-        Add new food product
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleRefresh}
-        startIcon={<RefreshIcon />}
-      >
-        Refresh
-      </Button>
-      {dataLoading ? (
-        <div>
-          <CircularProgress />
-          <p>Loading food products</p>
-        </div>
-      ) : (
-        <MDBTable btn>
-          <MDBTableHead columns={columns} />
-          <MDBTableBody rows={rows} />
-        </MDBTable>
-      )}
+      <Container fixed>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setNewFoodProductDialog(true)}
+        >
+          Add new food product
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleRefresh}
+          startIcon={<RefreshIcon />}
+        >
+          Refresh
+        </Button>
+        {dataLoading ? (
+          <div>
+            <CircularProgress />
+            <p>Loading food products</p>
+          </div>
+        ) : (
+          <MDBDataTable
+            paging={true}
+            searchTop
+            pagingTop
+            searchBottom={false}
+            hover
+            entriesOptions={[10, 20, 40, 100]}
+            entries={10}
+            pagesAmount={8}
+            data={{ columns: columns, rows: rows }}
+            fullPagination
+          ></MDBDataTable>
+        )}
+      </Container>
     </div>
   );
 };

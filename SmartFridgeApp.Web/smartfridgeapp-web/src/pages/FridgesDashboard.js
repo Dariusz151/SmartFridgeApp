@@ -12,6 +12,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { Container, Typography, Paper } from "@material-ui/core";
+
 import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -148,6 +150,7 @@ const FridgesDashboard = () => {
           ),
           delete: (
             <Button
+              disabled
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
@@ -216,38 +219,40 @@ const FridgesDashboard = () => {
         </DialogActions>
       </Dialog>
       <br />
-      <div className="btn-group userBtns">
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleClickOpen}
-          startIcon={<AddIcon />}
-        >
-          Add new
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleRefresh}
-          startIcon={<RefreshIcon />}
-        >
-          Refresh
-        </Button>
-      </div>
-
-      <br />
-      <br />
-      {dataLoading ? (
-        <div>
-          <CircularProgress />
-          <p>Loading fridges</p>
+      <Container fixed>
+        <div className="btn-group userBtns">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleClickOpen}
+            startIcon={<AddIcon />}
+          >
+            Add new
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleRefresh}
+            startIcon={<RefreshIcon />}
+          >
+            Refresh
+          </Button>
         </div>
-      ) : (
-        <MDBTable btn>
-          <MDBTableHead columns={columns} />
-          <MDBTableBody rows={rows} />
-        </MDBTable>
-      )}
+
+        <br />
+        <br />
+        {dataLoading ? (
+          <div>
+            <CircularProgress />
+            <p>Loading fridges</p>
+          </div>
+        ) : (
+          <MDBTable btn>
+            <MDBTableHead columns={columns} />
+            <MDBTableBody rows={rows} />
+          </MDBTable>
+        )}
+      </Container>
     </div>
   );
 };

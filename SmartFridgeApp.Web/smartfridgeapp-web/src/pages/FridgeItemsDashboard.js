@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import { Container } from "@material-ui/core";
+
 import NumericInput from "react-numeric-input";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
 import NewFridgeItemDialog from "../components/dialogs/NewFridgeItemDialog";
@@ -15,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const FridgeItemsDashboard = () => {
   const { fridgeId } = useParams();
+  // const [readOnly, setReadOnly] = useState(true);
   const [dummyState, rerender] = useState(1);
   const [newUserDialogState, setNewUserDialogState] = useState(false);
   const [newFridgeItemDialogState, setNewFridgeItemDialogState] = useState(
@@ -24,7 +27,7 @@ const FridgeItemsDashboard = () => {
   const [usersLoading, finishUsersLoading] = useState(true);
   const [fridgeItemsLoading, finishFridgeItemsLoading] = useState(true);
   const [fridgeUsers, setUsersData] = useState([]);
-  const [selectedUserId, selectUser] = useState("None");
+  const [selectedUserId, selectUser] = useState("All");
   const [rows, setRows] = useState([
     {
       id: 1,
@@ -36,6 +39,7 @@ const FridgeItemsDashboard = () => {
         <span>
           <NumericInput min={0} max={100} />
           <Button
+            disabled={true}
             variant="contained"
             color="primary"
             startIcon={<FastfoodIcon />}
@@ -48,14 +52,17 @@ const FridgeItemsDashboard = () => {
   ]);
 
   useEffect(() => {
-    if (selectedUserId != "None") {
-      fetch(
-        configData.SERVER_URL +
-          "/api/fridgeItems/" +
-          fridgeId +
-          "/" +
-          selectedUserId
-      )
+    let endpoint = "";
+    let readOnly = false;
+    if (selectedUserId !== "None") {
+      if (selectedUserId === "All") {
+        endpoint = "/api/fridgeItems/" + fridgeId;
+        readOnly = true;
+      } else {
+        readOnly = false;
+        endpoint = "/api/fridgeItems/" + fridgeId + "/" + selectedUserId;
+      }
+      fetch(configData.SERVER_URL + endpoint)
         .then((response) => response.json())
         .then((json) => {
           const rowsArray = json.map((item, index) => ({
@@ -67,12 +74,14 @@ const FridgeItemsDashboard = () => {
             consume: (
               <span>
                 <NumericInput
+                  disabled={readOnly}
                   min={0}
                   max={10000}
                   value={amount.curent}
                   onChange={handleChange}
                 />
                 <Button
+                  disabled={readOnly}
                   variant="contained"
                   color="primary"
                   startIcon={<FastfoodIcon />}
@@ -96,7 +105,7 @@ const FridgeItemsDashboard = () => {
       .then((response) => response.json())
       .then((json) => {
         setUsersData([
-          { id: "None", name: "None" },
+          { id: "All", name: "All (read-only)" },
           ...json,
           // { id: "All", name: "All" },
         ]);
@@ -226,14 +235,16 @@ const FridgeItemsDashboard = () => {
       </div>
 
       <br />
-      {fridgeItemsLoading ? (
-        <p>Select user</p>
-      ) : (
-        <MDBTable>
-          <MDBTableHead columns={columns} />
-          <MDBTableBody rows={rows} />
-        </MDBTable>
-      )}
+      <Container fixed>
+        {fridgeItemsLoading ? (
+          <p>Select user</p>
+        ) : (
+          <MDBTable>
+            <MDBTableHead columns={columns} />
+            <MDBTableBody rows={rows} />
+          </MDBTable>
+        )}
+      </Container>
     </div>
   );
 };

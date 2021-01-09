@@ -19,6 +19,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { Container, Typography, Paper } from "@material-ui/core";
+
 const Recipes = () => {
   let history = useHistory();
   const [dataLoading, finishLoading] = useState(true);
@@ -183,37 +185,38 @@ const Recipes = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <div className="btn-group">
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={redirect}
-          startIcon={<AddIcon />}
-        >
-          Add new
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleRefresh}
-          startIcon={<RefreshIcon />}
-        >
-          Refresh
-        </Button>
-      </div>
-
-      {dataLoading ? (
-        <div>
-          <CircularProgress />
-          <p>Loading recipes</p>
+      <Container fixed>
+        <div className="btn-group">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={redirect}
+            startIcon={<AddIcon />}
+          >
+            Add new
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleRefresh}
+            startIcon={<RefreshIcon />}
+          >
+            Refresh
+          </Button>
         </div>
-      ) : (
-        <MDBTable btn>
-          <MDBTableHead columns={columns} />
-          <MDBTableBody rows={rows} />
-        </MDBTable>
-      )}
+
+        {dataLoading ? (
+          <div>
+            <CircularProgress />
+            <p>Loading recipes</p>
+          </div>
+        ) : (
+          <MDBTable btn>
+            <MDBTableHead columns={columns} />
+            <MDBTableBody rows={rows} />
+          </MDBTable>
+        )}
+      </Container>
     </div>
   );
 };
