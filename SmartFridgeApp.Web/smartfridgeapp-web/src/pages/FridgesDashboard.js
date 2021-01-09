@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import configData from "../config_url.json";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+
+import { MDBDataTable } from "mdbreact";
 import { Link } from "react-router-dom";
 import KitchenIcon from "@material-ui/icons/Kitchen";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,6 +12,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+
+import { Container } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -148,6 +151,7 @@ const FridgesDashboard = () => {
           ),
           delete: (
             <Button
+              disabled
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
@@ -216,38 +220,48 @@ const FridgesDashboard = () => {
         </DialogActions>
       </Dialog>
       <br />
-      <div className="btn-group userBtns">
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleClickOpen}
-          startIcon={<AddIcon />}
-        >
-          Add new
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleRefresh}
-          startIcon={<RefreshIcon />}
-        >
-          Refresh
-        </Button>
-      </div>
-
-      <br />
-      <br />
-      {dataLoading ? (
-        <div>
-          <CircularProgress />
-          <p>Loading fridges</p>
+      <Container fixed>
+        <div className="btn-group userBtns">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleClickOpen}
+            startIcon={<AddIcon />}
+          >
+            Add new
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleRefresh}
+            startIcon={<RefreshIcon />}
+          >
+            Refresh
+          </Button>
         </div>
-      ) : (
-        <MDBTable btn>
-          <MDBTableHead columns={columns} />
-          <MDBTableBody rows={rows} />
-        </MDBTable>
-      )}
+
+        <br />
+        <br />
+        {dataLoading ? (
+          <div>
+            <CircularProgress />
+            <p>Loading fridges</p>
+          </div>
+        ) : (
+          <MDBDataTable
+            paging={true}
+            searchTop
+            pagingTop
+            searchBottom={false}
+            hover
+            entriesOptions={[5, 10, 20]}
+            entries={5}
+            pagesAmount={3}
+            data={{ columns: columns, rows: rows }}
+            fullPagination
+          ></MDBDataTable>
+        )}
+      </Container>
     </div>
   );
 };
