@@ -20,19 +20,12 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
             IsOptional = true;
         }
 
-        public FoodProductDetails(short productId, AmountValue amountValue)
+        public FoodProductDetails(short productId, AmountValue amountValue) : this(productId, "", amountValue, false)
         {
-            FoodProductId = productId;
-            AmountValue = amountValue;
-            IsOptional = false;
         }
 
-        public FoodProductDetails(short productId, string foodProductName, AmountValue amountValue)
+        public FoodProductDetails(short productId, string foodProductName, AmountValue amountValue) : this(productId, foodProductName, amountValue, false)
         {
-            FoodProductName = foodProductName;
-            FoodProductId = productId;
-            AmountValue = amountValue;
-            IsOptional = false;
         }
 
         public FoodProductDetails(short productId, string foodProductName, AmountValue amountValue, bool isOptional)
