@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import configData from "../config_url.json";
-import { MDBDataTable } from "mdbreact";
+import { MDBDataTable, MDBInput } from "mdbreact";
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { Container } from "@material-ui/core";
+
+import Checkbox from "@material-ui/core/Checkbox";
 
 import NumericInput from "react-numeric-input";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
@@ -28,8 +30,12 @@ const FridgeItemsDashboard = () => {
   const [fridgeItemsLoading, finishFridgeItemsLoading] = useState(true);
   const [fridgeUsers, setUsersData] = useState([]);
   const [selectedUserId, selectUser] = useState("All");
+
+  const [selectedItems, selectItems] = useState(["0"]);
+
   const [rows, setRows] = useState([
     {
+      check: <Checkbox />,
       id: 1,
       categoryName: "category",
       productName: "product",
@@ -66,6 +72,25 @@ const FridgeItemsDashboard = () => {
         .then((response) => response.json())
         .then((json) => {
           const rowsArray = json.map((item, index) => ({
+            check: (
+              // <MDBInput
+              //   label=" "
+              //   type="checkbox"
+              //   id={`${item.fridgeItemId}`}
+              //   onClick={(e) => toggleCheck(e)}
+              //   checked={() => {
+              //     return true;
+              //   }}
+              // />
+              <Checkbox
+                color="primary"
+                checked={() => {
+                  return true;
+                }}
+                onChange={toggleCheck}
+                inputProps={{ "aria-label": "primary checkbox" }}
+              />
+            ),
             id: index + 1,
             productName: item.productName,
             categoryName: item.categoryName,
@@ -166,6 +191,38 @@ const FridgeItemsDashboard = () => {
       .catch((error) => console.log(error));
   };
 
+  // useEffect(() => {
+  //   console.log(selectedItems);
+  // }, [selectedItems]);
+
+  const toggleCheck = (e) => {
+    console.log(e);
+    // if (selectedItems.includes(e.target.id)) {
+    //   const index = selectedItems.indexOf(e.target.id);
+    //   if (index > -1) {
+    //     selectItems((oldArray) => [...oldArray.splice(index, 1)]);
+    //   }
+    // } else {
+    //   selectItems((oldArray) => [...oldArray, e.target.id]);
+    // }
+
+    // console.log(selectedItems);
+    // console.log(
+    //   selectedItems.filter((name) => name === e.target.id)[0] ? true : false
+    // );
+    // checkedArr.filter((name) => name === e.target.id)[0]
+    //   ? (checkedArr = checkedArr.filter((name) => name !== e.target.id))
+    //   : checkedArr.push(e.target.id);
+    //console.log(checkedArr);
+    //selectItems([]);
+    //selectItems(checkedArr);
+    //console.log(selectedItems);
+  };
+
+  function isChecked() {
+    return false;
+  }
+
   return (
     <div>
       <ToastContainer />
@@ -241,15 +298,15 @@ const FridgeItemsDashboard = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
+            // searchTop
+            // pagingTop
+            // searchBottom={false}
             hover
             entriesOptions={[10, 20, 40, 100]}
             entries={20}
             pagesAmount={8}
             data={{ columns: columns, rows: rows }}
-            fullPagination
+            // fullPagination
           ></MDBDataTable>
         )}
       </Container>
@@ -258,6 +315,12 @@ const FridgeItemsDashboard = () => {
 };
 
 const columns = [
+  {
+    label: "Check",
+    field: "check",
+    sort: "disabled",
+    width: 20,
+  },
   {
     label: "#",
     field: "id",

@@ -12,6 +12,7 @@ import FoodProducts from "./pages/FoodProducts";
 import AddNewRecipe from "./components/AddNewRecipe";
 import Recipes from "./pages/Recipes";
 import Header from "./components/Header";
+import BottomMenu from "./components/BottomMenu";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <FridgeItemsDashboard />
             </Route>
           </Switch>
+          <BottomMenu />
         </div>
       </Router>
     </div>
