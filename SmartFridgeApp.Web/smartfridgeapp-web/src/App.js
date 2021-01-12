@@ -12,6 +12,7 @@ import FoodProducts from "./pages/FoodProducts";
 import AddNewRecipe from "./components/AddNewRecipe";
 import Recipes from "./pages/Recipes";
 import Header from "./components/Header";
+import BottomMenu from "./components/BottomMenu";
 
 function App() {
   return (
@@ -29,18 +30,17 @@ function App() {
             <Route path="/recipes">
               <Recipes />
             </Route>
-
             <Route path="/fridges">
               <FridgesDashboard />
             </Route>
             <Route path="/foodProducts">
               <FoodProducts />
             </Route>
-
             <Route path="/fridgeitems/:fridgeId">
               <FridgeItemsDashboard />
             </Route>
           </Switch>
+          <BottomMenu />
         </div>
       </Router>
     </div>

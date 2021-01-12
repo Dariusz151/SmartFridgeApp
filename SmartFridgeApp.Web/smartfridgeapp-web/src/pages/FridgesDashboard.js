@@ -18,6 +18,7 @@ import { Container } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -143,7 +144,7 @@ const FridgesDashboard = () => {
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<KitchenIcon />}
+                startIcon={<MoreVertIcon />}
               >
                 Details
               </Button>

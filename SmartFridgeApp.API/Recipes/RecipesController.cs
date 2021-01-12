@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
 using SmartFridgeApp.API.Recipes.Categories.CreateCategory;
@@ -98,6 +99,7 @@ namespace SmartFridgeApp.API.Recipes
         /// </summary>
         [Route("")]
         [HttpDelete]
+        [Authorize]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteRecipeAsync([FromBody]DeleteRecipeRequest request)
         {
@@ -124,6 +126,7 @@ namespace SmartFridgeApp.API.Recipes
         /// </summary>
         [Route("/api/recipes/categories")]
         [HttpPost]
+        [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateRecipeCategoryAsync([FromBody]CreateRecipeCategoryRequest request)
         {

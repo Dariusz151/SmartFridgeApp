@@ -22,7 +22,8 @@ namespace SmartFridgeApp.API.Recipes
             var recipesAvailable = new List<Recipe>();
             foreach (var recipe in recipes)
             {
-                var listOfIds = recipe.FoodProducts.Select(x => x.FoodProductId).ToList();
+                // TODO: test this change? Added Where condition
+                var listOfIds = recipe.FoodProducts.Where(x=>x.IsOptional == false).Select(x => x.FoodProductId).ToList();
                 if (!listOfIds.Except(foodProducts).Any())
                 {
                     recipesAvailable.Add(recipe);

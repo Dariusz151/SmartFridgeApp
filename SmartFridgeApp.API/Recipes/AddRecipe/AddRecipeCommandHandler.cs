@@ -41,7 +41,7 @@ namespace SmartFridgeApp.API.Recipes.AddRecipe
             foreach (var item in command.Products)
             {
                 var foodProductName = allFoodProducts.SingleOrDefault(x => x.FoodProductId == item.FoodProductId).Name;
-                FoodProductDetails fpd = new FoodProductDetails(item.FoodProductId, foodProductName, item.AmountValue);
+                FoodProductDetails fpd = new FoodProductDetails(item.FoodProductId, foodProductName, item.AmountValue, item.IsOptional);
                 productsDetails.Add(fpd);
             }
             

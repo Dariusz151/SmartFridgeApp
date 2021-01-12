@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SmartFridgeApp.API.Fridges.DeleteFridge;
 using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.API.Fridges.UpdateFridge;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SmartFridgeApp.API.Fridges
 {
@@ -64,6 +65,7 @@ namespace SmartFridgeApp.API.Fridges
         /// Delete fridge.
         /// </summary>
         [Route("")]
+        [Authorize]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteFridgeAsync([FromBody]DeleteFridgeRequest request)
