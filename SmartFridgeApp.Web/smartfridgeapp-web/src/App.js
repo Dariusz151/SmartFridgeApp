@@ -30,14 +30,12 @@ function App() {
             <Route path="/recipes">
               <Recipes />
             </Route>
-
             <Route path="/fridges">
               <FridgesDashboard />
             </Route>
             <Route path="/foodProducts">
               <FoodProducts />
             </Route>
-
             <Route path="/fridgeitems/:fridgeId">
               <FridgeItemsDashboard />
             </Route>

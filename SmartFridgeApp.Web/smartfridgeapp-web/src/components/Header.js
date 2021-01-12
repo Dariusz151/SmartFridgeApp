@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -11,6 +10,7 @@ import {
 } from "mdbreact";
 function Header() {
   const [isOpen, open] = React.useState(false);
+  const [actualPath, setActualPath] = React.useState("fridges");
   const toggleCollapse = () => {
     open(!isOpen);
   };
@@ -24,14 +24,29 @@ function Header() {
         <MDBNavbarToggler onClick={toggleCollapse} />
         <MDBCollapse id="navbarCollapse3" isOpen={true} navbar>
           <MDBNavbarNav left>
-            <MDBNavItem active>
-              <MDBNavLink to="/fridges">Fridges</MDBNavLink>
+            <MDBNavItem active={actualPath === "fridges"}>
+              <MDBNavLink
+                to="/fridges"
+                onClick={() => setActualPath("fridges")}
+              >
+                Fridges
+              </MDBNavLink>
             </MDBNavItem>
-            <MDBNavItem>
-              <MDBNavLink to="/foodProducts">FoodProducts</MDBNavLink>
+            <MDBNavItem active={actualPath === "foodproducts"}>
+              <MDBNavLink
+                to="/foodProducts"
+                onClick={() => setActualPath("foodproducts")}
+              >
+                FoodProducts
+              </MDBNavLink>
             </MDBNavItem>
-            <MDBNavItem>
-              <MDBNavLink to="/recipes">Recipes</MDBNavLink>
+            <MDBNavItem active={actualPath === "recipes"}>
+              <MDBNavLink
+                to="/recipes"
+                onClick={() => setActualPath("recipes")}
+              >
+                Recipes
+              </MDBNavLink>
             </MDBNavItem>
             <MDBNavItem></MDBNavItem>
           </MDBNavbarNav>
