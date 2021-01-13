@@ -20,18 +20,18 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
+import NewFridgeDialog from "../components/dialogs/NewFridgeDialog";
+import { AuthContext } from "../App";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FridgesDashboard = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [values, setValues] = useState({
-    name: "",
-    address: "",
-    desc: "",
-  });
+  const [newFridgeDialogOpen, newFridgeDialog] = useState(false);
+
   const [rows, setRows] = useState([
     {
       id: 1,
@@ -42,55 +42,12 @@ const FridgesDashboard = () => {
     },
   ]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-  };
-
   const handleRefresh = () => {
     rerender(dummyState + 1);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    refreshForm();
-    setOpen(false);
-  };
-
-  const handleAdd = () => {
-    const obj = {
-      name: values.name,
-      address: values.address,
-      desc: values.desc,
-    };
-    fetch(configData.SERVER_URL + "/api/fridges", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(obj),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          toast.error("Cant add fridge!", {
-            position: "bottom-center",
-            autoClose: 1500,
-          });
-          throw Error(response.statusText);
-        }
-        toast.success("Added new fridge!", {
-          position: "bottom-center",
-          autoClose: 1500,
-        });
-
-        return response;
-      })
-      .then(refreshForm())
-      .then(setOpen(false))
-      .catch((error) => console.log(error));
+    newFridgeDialog(false);
   };
 
   const handleDelete = (fridgeId) => {
@@ -98,37 +55,32 @@ const FridgesDashboard = () => {
       fridgeId: fridgeId,
     };
 
-    fetch(configData.SERVER_URL + "/api/fridges", {
-      method: "delete",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(obj),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          toast.error("Cant delete fridge!", {
+    if (state.isAuthenticated) {
+      fetch(configData.SERVER_URL + "/api/fridges", {
+        method: "delete",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + state.token,
+        },
+        body: JSON.stringify(obj),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            toast.error("Cant delete fridge!", {
+              position: "bottom-center",
+              autoClose: 1500,
+            });
+            throw Error(response.statusText);
+          }
+          toast.success("Fridge deleted!", {
             position: "bottom-center",
             autoClose: 1500,
           });
-          throw Error(response.statusText);
-        }
-        toast.success("Fridge deleted!", {
-          position: "bottom-center",
-          autoClose: 1500,
-        });
 
-        return response;
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const refreshForm = () => {
-    setValues({
-      name: "",
-      address: "",
-      desc: "",
-    });
+          return response;
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   useEffect(() => {
@@ -152,7 +104,7 @@ const FridgesDashboard = () => {
           ),
           delete: (
             <Button
-              disabled
+              disabled={!state.isAuthenticated}
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
@@ -167,82 +119,34 @@ const FridgesDashboard = () => {
       })
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
-  }, [dummyState]);
+  }, [dummyState, state]);
 
   return (
-    <div>
+    <React.Fragment>
       <ToastContainer />
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Add new Fridge</DialogTitle>
-        <DialogContent>
-          <TextField
-            name="name"
-            label="Fridge name"
-            fullWidth
-            onChange={handleInputChange}
-            value={values.name}
-          />
-          <TextField
-            name="address"
-            label="Address"
-            fullWidth
-            onChange={handleInputChange}
-            value={values.address}
-          />
-          <TextField
-            name="desc"
-            label="Description"
-            fullWidth
-            onChange={handleInputChange}
-            value={values.desc}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            color="secondary"
-            variant="outlined"
-            startIcon={<CloseIcon />}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleAdd}
-            color="primary"
-            startIcon={<AddIcon />}
-            variant="outlined"
-          >
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <br />
+      <NewFridgeDialog isOpen={newFridgeDialogOpen} handleClose={handleClose} />
       <Container fixed>
-        <div className="btn-group userBtns">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleClickOpen}
-            startIcon={<AddIcon />}
-          >
-            Add new
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleRefresh}
-            startIcon={<RefreshIcon />}
-          >
-            Refresh
-          </Button>
-        </div>
+        <Button
+          style={styles.topButton}
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            newFridgeDialog(true);
+          }}
+          startIcon={<AddIcon />}
+        >
+          Add new
+        </Button>
+        <Button
+          style={styles.topButton}
+          variant="outlined"
+          color="primary"
+          onClick={handleRefresh}
+          startIcon={<RefreshIcon />}
+        >
+          Refresh
+        </Button>
 
-        <br />
-        <br />
         {dataLoading ? (
           <div>
             <CircularProgress />
@@ -251,19 +155,15 @@ const FridgesDashboard = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
             hover
             entriesOptions={[5, 10, 20]}
             entries={5}
             pagesAmount={3}
             data={{ columns: columns, rows: rows }}
-            fullPagination
           ></MDBDataTable>
         )}
       </Container>
-    </div>
+    </React.Fragment>
   );
 };
 
@@ -294,5 +194,15 @@ const columns = [
     sort: "asc",
   },
 ];
+
+const styles = {
+  topButton: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginTop: "30px",
+    // marginRight: "8px",
+    // marginLeft: "20px",
+  },
+};
 
 export default FridgesDashboard;

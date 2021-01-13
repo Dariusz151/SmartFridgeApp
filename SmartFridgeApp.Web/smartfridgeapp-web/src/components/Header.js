@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -7,8 +7,18 @@ import {
   MDBNavLink,
   MDBNavbarToggler,
   MDBCollapse,
+  MDBIcon,
+  MDBDropdown,
+  MDBDropdownItem,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
 } from "mdbreact";
+
+import { AuthContext } from "../App";
+
 function Header() {
+  const { state, dispatch } = React.useContext(AuthContext);
+
   const [isOpen, open] = React.useState(false);
   const [actualPath, setActualPath] = React.useState("fridges");
   const toggleCollapse = () => {
@@ -22,7 +32,7 @@ function Header() {
           <strong className="white-text">SmartFridgeApp</strong>
         </MDBNavbarBrand>
         <MDBNavbarToggler onClick={toggleCollapse} />
-        <MDBCollapse id="navbarCollapse3" isOpen={true} navbar>
+        <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
           <MDBNavbarNav left>
             <MDBNavItem active={actualPath === "fridges"}>
               <MDBNavLink
@@ -50,11 +60,35 @@ function Header() {
             </MDBNavItem>
             <MDBNavItem></MDBNavItem>
           </MDBNavbarNav>
-          <MDBNavbarNav right>
-            <MDBNavItem>
-              <MDBNavLink to="/">Admin</MDBNavLink>
-            </MDBNavItem>
-          </MDBNavbarNav>
+          {state.isAuthenticated ? (
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBDropdown>
+                  <MDBDropdownToggle nav caret>
+                    <MDBIcon icon="user" /> Admin
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu className="dropdown-default">
+                    <MDBDropdownItem
+                      href="/fridges"
+                      onClick={() =>
+                        dispatch({
+                          type: "LOGOUT",
+                        })
+                      }
+                    >
+                      Logout
+                    </MDBDropdownItem>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
+              </MDBNavItem>
+            </MDBNavbarNav>
+          ) : (
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBNavLink to="/admin">Login Admin</MDBNavLink>
+              </MDBNavItem>
+            </MDBNavbarNav>
+          )}
         </MDBCollapse>
       </MDBNavbar>
     </React.Fragment>

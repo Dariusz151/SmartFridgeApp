@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import configData from "../../config_url.json";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const NewFoodProductDialog = ({ categories, state, handleClose }) => {
+const NewFridgeDialog = ({ isOpen, handleClose }) => {
   const [values, setValues] = useState({
     name: "",
+    address: "",
+    desc: "",
   });
-  const [categoryId, setCategory] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,90 +28,74 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
   const refreshForm = () => {
     setValues({
       name: "",
-      category: "",
+      address: "",
+      desc: "",
     });
-  };
-
-  const onSelectChange = (event, val) => {
-    console.log(val);
-    if (val != undefined && val != null) setCategory(val.categoryId);
   };
 
   const handleAdd = () => {
     const obj = {
       name: values.name,
-      category: categoryId,
+      address: values.address,
+      desc: values.desc,
     };
-    console.log(sessionStorage.getItem("token"));
-    fetch(configData.SERVER_URL + "/api/foodProducts", {
+    fetch(configData.SERVER_URL + "/api/fridges", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + sessionStorage.getItem("token"),
       },
       body: JSON.stringify(obj),
     })
-      .then(function (response) {
+      .then((response) => {
         if (!response.ok) {
-          if (response.status === 401) {
-            toast.error("Unauthorized operation!", {
-              position: "bottom-center",
-              autoClose: 1500,
-            });
-          } else {
-            toast.error("Cant add food product!", {
-              position: "bottom-center",
-              autoClose: 1500,
-            });
-          }
+          toast.error("Cant add fridge!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
           throw Error(response.statusText);
         }
-        toast.success("Food product added!", {
+        toast.success("Added new fridge!", {
           position: "bottom-center",
           autoClose: 1500,
         });
+
         return response;
       })
       .then(refreshForm())
-      .catch((error) => {
-        console.log(error);
-      })
-      .then(() => handleClose());
+      .then(handleClose())
+      .catch((error) => console.log(error));
   };
 
   return (
     <React.Fragment>
       <ToastContainer />
-
       <Dialog
-        open={state}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add food product</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add new Fridge</DialogTitle>
         <DialogContent>
           <TextField
             name="name"
-            label="Name"
+            label="Fridge name"
             fullWidth
             onChange={handleInputChange}
             value={values.name}
           />
-          <br />
-          <br />
-          <Autocomplete
-            id="categories-combobox"
-            options={categories}
-            getOptionLabel={(option) => option.name}
-            style={{ width: "100%" }}
-            onChange={onSelectChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select category"
-                variant="outlined"
-              />
-            )}
+          <TextField
+            name="address"
+            label="Address"
+            fullWidth
+            onChange={handleInputChange}
+            value={values.address}
+          />
+          <TextField
+            name="desc"
+            label="Description"
+            fullWidth
+            onChange={handleInputChange}
+            value={values.desc}
           />
         </DialogContent>
         <DialogActions>
@@ -122,10 +108,10 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
             Cancel
           </Button>
           <Button
+            onClick={handleAdd}
             color="primary"
             startIcon={<AddIcon />}
             variant="outlined"
-            onClick={handleAdd}
           >
             Add
           </Button>
@@ -135,4 +121,4 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
   );
 };
 
-export default NewFoodProductDialog;
+export default NewFridgeDialog;

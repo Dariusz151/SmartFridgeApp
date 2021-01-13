@@ -10,9 +10,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { Container } from "@material-ui/core";
 
+import { AuthContext } from "../App";
 import RecipeDetails from "../components/dialogs/RecipeDetails";
 
 const Recipes = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   let history = useHistory();
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
@@ -52,9 +54,9 @@ const Recipes = () => {
     }),
   });
 
-  useEffect(() => {
-    console.log(recipeDetails.foodProducts);
-  }, [recipeDetails]);
+  // useEffect(() => {
+  //   console.log(recipeDetails.foodProducts);
+  // }, [recipeDetails]);
 
   const closeDetailsDialog = () => {
     openDetailsDialog(false);
@@ -104,6 +106,8 @@ const Recipes = () => {
       <Container fixed>
         <div className="btn-group">
           <Button
+            disabled={!state.isAuthenticated}
+            style={styles.topButton}
             variant="outlined"
             color="primary"
             onClick={() => history.push("/recipes/add")}
@@ -112,6 +116,7 @@ const Recipes = () => {
             Add new
           </Button>
           <Button
+            style={styles.topButton}
             variant="outlined"
             color="primary"
             onClick={() => rerender(dummyState + 1)}
@@ -129,15 +134,11 @@ const Recipes = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
             hover
             entriesOptions={[5, 10, 20, 30]}
             entries={10}
             pagesAmount={3}
             data={{ columns: columns, rows: rows }}
-            fullPagination
           ></MDBDataTable>
         )}
       </Container>
@@ -177,5 +178,15 @@ const columns = [
     sort: "asc",
   },
 ];
+
+const styles = {
+  topButton: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginTop: "30px",
+    // marginRight: "8px",
+    // marginLeft: "20px",
+  },
+};
 
 export default Recipes;

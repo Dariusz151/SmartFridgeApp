@@ -7,7 +7,10 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
+import { AuthContext } from "../App";
+
 const FoodProducts = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [newFoodProductDialog, setNewFoodProductDialog] = useState(false);
   const [categories, setCategories] = useState({
@@ -69,6 +72,8 @@ const FoodProducts = () => {
       />
       <Container fixed>
         <Button
+          disabled={!state.isAuthenticated}
+          style={styles.topButton}
           variant="outlined"
           color="primary"
           onClick={() => setNewFoodProductDialog(true)}
@@ -76,6 +81,7 @@ const FoodProducts = () => {
           Add new food product
         </Button>
         <Button
+          style={styles.topButton}
           variant="outlined"
           color="primary"
           onClick={handleRefresh}
@@ -91,15 +97,11 @@ const FoodProducts = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
             hover
             entriesOptions={[10, 20, 40, 100]}
             entries={10}
             pagesAmount={8}
             data={{ columns: columns, rows: rows }}
-            fullPagination
           ></MDBDataTable>
         )}
       </Container>
@@ -124,5 +126,13 @@ const columns = [
     sort: "asc",
   },
 ];
+
+const styles = {
+  topButton: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginTop: "30px",
+  },
+};
 
 export default FoodProducts;
