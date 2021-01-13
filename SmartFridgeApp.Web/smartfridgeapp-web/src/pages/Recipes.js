@@ -104,6 +104,7 @@ const Recipes = () => {
       <Container fixed>
         <div className="btn-group">
           <Button
+            style={styles.topButton}
             variant="outlined"
             color="primary"
             onClick={() => history.push("/recipes/add")}
@@ -112,6 +113,7 @@ const Recipes = () => {
             Add new
           </Button>
           <Button
+            style={styles.topButton}
             variant="outlined"
             color="primary"
             onClick={() => rerender(dummyState + 1)}
@@ -129,15 +131,11 @@ const Recipes = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
             hover
             entriesOptions={[5, 10, 20, 30]}
             entries={10}
             pagesAmount={3}
             data={{ columns: columns, rows: rows }}
-            fullPagination
           ></MDBDataTable>
         )}
       </Container>
@@ -177,5 +175,15 @@ const columns = [
     sort: "asc",
   },
 ];
+
+const styles = {
+  topButton: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginTop: "30px",
+    // marginRight: "8px",
+    // marginLeft: "20px",
+  },
+};
 
 export default Recipes;

@@ -69,6 +69,7 @@ const FoodProducts = () => {
       />
       <Container fixed>
         <Button
+          style={styles.topButton}
           variant="outlined"
           color="primary"
           onClick={() => setNewFoodProductDialog(true)}
@@ -76,6 +77,7 @@ const FoodProducts = () => {
           Add new food product
         </Button>
         <Button
+          style={styles.topButton}
           variant="outlined"
           color="primary"
           onClick={handleRefresh}
@@ -91,15 +93,11 @@ const FoodProducts = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            searchTop
-            pagingTop
-            searchBottom={false}
             hover
             entriesOptions={[10, 20, 40, 100]}
             entries={10}
             pagesAmount={8}
             data={{ columns: columns, rows: rows }}
-            fullPagination
           ></MDBDataTable>
         )}
       </Container>
@@ -124,5 +122,13 @@ const columns = [
     sort: "asc",
   },
 ];
+
+const styles = {
+  topButton: {
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginTop: "30px",
+  },
+};
 
 export default FoodProducts;

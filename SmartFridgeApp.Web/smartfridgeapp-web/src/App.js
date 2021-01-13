@@ -13,35 +13,38 @@ import AddNewRecipe from "./components/AddNewRecipe";
 import Recipes from "./pages/Recipes";
 import Header from "./components/Header";
 import BottomMenu from "./components/BottomMenu";
+import AdminLogin from "./components/AdminLogin";
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <div>
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/fridges" />
-            </Route>
-            <Route path="/recipes/add">
-              <AddNewRecipe />
-            </Route>
-            <Route path="/recipes">
-              <Recipes />
-            </Route>
-            <Route path="/fridges">
-              <FridgesDashboard />
-            </Route>
-            <Route path="/foodProducts">
-              <FoodProducts />
-            </Route>
-            <Route path="/fridgeitems/:fridgeId">
-              <FridgeItemsDashboard />
-            </Route>
-          </Switch>
-          <BottomMenu />
-        </div>
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="/fridges" />
+          </Route>
+          <Route path="/recipes/add">
+            <AddNewRecipe />
+          </Route>
+          <Route path="/recipes">
+            <Recipes />
+          </Route>
+          <Route path="/admin">
+            <AdminLogin />
+          </Route>
+          <Route path="/fridges">
+            <FridgesDashboard />
+          </Route>
+          <Route path="/foodProducts">
+            <FoodProducts />
+          </Route>
+          <Route path="/fridgeitems/:fridgeId">
+            <FridgeItemsDashboard />
+          </Route>
+        </Switch>
+
+        <BottomMenu />
       </Router>
     </div>
   );

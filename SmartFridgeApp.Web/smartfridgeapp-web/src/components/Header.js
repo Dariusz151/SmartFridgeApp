@@ -7,8 +7,14 @@ import {
   MDBNavLink,
   MDBNavbarToggler,
   MDBCollapse,
+  MDBIcon,
+  MDBDropdown,
+  MDBDropdownItem,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
 } from "mdbreact";
 function Header() {
+  const [isAdmin, loginAdmin] = React.useState(false);
   const [isOpen, open] = React.useState(false);
   const [actualPath, setActualPath] = React.useState("fridges");
   const toggleCollapse = () => {
@@ -22,7 +28,7 @@ function Header() {
           <strong className="white-text">SmartFridgeApp</strong>
         </MDBNavbarBrand>
         <MDBNavbarToggler onClick={toggleCollapse} />
-        <MDBCollapse id="navbarCollapse3" isOpen={true} navbar>
+        <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
           <MDBNavbarNav left>
             <MDBNavItem active={actualPath === "fridges"}>
               <MDBNavLink
@@ -50,11 +56,26 @@ function Header() {
             </MDBNavItem>
             <MDBNavItem></MDBNavItem>
           </MDBNavbarNav>
-          <MDBNavbarNav right>
-            <MDBNavItem>
-              <MDBNavLink to="/">Admin</MDBNavLink>
-            </MDBNavItem>
-          </MDBNavbarNav>
+          {isAdmin ? (
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBDropdown>
+                  <MDBDropdownToggle nav caret>
+                    <MDBIcon icon="user" />
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu className="dropdown-default">
+                    <MDBDropdownItem href="#!">Logout</MDBDropdownItem>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
+              </MDBNavItem>
+            </MDBNavbarNav>
+          ) : (
+            <MDBNavbarNav right>
+              <MDBNavItem>
+                <MDBNavLink to="/admin">Admin</MDBNavLink>
+              </MDBNavItem>
+            </MDBNavbarNav>
+          )}
         </MDBCollapse>
       </MDBNavbar>
     </React.Fragment>

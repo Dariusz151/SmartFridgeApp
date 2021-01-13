@@ -12,13 +12,7 @@ code {
     monospace;
 }
 
-.userBtns {
-  margin-top: 0px;
-  margin-bottom: 30px;
-}
-
 .btn-group button {
-  padding: 10px 24px;
   cursor: pointer;
   float: left;
 }
@@ -28,11 +22,6 @@ code {
   clear: both;
   display: table;
 }
-
-.btn-group button:not(:last-child) {
-  border-right: none;
-}
-
 .linkStyle {
   margin-top: 30px;
   margin-bottom: 30px;

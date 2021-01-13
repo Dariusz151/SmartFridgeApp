@@ -298,15 +298,11 @@ const FridgeItemsDashboard = () => {
         ) : (
           <MDBDataTable
             paging={true}
-            // searchTop
-            // pagingTop
-            // searchBottom={false}
             hover
             entriesOptions={[10, 20, 40, 100]}
             entries={20}
             pagesAmount={8}
             data={{ columns: columns, rows: rows }}
-            // fullPagination
           ></MDBDataTable>
         )}
       </Container>
