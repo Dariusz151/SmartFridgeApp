@@ -1,10 +1,12 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Text;
 
 namespace SmartFridgeApp.API.Auth
@@ -20,19 +22,22 @@ namespace SmartFridgeApp.API.Auth
             _configuration = config;
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        public IActionResult GetToken(string username, string password)
+        [ProducesResponseType(typeof(string),StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetToken([FromBody]AuthRequest authRequest)
         {
-            if (username is null || password is null)
+            if (authRequest.Login is null || authRequest.Password is null)
             {
                 return BadRequest("Username or password is null.");
             }
 
-            if (username.Equals(_configuration["AuthUsername"]) && password.Equals(_configuration["AuthPassword"])){
+            if (authRequest.Login.Equals(_configuration["AuthUsername"]) && authRequest.Password.Equals(_configuration["AuthPassword"])){
                 return Ok(GenerateJSONWebToken());
             }
-            return BadRequest("Invalid user or password");
+            return Unauthorized();
         }
 
         private string GenerateJSONWebToken()
