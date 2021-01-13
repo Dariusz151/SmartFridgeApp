@@ -7,7 +7,10 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
+import { AuthContext } from "../App";
+
 const FoodProducts = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [newFoodProductDialog, setNewFoodProductDialog] = useState(false);
   const [categories, setCategories] = useState({
@@ -69,6 +72,7 @@ const FoodProducts = () => {
       />
       <Container fixed>
         <Button
+          disabled={!state.isAuthenticated}
           style={styles.topButton}
           variant="outlined"
           color="primary"

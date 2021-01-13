@@ -48,6 +48,16 @@ const reducer = (state, action) => {
 function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
+  React.useEffect(() => {
+    const token = sessionStorage.getItem("token") || null;
+    if (token) {
+      dispatch({
+        type: "LOGIN",
+        payload: sessionStorage.getItem("token"),
+      });
+    }
+  }, []);
+
   return (
     <div className="App">
       <Router>

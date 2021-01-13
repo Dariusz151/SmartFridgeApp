@@ -21,11 +21,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import NewFridgeDialog from "../components/dialogs/NewFridgeDialog";
+import { AuthContext } from "../App";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FridgesDashboard = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
   const [newFridgeDialogOpen, newFridgeDialog] = useState(false);
@@ -53,29 +55,32 @@ const FridgesDashboard = () => {
       fridgeId: fridgeId,
     };
 
-    fetch(configData.SERVER_URL + "/api/fridges", {
-      method: "delete",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(obj),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          toast.error("Cant delete fridge!", {
+    if (state.isAuthenticated) {
+      fetch(configData.SERVER_URL + "/api/fridges", {
+        method: "delete",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + state.token,
+        },
+        body: JSON.stringify(obj),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            toast.error("Cant delete fridge!", {
+              position: "bottom-center",
+              autoClose: 1500,
+            });
+            throw Error(response.statusText);
+          }
+          toast.success("Fridge deleted!", {
             position: "bottom-center",
             autoClose: 1500,
           });
-          throw Error(response.statusText);
-        }
-        toast.success("Fridge deleted!", {
-          position: "bottom-center",
-          autoClose: 1500,
-        });
 
-        return response;
-      })
-      .catch((error) => console.log(error));
+          return response;
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   useEffect(() => {
@@ -99,7 +104,7 @@ const FridgesDashboard = () => {
           ),
           delete: (
             <Button
-              disabled
+              disabled={!state.isAuthenticated}
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
@@ -114,7 +119,7 @@ const FridgesDashboard = () => {
       })
       .catch((error) => console.error(error))
       .finally(() => finishLoading(false));
-  }, [dummyState]);
+  }, [dummyState, state]);
 
   return (
     <React.Fragment>

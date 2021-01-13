@@ -45,7 +45,7 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        "Authorization": "Bearer " + sessionStorage.getItem("token"),
       },
       body: JSON.stringify(obj),
     })

@@ -10,9 +10,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { Container } from "@material-ui/core";
 
+import { AuthContext } from "../App";
 import RecipeDetails from "../components/dialogs/RecipeDetails";
 
 const Recipes = () => {
+  const { state, dispatch } = React.useContext(AuthContext);
   let history = useHistory();
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
@@ -52,9 +54,9 @@ const Recipes = () => {
     }),
   });
 
-  useEffect(() => {
-    console.log(recipeDetails.foodProducts);
-  }, [recipeDetails]);
+  // useEffect(() => {
+  //   console.log(recipeDetails.foodProducts);
+  // }, [recipeDetails]);
 
   const closeDetailsDialog = () => {
     openDetailsDialog(false);
@@ -104,6 +106,7 @@ const Recipes = () => {
       <Container fixed>
         <div className="btn-group">
           <Button
+            disabled={!state.isAuthenticated}
             style={styles.topButton}
             variant="outlined"
             color="primary"
