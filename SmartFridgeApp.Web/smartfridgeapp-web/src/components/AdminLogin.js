@@ -9,10 +9,12 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
+import { AuthContext } from "../App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminLogin = () => {
+  const { dispatch } = React.useContext(AuthContext);
   let history = useHistory();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -50,8 +52,14 @@ const AdminLogin = () => {
           position: "bottom-center",
           autoClose: 1500,
         });
-
         return response;
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch({
+          type: "LOGIN",
+          payload: data.value,
+        });
       })
       .then(refreshForm())
       .then(handleClose())

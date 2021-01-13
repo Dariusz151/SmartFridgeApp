@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -13,8 +13,12 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
 } from "mdbreact";
+
+import { AuthContext } from "../App";
+
 function Header() {
-  const [isAdmin, loginAdmin] = React.useState(false);
+  const { state, dispatch } = React.useContext(AuthContext);
+
   const [isOpen, open] = React.useState(false);
   const [actualPath, setActualPath] = React.useState("fridges");
   const toggleCollapse = () => {
@@ -56,15 +60,24 @@ function Header() {
             </MDBNavItem>
             <MDBNavItem></MDBNavItem>
           </MDBNavbarNav>
-          {isAdmin ? (
+          {state.isAuthenticated ? (
             <MDBNavbarNav right>
               <MDBNavItem>
                 <MDBDropdown>
                   <MDBDropdownToggle nav caret>
-                    <MDBIcon icon="user" />
+                    <MDBIcon icon="user" /> Admin
                   </MDBDropdownToggle>
                   <MDBDropdownMenu className="dropdown-default">
-                    <MDBDropdownItem href="#!">Logout</MDBDropdownItem>
+                    <MDBDropdownItem
+                      href="/fridges"
+                      onClick={() =>
+                        dispatch({
+                          type: "LOGOUT",
+                        })
+                      }
+                    >
+                      Logout
+                    </MDBDropdownItem>
                   </MDBDropdownMenu>
                 </MDBDropdown>
               </MDBNavItem>
@@ -72,7 +85,7 @@ function Header() {
           ) : (
             <MDBNavbarNav right>
               <MDBNavItem>
-                <MDBNavLink to="/admin">Admin</MDBNavLink>
+                <MDBNavLink to="/admin">Login Admin</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
           )}

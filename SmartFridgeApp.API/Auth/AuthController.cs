@@ -35,7 +35,7 @@ namespace SmartFridgeApp.API.Auth
             }
 
             if (authRequest.Login.Equals(_configuration["AuthUsername"]) && authRequest.Password.Equals(_configuration["AuthPassword"])){
-                return Ok(GenerateJSONWebToken());
+                return Ok(Json(GenerateJSONWebToken()));
             }
             return Unauthorized();
         }

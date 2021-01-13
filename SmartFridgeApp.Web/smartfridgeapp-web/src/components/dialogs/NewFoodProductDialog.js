@@ -31,7 +31,8 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
   };
 
   const onSelectChange = (event, val) => {
-    if (val != undefined && val != null) setCategory(val.foodProductId);
+    console.log(val);
+    if (val != undefined && val != null) setCategory(val.categoryId);
   };
 
   const handleAdd = () => {
@@ -39,11 +40,12 @@ const NewFoodProductDialog = ({ categories, state, handleClose }) => {
       name: values.name,
       category: categoryId,
     };
-
+    console.log(sessionStorage.getItem("token"));
     fetch(configData.SERVER_URL + "/api/foodProducts", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
       body: JSON.stringify(obj),
     })

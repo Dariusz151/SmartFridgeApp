@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
+import React from "react";
+
 import FridgesDashboard from "./pages/FridgesDashboard";
 import FridgeItemsDashboard from "./pages/FridgeItemsDashboard";
 import FoodProducts from "./pages/FoodProducts";
@@ -15,36 +17,72 @@ import Header from "./components/Header";
 import BottomMenu from "./components/BottomMenu";
 import AdminLogin from "./components/AdminLogin";
 
+export const AuthContext = React.createContext();
+
+const initialState = {
+  isAuthenticated: false,
+  token: null,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "LOGIN":
+      sessionStorage.setItem("token", action.payload);
+      return {
+        ...state,
+        isAuthenticated: true,
+        token: action.payload,
+      };
+    case "LOGOUT":
+      sessionStorage.clear();
+      return {
+        ...state,
+        isAuthenticated: false,
+        token: null,
+      };
+    default:
+      return state;
+  }
+};
+
 function App() {
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+
   return (
     <div className="App">
       <Router>
-        <Header />
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/fridges" />
-          </Route>
-          <Route path="/recipes/add">
-            <AddNewRecipe />
-          </Route>
-          <Route path="/recipes">
-            <Recipes />
-          </Route>
-          <Route path="/admin">
-            <AdminLogin />
-          </Route>
-          <Route path="/fridges">
-            <FridgesDashboard />
-          </Route>
-          <Route path="/foodProducts">
-            <FoodProducts />
-          </Route>
-          <Route path="/fridgeitems/:fridgeId">
-            <FridgeItemsDashboard />
-          </Route>
-        </Switch>
-
-        <BottomMenu />
+        <AuthContext.Provider
+          value={{
+            state,
+            dispatch,
+          }}
+        >
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/fridges" />
+            </Route>
+            <Route path="/recipes/add">
+              <AddNewRecipe />
+            </Route>
+            <Route path="/recipes">
+              <Recipes />
+            </Route>
+            <Route path="/admin">
+              <AdminLogin />
+            </Route>
+            <Route path="/fridges">
+              <FridgesDashboard />
+            </Route>
+            <Route path="/foodProducts">
+              <FoodProducts />
+            </Route>
+            <Route path="/fridgeitems/:fridgeId">
+              <FridgeItemsDashboard />
+            </Route>
+          </Switch>
+          <BottomMenu />
+        </AuthContext.Provider>
       </Router>
     </div>
   );
