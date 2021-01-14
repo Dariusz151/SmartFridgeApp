@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import configData from "../config_url.json";
-import { MDBDataTable, MDBInput } from "mdbreact";
+import { MDBDataTable } from "mdbreact";
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
@@ -31,7 +31,7 @@ const FridgeItemsDashboard = () => {
   const [fridgeUsers, setUsersData] = useState([]);
   const [selectedUserId, selectUser] = useState("All");
 
-  const [selectedItems, selectItems] = useState(["0"]);
+  // const [selectedItems, selectItems] = useState(["0"]);
 
   const [rows, setRows] = useState([
     {

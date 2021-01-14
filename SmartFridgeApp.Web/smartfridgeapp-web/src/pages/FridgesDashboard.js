@@ -3,19 +3,11 @@ import configData from "../config_url.json";
 
 import { MDBDataTable } from "mdbreact";
 import { Link } from "react-router-dom";
-import KitchenIcon from "@material-ui/icons/Kitchen";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { Container } from "@material-ui/core";
-
-import CloseIcon from "@material-ui/icons/Close";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -27,7 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FridgesDashboard = () => {
-  const { state, dispatch } = React.useContext(AuthContext);
+  const { state } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
   const [newFridgeDialogOpen, newFridgeDialog] = useState(false);
@@ -154,10 +146,12 @@ const FridgesDashboard = () => {
           </div>
         ) : (
           <MDBDataTable
+            scrollY
+            maxHeight="62vh"
             paging={true}
             hover
             entriesOptions={[5, 10, 20]}
-            entries={5}
+            entries={10}
             pagesAmount={3}
             data={{ columns: columns, rows: rows }}
           ></MDBDataTable>
@@ -197,11 +191,10 @@ const columns = [
 
 const styles = {
   topButton: {
+    paddingLeft: "30px",
     paddingTop: "10px",
     paddingBottom: "10px",
     marginTop: "30px",
-    // marginRight: "8px",
-    // marginLeft: "20px",
   },
 };
 

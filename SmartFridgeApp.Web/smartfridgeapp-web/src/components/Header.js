@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -20,11 +20,10 @@ function Header() {
   const { state, dispatch } = React.useContext(AuthContext);
 
   const [isOpen, open] = React.useState(false);
-  const [actualPath, setActualPath] = React.useState("fridges");
+  const [actualPath, setActualPath] = React.useState("");
   const toggleCollapse = () => {
     open(!isOpen);
   };
-
   return (
     <React.Fragment>
       <MDBNavbar color="teal darken-2" dark expand="md">

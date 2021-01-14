@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import { AuthContext } from "../App";
 
 const FoodProducts = () => {
-  const { state, dispatch } = React.useContext(AuthContext);
+  const { state } = React.useContext(AuthContext);
   const [dataLoading, finishLoading] = useState(true);
   const [newFoodProductDialog, setNewFoodProductDialog] = useState(false);
   const [categories, setCategories] = useState({
@@ -64,13 +64,20 @@ const FoodProducts = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <NewFoodProductDialog
         categories={categories}
         state={newFoodProductDialog}
         handleClose={handleCloseNewFoodProductDialog}
       />
-      <Container fixed>
+      <Container
+        fixed
+        // style={{
+        //   minHeight: "60vh",
+        //   maxHeight: "82vh",
+        //   backgroundColor: "gray",
+        // }}
+      >
         <Button
           disabled={!state.isAuthenticated}
           style={styles.topButton}
@@ -96,16 +103,18 @@ const FoodProducts = () => {
           </div>
         ) : (
           <MDBDataTable
+            scrollY
+            maxHeight="62vh"
             paging={true}
             hover
             entriesOptions={[10, 20, 40, 100]}
-            entries={10}
+            entries={40}
             pagesAmount={8}
             data={{ columns: columns, rows: rows }}
           ></MDBDataTable>
         )}
       </Container>
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -68,6 +68,7 @@ function App() {
           }}
         >
           <Header />
+
           <Switch>
             <Route exact path="/">
               <Redirect to="/fridges" />
@@ -91,6 +92,7 @@ function App() {
               <FridgeItemsDashboard />
             </Route>
           </Switch>
+
           <BottomMenu />
         </AuthContext.Provider>
       </Router>
