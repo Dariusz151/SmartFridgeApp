@@ -8,11 +8,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { Container } from "@material-ui/core";
 
-import Checkbox from "@material-ui/core/Checkbox";
+// import Checkbox from "@material-ui/core/Checkbox";
 
 import NumericInput from "react-numeric-input";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
 import NewFridgeItemDialog from "../components/dialogs/NewFridgeItemDialog";
+import CarouselDialog from "../components/dialogs/CarouselDialog";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,16 +32,17 @@ const FridgeItemsDashboard = () => {
   const [fridgeUsers, setUsersData] = useState([]);
   const [selectedUserId, selectUser] = useState("All");
 
+  const [carouselDialogState, setCarouselDialogState] = useState(false);
+  const [recipesFound, setRecipesFound] = useState([{}]);
+
+  const handleCloseCarouselDialog = () => {
+    setCarouselDialogState(false);
+  };
+
   const [selectedItems, selectItem] = useState([]);
 
-  // const [checked, setChecked] = useState([
-  //   {
-  //     id: 1,
-  //     checked: false,
-  //   },
-  // ]);
-
   const checkHandler = (id) => {
+    console.log(id);
     const arr = selectedItems;
     if (arr.includes(id)) {
       arr.splice(arr.indexOf(id), 1);
@@ -95,7 +97,7 @@ const FridgeItemsDashboard = () => {
                 label=" "
                 type="checkbox"
                 id={`checkbox${index}`}
-                onClick={() => checkHandler(item.fridgeItemId)}
+                onClick={() => checkHandler(item.foodProductId)}
               />
             ),
             id: index + 1,
@@ -198,6 +200,42 @@ const FridgeItemsDashboard = () => {
       .catch((error) => console.log(error));
   };
 
+  const handleFindRecipes = () => {
+    console.log(selectedItems);
+    const obj = {
+      foodProducts: selectedItems,
+    };
+
+    fetch(configData.SERVER_URL + "/api/recipes/find", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant find recipe!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then((response) => response.json())
+      .then((body) => {
+        console.log(body.length);
+        if (body.length > 0) {
+          const arr = ["siema", "siema2", "siema3"];
+          console.log(body);
+          setRecipesFound(body);
+          setCarouselDialogState(true);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -215,6 +253,11 @@ const FridgeItemsDashboard = () => {
         handleClose={() => {
           setNewFridgeItemDialogState(false);
         }}
+      />
+      <CarouselDialog
+        state={carouselDialogState}
+        handleClose={handleCloseCarouselDialog}
+        recipes={recipesFound}
       />
       {usersLoading ? (
         <div>
@@ -256,7 +299,7 @@ const FridgeItemsDashboard = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => console.log(selectedItems)}
+            onClick={handleFindRecipes}
           >
             Find recipes
           </Button>
