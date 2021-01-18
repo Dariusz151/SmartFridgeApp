@@ -27,7 +27,6 @@ bld/
 SmartFridgeApp.UI/.expo/
 packager-info.json
 [Pp]ublish/
-.travis.yml
 
 
 appsettings.Development.json
