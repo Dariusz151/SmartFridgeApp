@@ -14,7 +14,7 @@ import { AuthContext } from "../App";
 import RecipeDetails from "../components/dialogs/RecipeDetails";
 
 const Recipes = () => {
-  const { state, dispatch } = React.useContext(AuthContext);
+  const { state } = React.useContext(AuthContext);
   let history = useHistory();
   const [dataLoading, finishLoading] = useState(true);
   const [dummyState, rerender] = useState(1);
@@ -133,6 +133,8 @@ const Recipes = () => {
           </div>
         ) : (
           <MDBDataTable
+            scrollY
+            maxHeight="62vh"
             paging={true}
             hover
             entriesOptions={[5, 10, 20, 30]}
@@ -184,8 +186,6 @@ const styles = {
     paddingTop: "10px",
     paddingBottom: "10px",
     marginTop: "30px",
-    // marginRight: "8px",
-    // marginLeft: "20px",
   },
 };
 

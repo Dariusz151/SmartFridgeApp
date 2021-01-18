@@ -8,11 +8,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { Container } from "@material-ui/core";
 
-import Checkbox from "@material-ui/core/Checkbox";
+// import Checkbox from "@material-ui/core/Checkbox";
 
 import NumericInput from "react-numeric-input";
 import NewUserDialog from "../components/dialogs/NewUserDialog";
 import NewFridgeItemDialog from "../components/dialogs/NewFridgeItemDialog";
+import CarouselDialog from "../components/dialogs/CarouselDialog";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,11 +32,30 @@ const FridgeItemsDashboard = () => {
   const [fridgeUsers, setUsersData] = useState([]);
   const [selectedUserId, selectUser] = useState("All");
 
-  const [selectedItems, selectItems] = useState(["0"]);
+  const [carouselDialogState, setCarouselDialogState] = useState(false);
+  const [recipesFound, setRecipesFound] = useState([{}]);
+
+  const handleCloseCarouselDialog = () => {
+    setCarouselDialogState(false);
+  };
+
+  const [selectedItems, selectItem] = useState([]);
+
+  const checkHandler = (id) => {
+    console.log(id);
+    const arr = selectedItems;
+    if (arr.includes(id)) {
+      arr.splice(arr.indexOf(id), 1);
+      selectItem(arr);
+    } else {
+      arr.push(id);
+      selectItem(arr);
+    }
+  };
 
   const [rows, setRows] = useState([
     {
-      check: <Checkbox />,
+      check: <MDBInput type="checkbox" />,
       id: 1,
       categoryName: "category",
       productName: "product",
@@ -73,22 +93,11 @@ const FridgeItemsDashboard = () => {
         .then((json) => {
           const rowsArray = json.map((item, index) => ({
             check: (
-              // <MDBInput
-              //   label=" "
-              //   type="checkbox"
-              //   id={`${item.fridgeItemId}`}
-              //   onClick={(e) => toggleCheck(e)}
-              //   checked={() => {
-              //     return true;
-              //   }}
-              // />
-              <Checkbox
-                color="primary"
-                checked={() => {
-                  return true;
-                }}
-                onChange={toggleCheck}
-                inputProps={{ "aria-label": "primary checkbox" }}
+              <MDBInput
+                label=" "
+                type="checkbox"
+                id={`checkbox${index}`}
+                onClick={() => checkHandler(item.foodProductId)}
               />
             ),
             id: index + 1,
@@ -191,37 +200,41 @@ const FridgeItemsDashboard = () => {
       .catch((error) => console.log(error));
   };
 
-  // useEffect(() => {
-  //   console.log(selectedItems);
-  // }, [selectedItems]);
+  const handleFindRecipes = () => {
+    console.log(selectedItems);
+    const obj = {
+      foodProducts: selectedItems,
+    };
 
-  const toggleCheck = (e) => {
-    console.log(e);
-    // if (selectedItems.includes(e.target.id)) {
-    //   const index = selectedItems.indexOf(e.target.id);
-    //   if (index > -1) {
-    //     selectItems((oldArray) => [...oldArray.splice(index, 1)]);
-    //   }
-    // } else {
-    //   selectItems((oldArray) => [...oldArray, e.target.id]);
-    // }
-
-    // console.log(selectedItems);
-    // console.log(
-    //   selectedItems.filter((name) => name === e.target.id)[0] ? true : false
-    // );
-    // checkedArr.filter((name) => name === e.target.id)[0]
-    //   ? (checkedArr = checkedArr.filter((name) => name !== e.target.id))
-    //   : checkedArr.push(e.target.id);
-    //console.log(checkedArr);
-    //selectItems([]);
-    //selectItems(checkedArr);
-    //console.log(selectedItems);
+    fetch(configData.SERVER_URL + "/api/recipes/find", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant find recipe!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then((response) => response.json())
+      .then((body) => {
+        console.log(body.length);
+        if (body.length > 0) {
+          const arr = ["siema", "siema2", "siema3"];
+          console.log(body);
+          setRecipesFound(body);
+          setCarouselDialogState(true);
+        }
+      })
+      .catch((error) => console.log(error));
   };
-
-  function isChecked() {
-    return false;
-  }
 
   return (
     <div>
@@ -240,6 +253,11 @@ const FridgeItemsDashboard = () => {
         handleClose={() => {
           setNewFridgeItemDialogState(false);
         }}
+      />
+      <CarouselDialog
+        state={carouselDialogState}
+        handleClose={handleCloseCarouselDialog}
+        recipes={recipesFound}
       />
       {usersLoading ? (
         <div>
@@ -281,6 +299,13 @@ const FridgeItemsDashboard = () => {
           <Button
             variant="outlined"
             color="primary"
+            onClick={handleFindRecipes}
+          >
+            Find recipes
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
             onClick={() => {
               rerender(dummyState + 1);
             }}
@@ -297,6 +322,8 @@ const FridgeItemsDashboard = () => {
           <p>Select user</p>
         ) : (
           <MDBDataTable
+            scrollY
+            maxHeight="58vh"
             paging={true}
             hover
             entriesOptions={[10, 20, 40, 100]}
@@ -315,12 +342,13 @@ const columns = [
     label: "Check",
     field: "check",
     sort: "disabled",
-    width: 20,
+    // width: 20,
   },
   {
     label: "#",
     field: "id",
     sort: "asc",
+    // width: 20,
   },
   {
     label: "Product",
