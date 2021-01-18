@@ -7,4 +7,5 @@ branches:
 install:
   - dotnet restore
 script:
+  - dotnet test
   - dotnet build
