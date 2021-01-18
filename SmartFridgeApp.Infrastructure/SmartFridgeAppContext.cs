@@ -4,11 +4,14 @@ using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.Models.Recipes;
 using SmartFridgeApp.Domain.Models.Users;
+using SmartFridgeApp.Domain.Shared;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
 using SmartFridgeApp.Infrastructure.InternalCommands;
 using SmartFridgeApp.Infrastructure.Outbox;
 using SmartFridgeApp.Infrastructure.Recipes;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -30,7 +33,7 @@ namespace SmartFridgeApp.Infrastructure
 
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {
-
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

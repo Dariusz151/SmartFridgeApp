@@ -93,7 +93,9 @@ namespace SmartFridgeApp.API
 
             var user1 = new User("Dariusz", "dariusz@dariusz.pl");
             var user2 = new User("Olga", "olga@olga.pl");
-            var user3 = new User("Andrzej", "rischan@andrzej.pl");
+            var user3 = new User("Zbychu", "zbychu@elk.pl");
+            var user4 = new User("Krzysztof", "krzysztof@elk.pl");
+            var user5 = new User("Pietrek", "pietruj@elk.pl");
 
             var user1FridgeItems = new List<FridgeItem>();
             user1.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault(), "Z biedry", new AmountValue(500, Unit.Grams)));
@@ -146,6 +148,29 @@ namespace SmartFridgeApp.API
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mięso mielone wieprzowe")).SingleOrDefault(), "z promki było dużo", new AmountValue(750, Unit.Grams)));
             user3.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Kiełbasa")).SingleOrDefault(), "podwawelska", new AmountValue(3, Unit.Pieces)));
 
+            var user4FridgeItems = new List<FridgeItem>();
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Piwo")).SingleOrDefault(), "harnaś", new AmountValue(500, Unit.Mililiter)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(), "łowicz", new AmountValue(500, Unit.Grams)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Bułki")).SingleOrDefault(), "", new AmountValue(5, Unit.Pieces)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ser żółty")).SingleOrDefault(), "gouda", new AmountValue(200, Unit.Grams)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(), "", new AmountValue(1000, Unit.Mililiter)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Por")).SingleOrDefault(), "", new AmountValue(1, Unit.Pieces)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mięso mielone wieprzowe")).SingleOrDefault(), "z promki było dużo", new AmountValue(750, Unit.Grams)));
+            user4.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Kiełbasa")).SingleOrDefault(), "podwawelska", new AmountValue(3, Unit.Pieces)));
+
+            var user5FridgeItems = new List<FridgeItem>();
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Piwo")).SingleOrDefault(), "harnaś", new AmountValue(500, Unit.Mililiter)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Masło")).SingleOrDefault(), "", new AmountValue(250, Unit.Grams)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Margaryna")).SingleOrDefault(), "", new AmountValue(200, Unit.Grams)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(), "", new AmountValue(500, Unit.Grams)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Ser żółty")).SingleOrDefault(), "gouda", new AmountValue(200, Unit.Grams)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(), "", new AmountValue(1000, Unit.Mililiter)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Marchew")).SingleOrDefault(), "", new AmountValue(3, Unit.Pieces)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Mięso mielone wieprzowe")).SingleOrDefault(), "z promki było dużo", new AmountValue(750, Unit.Grams)));
+            user5.AddFridgeItem(new FridgeItem(foodProducts.Where(x => x.Name.Equals("Kiełbasa")).SingleOrDefault(), "podwawelska", new AmountValue(3, Unit.Pieces)));
+
+
             var fridgeDragana = new Fridge("Dragana", "Dragana", "Dragana");
             fridgeDragana.AddUser(user1);
             fridgeDragana.AddUser(user2);
@@ -153,8 +178,16 @@ namespace SmartFridgeApp.API
             var fridgeElk = new Fridge("Ełk", "Ełk", "Ełk");
             fridgeElk.AddUser(user3);
 
+            var fridge2 = new Fridge("Lodówa2", "Lodówa2", "Lodówa2");
+            fridge2.AddUser(user4);
+
+            var fridge3 = new Fridge("Lodówa3", "Lodówa3", "Lodówa3");
+            fridge3.AddUser(user5);
+
             fridges.Add(fridgeDragana);
             fridges.Add(fridgeElk);
+            fridges.Add(fridge2);
+            fridges.Add(fridge3);
 
             return fridges;
         }
@@ -166,7 +199,11 @@ namespace SmartFridgeApp.API
             recipes.Add(KurczakSlodkoKwasny(list));
             recipes.Add(PiersKurczakaWPanierce(list));
             recipes.Add(LeczoZTofu(list));
-            
+            recipes.Add(Jajecznica(list));
+            recipes.Add(Nalesniki(list));
+            recipes.Add(NalesnikiBanan(list));
+            recipes.Add(StekWolowy(list));
+
             return recipes;
         }
 
@@ -373,21 +410,21 @@ namespace SmartFridgeApp.API
             return foodProducts;
         }
 
-    
+
         private Recipe KurczakSlodkoKwasny(IEnumerable<FoodProduct> list)
         {
 
             var kurczak = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault(),
                 new AmountValue(250, Unit.Grams));
             var ryz = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Ryż biały")).SingleOrDefault(),
                 new AmountValue(100, Unit.Grams));
             var cebula = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault(),
                 new AmountValue(1, Unit.Pieces));
             var sos_slodko_kwasny = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Sos słodko-kwaśny")).SingleOrDefault(),
                new AmountValue(200, Unit.Grams));
 
             var _foodProducts = new List<FoodProductDetails>();
@@ -406,19 +443,19 @@ namespace SmartFridgeApp.API
         private Recipe PiersKurczakaWPanierce(IEnumerable<FoodProduct> list)
         {
             var kurczak = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Pierś z kurczaka")).SingleOrDefault(),
                 new AmountValue(250, Unit.Grams));
             var ziemniaki = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Ziemniaki")).SingleOrDefault(),
                 new AmountValue(300, Unit.Grams));
             var bulka_tarta = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Bułka tarta")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Bułka tarta")).SingleOrDefault(),
                new AmountValue(50, Unit.Grams));
             var maka = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(),
                new AmountValue(50, Unit.Grams));
             var jajo = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(),
                new AmountValue(1, Unit.Pieces));
 
 
@@ -439,22 +476,22 @@ namespace SmartFridgeApp.API
         private Recipe LeczoZTofu(IEnumerable<FoodProduct> list)
         {
             var tofu = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Tofu")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Tofu")).SingleOrDefault(),
                 new AmountValue(300, Unit.Grams));
             var cukinia = new FoodProductDetails(
-                list.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault().FoodProductId,
+                list.Where(x => x.Name.Equals("Cukinia")).SingleOrDefault(),
                 new AmountValue(1, Unit.Pieces));
             var papryka = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Papryka")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Papryka")).SingleOrDefault(),
                new AmountValue(1, Unit.Pieces));
             var cebula = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault(),
                new AmountValue(1, Unit.Pieces));
             var czosnek = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Czosnek")).SingleOrDefault(),
                new AmountValue(2, Unit.Pieces));
             var pomidory = new FoodProductDetails(
-               list.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault().FoodProductId,
+               list.Where(x => x.Name.Equals("Pomidor")).SingleOrDefault(),
                new AmountValue(3, Unit.Pieces));
 
             var _foodProducts = new List<FoodProductDetails>();
@@ -468,6 +505,139 @@ namespace SmartFridgeApp.API
             var desc = "Tofu pokroić w kostkę, przyprawić i zostawić na trochę w lodówce. Cukinię pokroić w półtalarki, paprykę w kostkę, pomidora na małe kawałki (żeby puścił sok). Cebulę i czonske kroimy i podsmażamy na oliwie w garnku. Po minucie dodajemy cukinie, dodajemy 100ml wody, dusimy przez 3 min. Dodajemy pomidory i dalej dusimy. Podsmażamy tofu na patelni - w międzyczasie dorzucamy paprykę do lecza (w zależności jak chcemy żeby była twarda). Jak tofu jest podsmażone, miezsamy wszystko w garnku.";
 
             var recipe = new Recipe("Leczo z tofu, cukinii i papryki", desc, categoryObiad, _foodProducts, 35, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
+
+        private Recipe Jajecznica(IEnumerable<FoodProduct> list)
+        {
+            var jaja = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(),
+                new AmountValue(3, Unit.Pieces));
+            var mleko = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(),
+               new AmountValue(75, Unit.Mililiter));
+            mleko.SetOptional();
+            var cebula = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Cebula")).SingleOrDefault(),
+               new AmountValue(50, Unit.Grams));
+            cebula.SetOptional();
+            var maslo = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Masło")).SingleOrDefault(),
+               new AmountValue(15, Unit.Grams));
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(jaja);
+            _foodProducts.Add(mleko);
+            _foodProducts.Add(maslo);
+            _foodProducts.Add(cebula);
+
+            var desc = "Rozbijamy jajka, dodajemy trochę mleka. Na patelni rozgrzewamy masło i wrzucamy cebulę. Po chwili wlewamy jajka i czekamy aż się zetną.";
+
+            var recipe = new Recipe("Jajecznica na mleku", desc, categorySniadanie, _foodProducts, 10, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
+
+        private Recipe Nalesniki(IEnumerable<FoodProduct> list)
+        {
+            var jaja = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(),
+                new AmountValue(2, Unit.Pieces));
+            var maka = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(),
+                new AmountValue(200, Unit.Grams));
+            var mleko = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(),
+               new AmountValue(150, Unit.Mililiter));
+            var woda = new FoodProductDetails(
+              list.Where(x => x.Name.Equals("Woda")).SingleOrDefault(),
+              new AmountValue(30, Unit.Mililiter));
+            woda.SetOptional();
+            var olej = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Olej")).SingleOrDefault(),
+             new AmountValue(15, Unit.Mililiter));
+
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(jaja);
+            _foodProducts.Add(mleko);
+            _foodProducts.Add(maka);
+            _foodProducts.Add(woda);
+
+            var desc = "Do mąki wbijamy jajko i mleko, mieszamy. Dodajemy troche wody gazowanej. Dodajemy trochę soli. Wlewamy na patelnie do naleśników (mozna wytrzec olejem przed smazeniem) i smażymy.";
+
+            var recipe = new Recipe("Naleśniki", desc, categoryKolacja, _foodProducts, 25, (int)LevelOfDifficulty.Easy);
+
+            return recipe;
+        }
+
+        private Recipe NalesnikiBanan(IEnumerable<FoodProduct> list)
+        {
+            var jaja = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Jaja")).SingleOrDefault(),
+                new AmountValue(2, Unit.Pieces));
+            var maka = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(),
+                new AmountValue(80, Unit.Grams));
+            var mleko = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Mleko")).SingleOrDefault(),
+               new AmountValue(150, Unit.Mililiter));
+            var maslo = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Masło")).SingleOrDefault(),
+               new AmountValue(30, Unit.Grams));
+            var olej = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Olej")).SingleOrDefault(),
+             new AmountValue(20, Unit.Mililiter));
+            var banan = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Banan")).SingleOrDefault(),
+             new AmountValue(6, Unit.Pieces));
+            var sol = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Sól")).SingleOrDefault(),
+             new AmountValue(10, Unit.Grams));
+
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(jaja);
+            _foodProducts.Add(mleko);
+            _foodProducts.Add(maka);
+            _foodProducts.Add(maslo);
+            _foodProducts.Add(olej);
+            _foodProducts.Add(sol);
+            _foodProducts.Add(banan);
+
+            var desc = "Ciasto: roztopił 1 łyżkę masła, wszystkie składniki wymieszać, dodając taką ilość mleka, aby ciasto miało konsystencję gęstej śmietany. Odstawić na godzinę. Smażyć naleśniki na patelni posmarowanej olejem. Nadzienie: banany obrać, obsmażyć na reszcie masła na małym ogniu tak, aby go nie rumienić. Gdy banany lekko zmiękną, posypać grubo cukrem pudrem i skropić aromatem rumowym. Od czasu do czasu skrapiać wodą, do momentu, aż na wierzchu powstanie karmel.Lekko przestudzone banany owinąć naleśnikiem, ułożyć w żaroodpornym naczyniu do zapiekania. Posypać cukrem i ponownie skropić aromatem rumowym";
+
+            var recipe = new Recipe("Naleśniki z bananami", desc, categoryKolacja, _foodProducts, 90, (int)LevelOfDifficulty.Medium);
+
+            return recipe;
+        }
+
+        private Recipe StekWolowy(IEnumerable<FoodProduct> list)
+        {
+            var stek = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Stek wołowy")).SingleOrDefault(),
+                new AmountValue(3, Unit.Pieces));
+            var maslo = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Masło")).SingleOrDefault(),
+               new AmountValue(60, Unit.Grams));
+            var sol = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Sól")).SingleOrDefault(),
+             new AmountValue(10, Unit.Grams));
+            var pieprz = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Pieprz")).SingleOrDefault(),
+             new AmountValue(10, Unit.Grams));
+
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(stek);
+            _foodProducts.Add(maslo);
+            _foodProducts.Add(sol);
+            _foodProducts.Add(pieprz);
+
+            var desc = "3-4 minut na stek mocno krwisty. 4-5 minut na stek krwisty. 5-6 minut na stek średnio wysmażony. 6-7 minut na stek mocno wysmażony";
+
+            var recipe = new Recipe("Stek wołowy z patelni", desc, categoryObiad, _foodProducts, 20, (int)LevelOfDifficulty.Hard);
 
             return recipe;
         }

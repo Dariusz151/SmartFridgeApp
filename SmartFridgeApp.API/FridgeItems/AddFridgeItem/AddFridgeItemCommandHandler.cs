@@ -29,6 +29,7 @@ namespace SmartFridgeApp.API.FridgeItems.AddFridgeItem
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
             var foodProduct = await _foodProductRepository.GetByIdAsync(command.FridgeItemDto.FoodProductId);
+
             
             var fridgeItem = new FridgeItem(
                 foodProduct,

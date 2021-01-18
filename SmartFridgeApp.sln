@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{236166EB-0372-4433-A48F-34846FE675AB}"
 	ProjectSection(SolutionItems) = preProject
-		.travis.yml = .travis.yml
-		build.sh = build.sh
-		Dockerfile = Dockerfile
-		pipeline.sh = pipeline.sh
 		readme.md = readme.md
 	EndProjectSection
 EndProject

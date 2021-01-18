@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +16,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     CategoryId = table.Column<short>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
@@ -74,19 +73,17 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipes",
+                name: "RecipeCategories",
                 schema: "app",
                 columns: table => new
                 {
-                    RecipeId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Description = table.Column<string>(maxLength: 5000, nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    FoodProducts = table.Column<string>(nullable: true)
+                    RecipeCategoryId = table.Column<short>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipes", x => x.RecipeId);
+                    table.PrimaryKey("PK_RecipeCategories", x => x.RecipeCategoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,7 +92,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     FoodProductId = table.Column<short>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     CategoryId = table.Column<short>(nullable: true)
                 },
@@ -135,16 +132,41 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Recipes",
+                schema: "app",
+                columns: table => new
+                {
+                    RecipeId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    RequiredTime = table.Column<int>(nullable: false, defaultValue: -1),
+                    LevelOfDifficulty = table.Column<short>(type: "smallint", nullable: false, defaultValue: (short)3),
+                    RecipeCategoryId = table.Column<short>(nullable: true),
+                    FoodProducts = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipes", x => x.RecipeId);
+                    table.ForeignKey(
+                        name: "FK_Recipes_RecipeCategories_RecipeCategoryId",
+                        column: x => x.RecipeCategoryId,
+                        principalSchema: "app",
+                        principalTable: "RecipeCategories",
+                        principalColumn: "RecipeCategoryId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FridgeItems",
                 schema: "app",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FoodProductId = table.Column<short>(nullable: true),
                     Note = table.Column<string>(maxLength: 1000, nullable: true),
-                    Value = table.Column<float>(nullable: false),
-                    Unit = table.Column<string>(nullable: false),
+                    Value = table.Column<float>(nullable: true),
+                    Unit = table.Column<string>(nullable: true),
                     ExpirationDate = table.Column<DateTime>(nullable: false),
                     EnteredAt = table.Column<DateTime>(nullable: false),
                     IsConsumed = table.Column<bool>(nullable: false),
@@ -188,6 +210,12 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recipes_RecipeCategoryId",
+                schema: "app",
+                table: "Recipes",
+                column: "RecipeCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_FridgeId",
                 schema: "app",
                 table: "Users",
@@ -218,6 +246,10 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "RecipeCategories",
                 schema: "app");
 
             migrationBuilder.DropTable(

@@ -42,8 +42,18 @@ namespace SmartFridgeApp.Domain.Models.Users
         
         public void AddFridgeItem(FridgeItem item)
         {
-            _fridgeItems.Add(item);
-
+            var foodProducts = _fridgeItems.Select(x => x.FoodProduct).Select(x => x.FoodProductId);
+            if (foodProducts.Contains(item.FoodProduct.FoodProductId))
+            {
+                _fridgeItems
+                    .Where(x => x.FoodProduct.FoodProductId == item.FoodProduct.FoodProductId)
+                    .First()
+                    .IncreaseFridgeItemAmount(item.AmountValue);
+            }
+            else
+            {
+                _fridgeItems.Add(item);
+            }
             //this.AddDomainEvent(new FridgeItemAdded(item));
         }
 

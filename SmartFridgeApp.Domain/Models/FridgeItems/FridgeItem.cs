@@ -37,6 +37,12 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
             AmountValue = amountValue;
         }
 
+        public void IncreaseFridgeItemAmount(AmountValue amountValue)
+        {
+            // handle unit - is it the same?
+            AmountValue = new AmountValue(AmountValue.Value + amountValue.Value, AmountValue.Unit);
+        }
+
         public void UpdateFridgeItemNote(string note)
         {
             if (IsConsumed)

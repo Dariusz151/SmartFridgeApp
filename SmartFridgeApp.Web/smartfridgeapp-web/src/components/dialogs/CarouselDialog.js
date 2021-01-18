@@ -28,6 +28,8 @@ const CarouselDialog = ({ state, handleClose, recipes }) => {
   const numSlides = recipes.length;
 
   const onArrowClick = (direction) => {
+    console.log(recipeContent);
+    console.log(direction);
     const increment = direction === "left" ? -1 : 1;
     const newIndex = (index + increment + numSlides) % numSlides;
     setIndex(newIndex);

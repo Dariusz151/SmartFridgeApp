@@ -10,8 +10,8 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20201022185125_FridgeUserEdit")]
-    partial class FridgeUserEdit
+    [Migration("20210118202543_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -109,6 +109,12 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         .HasColumnName("FoodProducts")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<short>("LevelOfDifficulty")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("LevelOfDifficulty")
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)3);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("Name")
@@ -117,6 +123,12 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                     b.Property<short?>("RecipeCategoryId")
                         .HasColumnType("smallint");
+
+                    b.Property<int>("RequiredTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("RequiredTime")
+                        .HasColumnType("int")
+                        .HasDefaultValue(-1);
 
                     b.HasKey("RecipeId");
 
@@ -199,7 +211,6 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     b.OwnsMany("SmartFridgeApp.Domain.Models.Users.User", "_users", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Email")
@@ -228,8 +239,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                             b1.ToTable("Users","app");
 
                             b1.WithOwner()
-                                .HasForeignKey("FridgeId")
-                                .HasConstraintName("FK_FridgeUsers");
+                                .HasForeignKey("FridgeId");
 
                             b1.OwnsMany("SmartFridgeApp.Domain.Models.FridgeItems.FridgeItem", "_fridgeItems", b2 =>
                                 {
@@ -274,8 +284,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                         .HasForeignKey("FoodProductId");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("UserId")
-                                        .HasConstraintName("FK_UsersFridgeItems");
+                                        .HasForeignKey("UserId");
 
                                     b2.OwnsOne("SmartFridgeApp.Domain.Shared.AmountValue", "AmountValue", b3 =>
                                         {

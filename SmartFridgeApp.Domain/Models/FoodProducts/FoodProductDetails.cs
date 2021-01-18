@@ -20,6 +20,10 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
             IsOptional = true;
         }
 
+        public FoodProductDetails(FoodProduct foodProduct, AmountValue amountValue) : this(foodProduct.FoodProductId, foodProduct.Name, amountValue, false)
+        {
+        }
+
         public FoodProductDetails(short productId, AmountValue amountValue) : this(productId, "", amountValue, false)
         {
         }
