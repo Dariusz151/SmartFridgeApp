@@ -44,6 +44,30 @@ I tried to apply some Domain-Driven Design concepts to my app.
 I'm aware that in this case its over-engineering but I created this app to learn as much as possible (mainly on own mistakes).
 So while looking into the code you can see such a objects like aggregates, entities, value objects, domain events (building blocks) etc. 
 
+
+### Domain
+
+There are 3 main group of contexts in this app: 
+1. Fridge 
+2. Recipe
+3. Food product
+
+**Fridges** contain users (**FridgeUser**) who have a list of **FridgeItems**. 
+
+Each FridgeItem consists of **FoodProduct** (connected by id), **AmountValue** and other additional properties like note or expiration date.
+
+**FoodProducts** are independent - they have only identificators, name and category.
+
+**Recipes** have a list of **FoodProduct** and description how to prepare this recipe from this items.
+
+In this case Fridge, FoodProduct and Recipe are *aggregates*. 
+
+FridgeUsers and FridgeItems are *entities*.
+
+AmountValue is *value object*.
+
+> UML diagram.
+
 ### Stack
 
 I used this tools while developing app:
@@ -62,23 +86,6 @@ I used this tools while developing app:
 
 ### High-level view
 
-### Domain
-
-There are 3 main group of contexts in this app: 
-1. Fridge 
-2. Recipe
-3. Food product
-
-**Fridges** contain users (**FridgeUser**) who have a list of **FridgeItems**. 
-Each FridgeItem consists of **FoodProduct** (connected by id), **AmountValue** and other additional properties like note or expiration date.
-**FoodProducts** are independent - they have only identificators, name and category.
-**Recipes** have a list of **FoodProduct** and description how to prepare this recipe from this items.
-
-In this case Fridge, FoodProduct and Recipe are *aggregates*. 
-FridgeUsers and FridgeItems are *entities*.
-AmountValue is *value object*.
-
-> UML diagram.
 
 
 # Resources
