@@ -2,6 +2,19 @@
 
 https://smartfridgeapp.pl/
 
+<p align="justify">
+  Lorem ipsum
+</p>
+
+<p align="center">
+  <b>Some Links:</b><br>
+  <a href="#">Link 1</a> |
+  <a href="#">Link 2</a> |
+  <a href="#">Link 3</a>
+  <br><br>
+  <img src="http://s.4cdn.org/image/title/105.gif">
+</p>
+
 Application for managing kitchen products and recipes. Users can create fridges, join them and add list of food products. 
 App has also list of recipes and based on selected food products user can find recipe to make.
 
@@ -9,7 +22,7 @@ I am automatically the first user of this app, because it was created to help me
 I have a lot of ideas to new features and application growth - only limitation is my free time. 
 Please do not hesitate to provide me any feedback/comments about the app.
 
-# Front-end [React] app
+# Front-end app
 
 To be able to start using the application in everyday life, I had to create a prototype of the front-end interface (UI). 
 I used React as I have some basics knowledge about this framework. 
@@ -26,7 +39,8 @@ In this application I used several programming concepts such as:
 
 ## Onion architecture
 
-![Screenshot](onion-architecture.png)
+![Alt text](misc/img/onion-architecture.png?raw=true "Onion architecture")
+
 
 ### High-level view
 
