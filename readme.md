@@ -64,6 +64,21 @@ I used this tools while developing app:
 
 ### Domain
 
+There are 3 main group of contexts in this app: 
+1. Fridge 
+2. Recipe
+3. Food product
+
+**Fridges** contain users (**FridgeUser**) who have a list of **FridgeItems**. 
+Each FridgeItem consists of **FoodProduct** (connected by id), **AmountValue** and other additional properties like note or expiration date.
+**FoodProducts** are independent - they have only identificators, name and category.
+**Recipes** have a list of **FoodProduct** and description how to prepare this recipe from this items.
+
+In this case Fridge, FoodProduct and Recipe are *aggregates*. 
+FridgeUsers and FridgeItems are *entities*.
+AmountValue is *value object*.
+
+> UML diagram.
 
 
 # Resources
