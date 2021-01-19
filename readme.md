@@ -20,9 +20,9 @@ I'm not front-end developer so I'm aware of its imperfections. I would be gratef
 ## Architecture
 
 In this application I used several programming concepts such as:
-- Domain-Driven Design
-- Command Query Responsibility Separation
 - Onion Architecture (split into domain layer, infrastructure layer and application (API) layer)
+- Command Query Responsibility Separation
+- Domain-Driven Design
 
 ### Onion architecture
 
@@ -36,16 +36,13 @@ I used CQRS pattern to communicate with database.
 
 It's very simple solution without additional Event Source database or any projection - just made views in database for read-model.
 
+![Alt text](misc/img/cqrs.PNG?raw=true "CQRS pattern")
 
-![Alt text](misc/img/cqrs.png?raw=true "CQRS pattern")
+### Domain-driven design
 
-### High-level view
-
-### Domain
-
-
-
-### Modules
+I tried to apply some Domain-Driven Design concepts to my app. 
+I'm aware that in this case its over-engineering but I created this app to learn as much as possible (mainly on own mistakes).
+So while looking into the code you can see such a objects like aggregates, entities, value objects, domain events (building blocks) etc. 
 
 ### Stack
 
@@ -63,11 +60,11 @@ I used this tools while developing app:
 - Autofac (Dependency Injection)
 - MediatR (for mediator in CQRS)
 
-## Infrastructure
+### High-level view
 
-## API
+### Domain
 
-## How to run application
+
 
 # Resources
 
@@ -76,9 +73,6 @@ I used this tools while developing app:
 - Martin Fowler's articles [CQRS](https://martinfowler.com/bliki/CQRS.html "cqrs")
 
 
-## CI/CD
- 
-## Todo list
 
 
 
