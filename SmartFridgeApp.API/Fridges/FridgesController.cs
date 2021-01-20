@@ -8,6 +8,7 @@ using SmartFridgeApp.API.Fridges.DeleteFridge;
 using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.API.Fridges.UpdateFridge;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace SmartFridgeApp.API.Fridges
 {
@@ -27,12 +28,12 @@ namespace SmartFridgeApp.API.Fridges
         /// </summary>
         [Route("")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<FridgeDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<FridgeDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllFridgesAsync()
          {
-            var fridges = await _mediator.Send(new GetFridgesQuery());
-
-            return Ok(fridges);
+            return Ok(await _mediator.Send(new GetFridgesQuery()));
         }
 
         /// <summary>
@@ -41,6 +42,8 @@ namespace SmartFridgeApp.API.Fridges
         [Route("")]
         [HttpPost]
         [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddFridgeAsync([FromBody]AddFridgeRequest request)
         {
             var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
@@ -53,7 +56,9 @@ namespace SmartFridgeApp.API.Fridges
         /// </summary>
         [Route("")]
         [HttpPut]
-        [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateFridgeAsync([FromBody]UpdateFridgeRequest request)
         {
             await _mediator.Send(new UpdateFridgeCommand(request.FridgeId, request.Name, request.Desc));
@@ -67,7 +72,10 @@ namespace SmartFridgeApp.API.Fridges
         [Route("")]
         [Authorize]
         [HttpDelete]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteFridgeAsync([FromBody]DeleteFridgeRequest request)
         {
             await _mediator.Send(new DeleteFridgeCommand(request.FridgeId));

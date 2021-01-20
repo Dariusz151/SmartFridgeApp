@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Users.AddFridgeUser;
 using SmartFridgeApp.API.Users.GetFridgeUsers;
@@ -27,11 +28,12 @@ namespace SmartFridgeApp.API.Users
         /// </summary>
         [Route("{fridgeId}")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<FridgeUserDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<FridgeUserDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetFridgeUsersAsync(Guid fridgeId)
         {
-            var users = await _mediator.Send(new GetFridgeUsersQuery(fridgeId));
-            return Ok(users);
+            return Ok(await _mediator.Send(new GetFridgeUsersQuery(fridgeId)));
         }
 
         /// <summary>
@@ -39,14 +41,15 @@ namespace SmartFridgeApp.API.Users
         /// </summary>
         [Route("{fridgeId}")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddFridgeUserAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]AddFridgeUserRequest request)
         {
             await _mediator.Send(new AddFridgeUserCommand(fridgeId, request.User));
 
-            //return userId ?
             return Created(string.Empty, null);
         }
 
@@ -55,7 +58,9 @@ namespace SmartFridgeApp.API.Users
         /// </summary>
         [Route("{fridgeId}")]
         [HttpPut]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateFridgeUserAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]UpdateFridgeUserRequest request)
@@ -70,7 +75,9 @@ namespace SmartFridgeApp.API.Users
         /// </summary>
         [Route("{fridgeId}")]
         [HttpDelete]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveFridgeUserAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeUserRequest request)

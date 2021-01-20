@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
 using SmartFridgeApp.API.FoodProducts.Categories.CreateCategory;
@@ -32,12 +33,12 @@ namespace SmartFridgeApp.API.FoodProducts
         [Route("/api/foodProducts/categories")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ResponseCache(Duration = 300)]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
-            var categories = await _mediator.Send(new GetCategoriesQuery());
-
-            return Ok(categories);
+            return Ok(await _mediator.Send(new GetCategoriesQuery()));
         }
 
         /// <summary>
@@ -45,12 +46,12 @@ namespace SmartFridgeApp.API.FoodProducts
         /// </summary>
         [Route("")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<FoodProductDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<FoodProductDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllFoodProductsAsync()
         {
-            var foodProducts = await _mediator.Send(new GetFoodProductsQuery());
-
-            return Ok(foodProducts);
+            return Ok(await _mediator.Send(new GetFoodProductsQuery()));
         }
 
         /// <summary>
@@ -59,14 +60,15 @@ namespace SmartFridgeApp.API.FoodProducts
         [Authorize]
         [Route("/api/foodProducts/categories")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateCategoryAsync([FromBody]CreateCategoryRequest request)
         {
             await _mediator.Send(new CreateCategoryCommand(request.Name));
             
-            return Ok();
+            return Created(string.Empty, null);
         }
 
         /// <summary>
@@ -75,20 +77,15 @@ namespace SmartFridgeApp.API.FoodProducts
         [Authorize]
         [Route("")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody]AddFoodProductRequest request)
         {
-            try
-            {
-                await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
-            }
-            catch (InvalidFoodProductCategoryException exception)
-            {
-                return BadRequest($"Cant create this product: {exception.Message}");
-            }
-            return Ok();
+            await _mediator.Send(new AddFoodProductCommand(request.Name, request.Category));
+            
+            return Created(string.Empty, null);
         }
 
         /// <summary>
@@ -97,23 +94,13 @@ namespace SmartFridgeApp.API.FoodProducts
         [Authorize]
         [Route("")]
         [HttpPut]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateFoodProductAsync([FromBody]UpdateFoodProductRequest request)
         {
-            try
-            {
-                await _mediator.Send(new UpdateFoodProductCommand(request.FoodProductId, request.FoodProductName));
-            }
-            catch (FoodProductNotFoundException exception)
-            {
-                return BadRequest($"Cant update this product: {exception.Message}");
-            }
-            catch (DomainException domainException)
-            {
-                return BadRequest($"Cant update this product: {domainException.Message}");
-            }
+            await _mediator.Send(new UpdateFoodProductCommand(request.FoodProductId, request.FoodProductName));
             
             return Ok();
         }
@@ -124,21 +111,14 @@ namespace SmartFridgeApp.API.FoodProducts
         [Authorize]
         [Route("")]
         [HttpDelete]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteFoodProductAsync([FromBody]DeleteFoodProductRequest request)
         {
-            //TODO: check if any recipe contains this given food product
-            try
-            {
-                await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));
-            }
-            catch (FoodProductNotFoundException exception)
-            {
-                return BadRequest($"Cant delete this product: {exception.Message}");
-            }
-
+            await _mediator.Send(new DeleteFoodProductCommand(request.FoodProductId));
+            
             return NoContent();
         }
     }

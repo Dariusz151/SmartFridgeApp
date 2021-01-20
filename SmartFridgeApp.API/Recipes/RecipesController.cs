@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.Recipes.AddRecipe;
 using SmartFridgeApp.API.Recipes.Categories.CreateCategory;
@@ -32,11 +33,11 @@ namespace SmartFridgeApp.API.Recipes
         [Route("")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RecipeDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRecipesAsync()
         {
-            var recipes = await _mediator.Send(new GetRecipesQuery());
-
-            return Ok(recipes);
+            return Ok(await _mediator.Send(new GetRecipesQuery()));
         }
 
         /// <summary>
@@ -44,7 +45,9 @@ namespace SmartFridgeApp.API.Recipes
         /// </summary>
         [Route("")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Recipe), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddRecipeAsync([FromBody]AddRecipeRequest request)
         {
             var recipe = await _mediator.Send(new AddRecipeCommand(
@@ -64,14 +67,12 @@ namespace SmartFridgeApp.API.Recipes
         /// </summary>
         [Route("find")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Recipe>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> FindMatchingRecipesAsync([FromBody]FindRecipesRequest request)
         {
-            var recipes = await _mediator.Send(new FindRecipesCommand(
-                request.FoodProducts
-            ));
-
-            return Ok(recipes);
+            return Ok(await _mediator.Send(new FindRecipesCommand(request.FoodProducts)));
         }
 
         /// <summary>
@@ -79,7 +80,9 @@ namespace SmartFridgeApp.API.Recipes
         /// </summary>
         [Route("")]
         [HttpPut]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateRecipeAsync([FromBody]UpdateRecipeRequest request)
         {
             await _mediator.Send(new UpdateRecipeCommand(
@@ -100,7 +103,10 @@ namespace SmartFridgeApp.API.Recipes
         [Route("")]
         [HttpDelete]
         [Authorize]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteRecipeAsync([FromBody]DeleteRecipeRequest request)
         {
             await _mediator.Send(new DeleteRecipeCommand(request.RecipeId));
@@ -114,11 +120,11 @@ namespace SmartFridgeApp.API.Recipes
         [Route("/api/recipes/categories")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RecipeCategory>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRecipeCategoriesAsync()
         {
-            var categories = await _mediator.Send(new GetRecipeCategoriesQuery());
-
-            return Ok(categories);
+            return Ok(await _mediator.Send(new GetRecipeCategoriesQuery()));
         }
 
         /// <summary>
@@ -127,12 +133,15 @@ namespace SmartFridgeApp.API.Recipes
         [Route("/api/recipes/categories")]
         [HttpPost]
         [Authorize]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateRecipeCategoryAsync([FromBody]CreateRecipeCategoryRequest request)
         {
             await _mediator.Send(new CreateRecipeCategoryCommand(request.Name));
 
-            return Ok();
+            return Created(string.Empty, null);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
@@ -25,25 +26,25 @@ namespace SmartFridgeApp.API.FridgeItems
 
         [Route("{fridgeId}/{userId}")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetFridgeItemsByUserAsync(
             [FromRoute]Guid fridgeId, 
             [FromRoute]Guid userId)
         {
-            var fridgeItems = await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId));
-
-            return Ok(fridgeItems);
+            return Ok(await _mediator.Send(new GetFridgeItemsQuery(userId, fridgeId)));
         }
 
         [Route("{fridgeId}")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<FridgeItemDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetFridgeItemsByIdAsync(
              [FromRoute]Guid fridgeId)
         {
-            var fridgeItems = await _mediator.Send(new GetFridgeItemsByIdQuery(fridgeId));
-
-            return Ok(fridgeItems);
+            return Ok(await _mediator.Send(new GetFridgeItemsByIdQuery(fridgeId)));
         }
 
         /// <summary>
@@ -51,7 +52,9 @@ namespace SmartFridgeApp.API.FridgeItems
         /// </summary>
         [Route("{fridgeId}/add")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]AddFridgeItemRequest request)
@@ -66,28 +69,15 @@ namespace SmartFridgeApp.API.FridgeItems
         ///// </summary>
         [Route("{fridgeId}/remove")]
         [HttpDelete]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]RemoveFridgeItemRequest request)
         {
-            try
-            {
-                await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
-            }
-            catch (InvalidFridgeException e)
-            {
-                return BadRequest($"Invalid fridge id. Error:{e.Details}");
-            }
-            catch (UserNotExistException e)
-            {
-                return BadRequest($"User does not exist. Error:{e.Details}");
-            }
-            catch (FridgeItemNotExistException e)
-            {
-                return BadRequest($"Fridge item does not exist. Error:{e.Details}");
-            }
-            
+            await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
+           
             return NoContent();
         }
 
@@ -96,32 +86,15 @@ namespace SmartFridgeApp.API.FridgeItems
         ///// </summary>
         [Route("{fridgeId}/consume")]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ConsumeFridgeItemAsync(
             [FromRoute]Guid fridgeId,
             [FromBody]ConsumeFridgeItemRequest request)
         {
-            try
-            {
-                await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
-            }
-            catch (InvalidFridgeException e)
-            {
-                return BadRequest($"Invalid fridge id. Error:{e.Details}");
-            }
-            catch (UserNotExistException e)
-            {
-                return BadRequest($"User does not exist. Error:{e.Details}");
-            }
-            catch (FridgeItemNotExistException e)
-            {
-                return BadRequest($"Fridge item does not exist. Error:{e.Details}");
-            }
-            catch (DomainException domainException)
-            {
-                return BadRequest($"Can't consume fridge item. Error message: {domainException.Details}");
-            }
-            
+            await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
+           
             return NoContent();
         }
     }

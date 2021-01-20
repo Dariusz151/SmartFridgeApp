@@ -17,15 +17,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SmartFridgeApp.API.Outbox;
+using System.Threading.Tasks;
+using SmartFridgeApp.API.Middleware;
 
 namespace SmartFridgeApp.API
 {
     public class Startup
     {
         private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString";
-
-        private ISchedulerFactory _schedulerFactory;
-        private IScheduler _scheduler;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -89,7 +88,6 @@ namespace SmartFridgeApp.API
                     };
                 });
 
-
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddSwaggerGen();
 
@@ -106,11 +104,31 @@ namespace SmartFridgeApp.API
                     new JsonStringEnumConverter()
                 );
             });
+
+
+            //var schedulerFactory = new StdSchedulerFactory();
+            //var scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+            //scheduler.Start().GetAwaiter().GetResult();
+
+            //IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
+            //    .Build();
+
+            //ITrigger trigger = TriggerBuilder
+            //    .Create()
+            //    .StartNow()
+            //    .WithSimpleSchedule(x => x
+            //        .WithIntervalInSeconds(30)
+            //        .RepeatForever())
+            //    .Build();
+
+            //scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             IHostApplicationLifetime lifetime, IServiceProvider serviceProvider)
         {
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -147,9 +165,6 @@ namespace SmartFridgeApp.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            this._schedulerFactory = new StdSchedulerFactory();
-            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
-
             builder.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
             builder.RegisterModule(new MediatorModule());
             builder.RegisterModule(new OutboxModule());
@@ -160,23 +175,8 @@ namespace SmartFridgeApp.API
 
                 return new SmartFridgeAppContext(dbContextOptionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();
-
-            IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
-                .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
-                .Build();
-
-            ITrigger trigger = TriggerBuilder
-                .Create()
-                .StartNow()
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(60)
-                    .RepeatForever())
-                .Build();
-
-            _scheduler.Start().GetAwaiter().GetResult();
-
-            _scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
         }
+
         private static void ConfigureSwagger(IApplicationBuilder app)
         {
             app.UseSwagger(
