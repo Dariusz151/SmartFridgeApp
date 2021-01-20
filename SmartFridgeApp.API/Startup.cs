@@ -23,6 +23,7 @@ namespace SmartFridgeApp.API
     public class Startup
     {
         private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString";
+        private readonly Version version = Assembly.GetExecutingAssembly().GetName().Version;
 
         private ISchedulerFactory _schedulerFactory;
         private IScheduler _scheduler;
@@ -52,8 +53,8 @@ namespace SmartFridgeApp.API
                     builder.WithOrigins("http://localhost:3001",
                                         "http://localhost:3000")
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod()
-                                        .AllowAnyOrigin();
+                                        .AllowAnyMethod();
+                                        //.AllowAnyOrigin();
                 });
             });
 
@@ -189,7 +190,7 @@ namespace SmartFridgeApp.API
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartFridgeApp API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"SmartFridgeApp API {version}");
                 c.RoutePrefix = "docs";
             });
         }

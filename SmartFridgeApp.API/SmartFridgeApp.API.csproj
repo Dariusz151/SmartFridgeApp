@@ -6,6 +6,11 @@
     <UserSecretsId>449501cf-c64f-46a7-81ca-e421f741fe18</UserSecretsId>
     <Configurations>Debug;Release;Docker</Configurations>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Authors>Dariusz Koziol</Authors>
+    <Product>SmartFridgeApp</Product>
+    <Version>0.9.0</Version>
+    <PackageProjectUrl>smartfridgeapp.pl</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Dariusz151/SmartFridgeApp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
