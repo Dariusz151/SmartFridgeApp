@@ -15,40 +15,35 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         public string Name { get; private set; }
         public string Address { get; private set; }
         public string Desc { get; private set; }
-        public bool IsWelcomed { get; private set; }
+        public int UsersCount { get; }
         private List<User> _users;
 
         private Fridge()
         {
         }
 
-        public Fridge(string name, string address, string desc)
+        public Fridge(string name, string address, string desc) : this()
         {
             if (string.IsNullOrEmpty(name))
-                throw new DomainException("Fridge should have a name.");
+                throw new InvalidInputException("Fridge should have a name.", "InvalidFridgeName");
+            Id = Guid.NewGuid();
             Address = address;
             Name = name;
             Desc = desc;
-            Id = Guid.NewGuid();
-            IsWelcomed = false;
 
             _users = new List<User>();
+            UsersCount = _users.Count;
 
             AddDomainEvent(new FridgeCreatedEvent(this));
-        }
-
-        public void MarkAsWelcomed()
-        {
-            IsWelcomed = true;
         }
 
         public void AddUser(User user)
         {
             if (user is null)
-                throw new DomainException("User object cant be null to add to fridge.");
+                throw new InvalidInputException("User object cant be null to add to fridge.", "InvalidUserObject");
             if (_users.Count(u => u.Id == user.Id) > 0)
             {
-                throw new DomainException("Same user exists in this fridge.");
+                throw new DomainException("Same user exists in this fridge.", "UserExist");
             }
 
             _users.Add(user);
@@ -66,8 +61,14 @@ namespace SmartFridgeApp.Domain.Models.Fridges
         
         public List<Guid> GetFridgeUsers()
         {
-            var userIds = _users.Select(x => x.Id).ToList();
-            return userIds;
+            try
+            {
+                return _users.Select(x => x.Id).ToList();
+            }
+            catch (ArgumentNullException)
+            {
+                throw new AppException("Can't get fridge users.","GetFridgeUsersFailed");
+            }
         }
 
         public User GetFridgeUser(Guid userId)
@@ -78,26 +79,22 @@ namespace SmartFridgeApp.Domain.Models.Fridges
             }
             catch
             {
-                throw new UserNotExistException("This user does not exist.");
+                throw new InvalidInputException("This user does not belong to this fridge.", "UserNotBelongToFridge");
             }
         }
 
         public void ChangeFridgeName(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new DomainException("Fridge should have a name.");
+                throw new InvalidInputException("Fridge should have a name.", "InvalidFridgeName");
             Name = name;
-
-            this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
 
         public void ChangeFridgeDesc(string desc)
         {
             if (string.IsNullOrEmpty(desc))
-                throw new DomainException("Fridge should have a description.");
+                throw new InvalidInputException("Fridge should have a description.", "InvalidFridgeDesc");
             Desc = desc;
-
-            this.AddDomainEvent(new FridgeUpdatedEvent(this));
         }
     }
 }

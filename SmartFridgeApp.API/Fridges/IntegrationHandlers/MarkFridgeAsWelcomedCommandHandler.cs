@@ -18,7 +18,7 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
         {
             var fridge = await this._fridgeRepository.GetByIdAsync(command.FridgeId);
 
-            fridge.MarkAsWelcomed();
+            //fridge.MarkAsWelcomed();
             
             return Unit.Value;
         }
