@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.Infrastructure
 {

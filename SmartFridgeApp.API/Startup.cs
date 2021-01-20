@@ -161,21 +161,21 @@ namespace SmartFridgeApp.API
                 return new SmartFridgeAppContext(dbContextOptionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();
 
-            //IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
-            //    .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
-            //    .Build();
+            IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
+                .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
+                .Build();
 
-            //ITrigger trigger = TriggerBuilder
-            //    .Create()
-            //    .StartNow()
-            //    .WithSimpleSchedule(x => x
-            //        .WithIntervalInSeconds(60)
-            //        .RepeatForever())
-            //    .Build();
+            ITrigger trigger = TriggerBuilder
+                .Create()
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInSeconds(60)
+                    .RepeatForever())
+                .Build();
 
-            //_scheduler.Start().GetAwaiter().GetResult();
+            _scheduler.Start().GetAwaiter().GetResult();
 
-            //_scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
+            _scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
         }
         private static void ConfigureSwagger(IApplicationBuilder app)
         {

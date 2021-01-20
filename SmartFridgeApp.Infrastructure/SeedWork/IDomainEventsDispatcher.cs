@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SmartFridgeApp.Infrastructure
+namespace SmartFridgeApp.Infrastructure.SeedWork
 {
     public interface IDomainEventsDispatcher
     {

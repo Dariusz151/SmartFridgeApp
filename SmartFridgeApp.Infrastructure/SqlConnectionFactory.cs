@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmartFridgeApp.Infrastructure.SeedWork;
 using System;
 using System.Data;
 

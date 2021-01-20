@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.FoodProducts.GetFoodProducts
 {

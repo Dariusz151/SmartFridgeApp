@@ -6,7 +6,7 @@ using MediatR;
 using Newtonsoft.Json;
 using Quartz;
 using SmartFridgeApp.API.Notifications.Fridge;
-using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.Outbox
 {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.FoodProducts.Categories.GetCategories
 {

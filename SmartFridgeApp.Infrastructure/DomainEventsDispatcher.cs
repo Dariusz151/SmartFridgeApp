@@ -33,6 +33,11 @@ namespace SmartFridgeApp.Infrastructure
                 .SelectMany(x => x.Entity.DomainEvents)
                 .ToList();
 
+            foreach (var ev in domainEvents)
+            {
+                Console.WriteLine(ev.OccurredOn);
+            }
+
             var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
             foreach (var domainEvent in domainEvents)
             {

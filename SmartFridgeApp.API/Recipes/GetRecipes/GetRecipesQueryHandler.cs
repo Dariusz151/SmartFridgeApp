@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using SmartFridgeApp.Domain.Models.Recipes;
-using SmartFridgeApp.Infrastructure;
 using SmartFridgeApp.Infrastructure.Extensions;
+using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.Recipes.GetRecipes
 {

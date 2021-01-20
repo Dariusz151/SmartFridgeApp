@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using MediatR;
-using SmartFridgeApp.Infrastructure;
-using System;
+using SmartFridgeApp.Infrastructure.SeedWork;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

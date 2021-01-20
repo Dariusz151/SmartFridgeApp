@@ -51,6 +51,10 @@ namespace SmartFridgeApp.API.Modules
                 .As<IRecipeFinderService>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<EmailSender>()
+                .As<INotifier>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<UnitOfWork>()
                 .As<IUnitOfWork>()
                 .InstancePerLifetimeScope();
@@ -65,26 +69,6 @@ namespace SmartFridgeApp.API.Modules
                 .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
             builder.RegisterAssemblyTypes(typeof(UserAddedNotification).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
-
-            //builder.RegisterGenericDecorator(
-            //    typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
-            //    typeof(INotificationHandler<>));
-
-            //builder.RegisterGenericDecorator(
-            //    typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
-            //    typeof(IRequestHandler<,>));
-
-            //builder.RegisterType<CommandsDispatcher>()
-            //    .As<ICommandsDispatcher>()
-            //    .InstancePerLifetimeScope();
-
-            //builder.RegisterType<CommandsScheduler>()
-            //    .As<ICommandsScheduler>()
-            //    .InstancePerLifetimeScope();
-
-            builder.RegisterType<EmailSender>()
-                .As<INotifier>()
-                .InstancePerLifetimeScope();
         }
     }
 }
