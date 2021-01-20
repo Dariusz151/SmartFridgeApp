@@ -33,6 +33,15 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
             EnteredAt = DateTime.Now;
         }
 
+        public void SetExpirationDate(DateTime datetime)
+        {
+            if (datetime.CompareTo(DateTime.Now.AddDays(-1)) < 0)
+            {
+                throw new DomainException("Cant set past expiration date!", "InvalidExpirationDate");
+            }
+            ExpirationDate = datetime;
+        }
+
         public void ChangeFridgeItemAmount(AmountValue amountValue)
         {
             AmountValue = amountValue;
