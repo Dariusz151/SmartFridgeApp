@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using SmartFridgeApp.Domain.Models.Fridges.Events;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
-namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
+namespace SmartFridgeApp.API.Notifications.Fridge
 {
     public class FridgeAddedNotification : DomainNotificationBase<FridgeCreatedEvent>
     {

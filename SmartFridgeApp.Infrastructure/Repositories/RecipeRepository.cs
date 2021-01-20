@@ -20,12 +20,11 @@ namespace SmartFridgeApp.Infrastructure.Recipes
         {
             try
             {
-                var recipe = await _context.Recipes.SingleAsync(x => x.RecipeId == recipeId);
-                return recipe;
+                return await _context.Recipes.SingleAsync(x => x.RecipeId == recipeId);
             }
             catch
             {
-                throw new DomainException("This recipe does not exist.");
+                throw new InvalidRecipeException("This recipe does not exist.", "InvalidRecipeId");
             }
         }
 
@@ -64,7 +63,7 @@ namespace SmartFridgeApp.Infrastructure.Recipes
             }
             catch
             {
-                throw new InfrastructureException("This category id does not exist.");
+                throw new InvalidRecipeException("This recipe category does not exist.", "InvalidRecipeCategoryId");
             }
         }
     }

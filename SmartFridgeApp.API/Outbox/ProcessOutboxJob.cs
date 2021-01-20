@@ -5,7 +5,7 @@ using Dapper;
 using MediatR;
 using Newtonsoft.Json;
 using Quartz;
-using SmartFridgeApp.API.Fridges.IntegrationHandlers;
+using SmartFridgeApp.API.Notifications.Fridge;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API.Outbox

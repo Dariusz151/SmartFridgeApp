@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Domain.Models.FoodProducts;
@@ -24,7 +23,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
             catch
             {
-                throw new FoodProductNotFoundException("This FoodProduct does not exist.");
+                throw new FoodProductNotFoundException("This FoodProduct does not exist.", "InvalidFoodProductId");
             }
         }
 
@@ -36,7 +35,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
             catch
             {
-                throw new FoodProductNotFoundException("This FoodProduct does not exist.");
+                throw new FoodProductNotFoundException("This FoodProduct does not exist.", "InvalidFoodProductName");
             }
         }
 
@@ -74,9 +73,8 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             }
             catch
             {
-                throw new InvalidFoodProductCategoryException("This category does not exist.");
+                throw new InvalidFoodProductCategoryException("This category does not exist.", "InvalidFoodProductCategoryId");
             }
-            
         }
     }
 }

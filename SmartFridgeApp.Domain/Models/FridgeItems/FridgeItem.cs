@@ -1,6 +1,5 @@
 ﻿using System;
 using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.FridgeItems.Events;
 using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 using SmartFridgeApp.Domain.Shared;

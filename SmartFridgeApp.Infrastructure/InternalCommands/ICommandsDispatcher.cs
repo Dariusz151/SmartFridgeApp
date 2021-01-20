@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace SmartFridgeApp.Infrastructure.InternalCommands
-{
-    public interface ICommandsDispatcher
-    {
-        Task DispatchCommandAsync(Guid id);
-    }
-}
+//namespace SmartFridgeApp.Infrastructure.InternalCommands
+//{
+//    public interface ICommandsDispatcher
+//    {
+//        Task DispatchCommandAsync(Guid id);
+//    }
+//}

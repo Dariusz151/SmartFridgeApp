@@ -1,4 +1,4 @@
-﻿namespace SmartFridgeApp.API.Notifications
+﻿namespace SmartFridgeApp.Domain.DomainServices
 {
     public interface INotifier
     {

@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +8,18 @@ using Autofac.Core;
 using MediatR;
 using Newtonsoft.Json;
 using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Infrastructure.Outbox;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.Infrastructure
 {
     public class DomainEventsDispatcher : IDomainEventsDispatcher
     {
-        private readonly IMediator _mediator;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly SmartFridgeAppContext _context;
 
-        public DomainEventsDispatcher(ILifetimeScope lifetimeScope, IMediator mediator, SmartFridgeAppContext context)
+        public DomainEventsDispatcher(ILifetimeScope lifetimeScope, SmartFridgeAppContext context)
         {
             _lifetimeScope = lifetimeScope;
-            _mediator = mediator;
             _context = context;
         }
 
@@ -48,20 +45,12 @@ namespace SmartFridgeApp.Infrastructure
 
                 if (domainNotification != null)
                 {
-                    domainEventNotifications.Add(domainNotification as SeedWork.IDomainEventNotification<IDomainEvent>);
+                    domainEventNotifications.Add(domainNotification as IDomainEventNotification<IDomainEvent>);
                 }
             }
 
             domainEntities
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
-
-            //var tasks = domainEvents
-            //    .Select(async (domainEvent) =>
-            //    {
-            //        await _mediator.Publish(domainEvent);
-            //    });
-
-            //await Task.WhenAll(tasks);
 
             foreach (var domainEventNotification in domainEventNotifications)
             {
@@ -71,7 +60,7 @@ namespace SmartFridgeApp.Infrastructure
                     domainEventNotification.DomainEvent.OccurredOn,
                     type,
                     data);
-                this._context.OutboxMessages.Add(outboxMessage);
+                await this._context.OutboxMessages.AddAsync(outboxMessage);
             }
         }
     }

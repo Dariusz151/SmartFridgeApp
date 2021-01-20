@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.API.Notifications;
+using SmartFridgeApp.Domain.DomainServices;
 
-namespace SmartFridgeApp.API.Users.Notifications
+namespace SmartFridgeApp.API.Notifications.Users
 {
     public class UserAddedNotificationHandler : INotificationHandler<UserAddedNotification>
     {

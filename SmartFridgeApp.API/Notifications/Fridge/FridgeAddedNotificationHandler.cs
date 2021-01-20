@@ -1,20 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.API.Notifications;
-using SmartFridgeApp.Infrastructure.InternalCommands;
+using SmartFridgeApp.Domain.DomainServices;
 
-namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
+namespace SmartFridgeApp.API.Notifications.Fridge
 {
     public class FridgeAddedNotificationHandler : INotificationHandler<FridgeAddedNotification>
     {
-        private readonly ICommandsScheduler _commandsScheduler;
         private readonly INotifier _notifier;
 
-        public FridgeAddedNotificationHandler(
-            ICommandsScheduler commandsScheduler, INotifier notifier)
+        public FridgeAddedNotificationHandler(INotifier notifier)
         {
-            _commandsScheduler = commandsScheduler;
             _notifier = notifier;
         }
 
@@ -22,8 +18,6 @@ namespace SmartFridgeApp.API.Fridges.IntegrationHandlers
         {
             var fridgeName = notification.FridgeId.ToString();
             _notifier.SendMessage(fridgeName, "Welcome in SmartFridgeApp!");
-            
-            await this._commandsScheduler.EnqueueAsync(new MarkFridgeAsWelcomedCommand(notification.FridgeId));
         }
     }
 }

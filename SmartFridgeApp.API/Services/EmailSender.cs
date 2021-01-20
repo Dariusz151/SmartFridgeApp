@@ -1,6 +1,7 @@
-﻿using System;
+﻿using SmartFridgeApp.Domain.DomainServices;
+using System;
 
-namespace SmartFridgeApp.API.Notifications
+namespace SmartFridgeApp.API.Services
 {
     public class EmailSender : INotifier
     {

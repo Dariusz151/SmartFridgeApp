@@ -21,7 +21,7 @@ namespace SmartFridgeApp.API.Users.UpdateFridgeUser
         {
             var fridge = await _fridgeRepository.GetByIdAsync(command.FridgeId);
             var user = fridge.GetFridgeUser(command.UserId);
-            user.UpdateUser(command.Name);
+            user.UpdateUserName(command.Name);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

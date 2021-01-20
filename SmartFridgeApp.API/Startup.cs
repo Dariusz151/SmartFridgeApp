@@ -46,18 +46,27 @@ namespace SmartFridgeApp.API
             services.AddHealthChecks();
             services.AddCors(options =>
             {
-                options.AddPolicy("CORS_Policy",
+                options.AddPolicy("Development_Policy",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3001",
-                                        "http://localhost:3000")
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod();
-                                        //.AllowAnyOrigin();
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                   
                 });
+                options.AddPolicy("Production_Policy",
+               builder =>
+               {
+                   builder
+                       .WithOrigins("http://localhost:3000", 
+                                    "https://localhost:3001")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+
+               });
             });
 
-           
             var key = Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]);
             services
                 .AddAuthentication(options =>
@@ -105,15 +114,14 @@ namespace SmartFridgeApp.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("Development_Policy");
             }
             else
             {
                 app.UseHsts();
+                app.UseCors("Production_Policy");
             }
 
-            Console.WriteLine(env.EnvironmentName);
-
-            app.UseCors("CORS_Policy");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -153,33 +161,21 @@ namespace SmartFridgeApp.API
                 return new SmartFridgeAppContext(dbContextOptionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();
 
+            //IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
+            //    .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
+            //    .Build();
 
-            IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
-                .WithIdentity("ProcessOutboxJob", "ProcessOutboxJob")
-                .Build();
+            //ITrigger trigger = TriggerBuilder
+            //    .Create()
+            //    .StartNow()
+            //    .WithSimpleSchedule(x => x
+            //        .WithIntervalInSeconds(60)
+            //        .RepeatForever())
+            //    .Build();
 
-            ITrigger trigger = TriggerBuilder
-                .Create()
-                .StartNow()
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(60)
-                    .RepeatForever())
-                .Build();
+            //_scheduler.Start().GetAwaiter().GetResult();
 
-            _scheduler.Start().GetAwaiter().GetResult();
-
-            _scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
-
-            //var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            //var triggerCommandsProcessing =
-            //    TriggerBuilder
-            //        .Create()
-            //        .StartNow()
-            //        .WithCronSchedule("0/15 * * * * ?")
-            //        //.WithCronSchedule("0 0/1 * * * ?")
-            //        .Build();
-            //_scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
-
+            //_scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
         }
         private static void ConfigureSwagger(IApplicationBuilder app)
         {

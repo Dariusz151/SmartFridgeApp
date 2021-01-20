@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartFridgeApp.Infrastructure.Outbox
+namespace SmartFridgeApp.Domain.SeedWork
 {
     public class OutboxMessage
     {

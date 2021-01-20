@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
 using Autofac;
 using MediatR;
-using SmartFridgeApp.API.Fridges.IntegrationHandlers;
-using SmartFridgeApp.API.InternalCommands;
 using SmartFridgeApp.API.Notifications;
-using SmartFridgeApp.API.Recipes;
+using SmartFridgeApp.API.Notifications.Fridge;
+using SmartFridgeApp.API.Notifications.Recipe;
+using SmartFridgeApp.API.Notifications.Users;
+using SmartFridgeApp.API.Services;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.Fridges;
@@ -13,7 +14,6 @@ using SmartFridgeApp.Domain.SeedWork;
 using SmartFridgeApp.Infrastructure;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
-using SmartFridgeApp.Infrastructure.InternalCommands;
 using SmartFridgeApp.Infrastructure.Recipes;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
@@ -61,22 +61,26 @@ namespace SmartFridgeApp.API.Modules
 
             builder.RegisterAssemblyTypes(typeof(FridgeAddedNotification).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(RecipeAddedNotification).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
+            builder.RegisterAssemblyTypes(typeof(UserAddedNotification).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
 
-            builder.RegisterGenericDecorator(
-                typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
-                typeof(INotificationHandler<>));
+            //builder.RegisterGenericDecorator(
+            //    typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
+            //    typeof(INotificationHandler<>));
 
-            builder.RegisterGenericDecorator(
-                typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
-                typeof(IRequestHandler<,>));
+            //builder.RegisterGenericDecorator(
+            //    typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
+            //    typeof(IRequestHandler<,>));
 
-            builder.RegisterType<CommandsDispatcher>()
-                .As<ICommandsDispatcher>()
-                .InstancePerLifetimeScope();
+            //builder.RegisterType<CommandsDispatcher>()
+            //    .As<ICommandsDispatcher>()
+            //    .InstancePerLifetimeScope();
 
-            builder.RegisterType<CommandsScheduler>()
-                .As<ICommandsScheduler>()
-                .InstancePerLifetimeScope();
+            //builder.RegisterType<CommandsScheduler>()
+            //    .As<ICommandsScheduler>()
+            //    .InstancePerLifetimeScope();
 
             builder.RegisterType<EmailSender>()
                 .As<INotifier>()

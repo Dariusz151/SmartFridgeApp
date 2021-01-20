@@ -75,7 +75,7 @@ namespace SmartFridgeApp.API.FridgeItems
             {
                 await _mediator.Send(new RemoveFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId));
             }
-            catch (InvalidFridgeIdException e)
+            catch (InvalidFridgeException e)
             {
                 return BadRequest($"Invalid fridge id. Error:{e.Details}");
             }
@@ -105,7 +105,7 @@ namespace SmartFridgeApp.API.FridgeItems
             {
                 await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
             }
-            catch (InvalidFridgeIdException e)
+            catch (InvalidFridgeException e)
             {
                 return BadRequest($"Invalid fridge id. Error:{e.Details}");
             }

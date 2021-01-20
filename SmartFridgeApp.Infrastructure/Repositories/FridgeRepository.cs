@@ -34,7 +34,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
             }
             catch
             {
-                throw new InvalidFridgeIdException("This fridge id does not exist.");
+                throw new InvalidFridgeException("This fridge id does not exist.", "InvalidFridgeId");
             }
         }
     }

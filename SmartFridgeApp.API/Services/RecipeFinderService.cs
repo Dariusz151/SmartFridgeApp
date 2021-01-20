@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SmartFridgeApp.Domain.DomainServices;
 using SmartFridgeApp.Domain.Models.Recipes;
 
-namespace SmartFridgeApp.API.Recipes
+namespace SmartFridgeApp.API.Services
 {
     public class RecipeFinderService : IRecipeFinderService
     {
