@@ -24,6 +24,9 @@ namespace SmartFridgeApp.Domain.Models.Users
 
         public User(string name, string email)
         {
+            UpdateUserName(name);
+            if (string.IsNullOrEmpty(email))
+                throw new InvalidInputException("User email can't be empty.", "InvalidUserEmail");
             Id = Guid.NewGuid();
             Name = name;
             Email = email;
@@ -32,29 +35,34 @@ namespace SmartFridgeApp.Domain.Models.Users
             this._fridgeItems = new List<FridgeItem>();
         }
 
-        public void UpdateUser(string name)
+        public void UpdateUserName(string name)
         {
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
-
-            //this.AddDomainEvent(new UserUpdatedEvent(this));
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidInputException("User name can't be empty.", "InvalidUserName");
+            Name = name;
         }
         
         public void AddFridgeItem(FridgeItem item)
         {
-            var foodProducts = _fridgeItems.Select(x => x.FoodProduct).Select(x => x.FoodProductId);
-            if (foodProducts.Contains(item.FoodProduct.FoodProductId))
+            try
             {
-                _fridgeItems
-                    .Where(x => x.FoodProduct.FoodProductId == item.FoodProduct.FoodProductId)
-                    .First()
-                    .IncreaseFridgeItemAmount(item.AmountValue);
+                var foodProducts = _fridgeItems.Select(x => x.FoodProduct.FoodProductId);
+                if (foodProducts.Contains(item.FoodProduct.FoodProductId))
+                {
+                    _fridgeItems
+                        .Where(x => x.FoodProduct.FoodProductId == item.FoodProduct.FoodProductId)
+                        .First()
+                        .IncreaseFridgeItemAmount(item.AmountValue);
+                }
+                else
+                {
+                    _fridgeItems.Add(item);
+                }
             }
-            else
+            catch
             {
-                _fridgeItems.Add(item);
+                throw new AppException("Cant add FridgeItem for this user.", "AddFridgeItemFailed");
             }
-            //this.AddDomainEvent(new FridgeItemAdded(item));
         }
 
         public void RemoveFridgeItem(long fridgeItemId)
@@ -62,27 +70,26 @@ namespace SmartFridgeApp.Domain.Models.Users
             var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
             
-            //this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
+            this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
         
         public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
         {
-            var fridgeItem = this.GetFridgeItem(fridgeItemId);
+            var fridgeItem = GetFridgeItem(fridgeItemId);
             fridgeItem.ConsumeFridgeItem(amountValue);
 
-            //this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
+            this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
         }
         
         private FridgeItem GetFridgeItem(long fridgeItemId)
         {
             try
             {
-                var fridgeItem = _fridgeItems.Single(fi => fi.Id == fridgeItemId);
-                return fridgeItem;
+                return _fridgeItems.Single(fi => fi.Id == fridgeItemId);
             }
             catch
             {
-                throw new FridgeItemNotExistException("Element with given id does not exist.");
+                throw new InvalidInputException("FridgeItem with given id does not exist.", "InvalidFridgeItemId");
             }
         }
     }
