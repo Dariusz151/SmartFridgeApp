@@ -8,7 +8,7 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
         public short FoodProductId { get; set; }
         public string FoodProductName { get; set; }
         public AmountValue AmountValue { get; set; }
-        public bool IsOptional { get; set; }
+        public bool IsOptional { get; private set; }
 
         private FoodProductDetails()
         {

@@ -12,15 +12,13 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 
         private FoodProduct()
         {
-            // EF Core
+            
         }
 
         public FoodProduct(string name, Category category)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new DomainException("Product name can't be empty.");
+            ValidateFoodProductName(name);
             Name = UppercaseFirst(name.ToLower());
-
             Category = category;
 
             this.AddDomainEvent(new FoodProductAddedEvent(this));
@@ -34,20 +32,26 @@ namespace SmartFridgeApp.Domain.Models.FoodProducts
 
         public void UpdateProductName(string newName)
         {
-            if (string.IsNullOrEmpty(newName))
-                throw new DomainException("Product name can't be empty.");
+            ValidateFoodProductName(newName);
             Name = UppercaseFirst(newName);
-
-            //this.AddDomainEvent(new FoodProductChangedEvent(this));
         }
 
         public void UpdateProductCategory(Category category)
         {
-            if (string.IsNullOrEmpty(category.Name))
-                throw new DomainException("Product must have category with name!.");
-            Category = category;
+             ValidateFoodProductCategory(category);
+             Category = category;
+        }
 
-            //this.AddDomainEvent(new FoodProductChangedEvent(this));
+        private void ValidateFoodProductName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new InvalidInputException("Product name can't be empty.", "InvalidFoodProductName");
+        }
+
+        private void ValidateFoodProductCategory(Category category)
+        {
+            if (string.IsNullOrEmpty(category.Name))
+                throw new InvalidInputException("Product category can't be empty.", "InvalidFoodProductCategory");
         }
 
         private string UppercaseFirst(string s)
