@@ -8,8 +8,6 @@ namespace SmartFridgeApp.Domain.Shared
     {
         private const float TOLERANCE = 0.001f;
 
-        // this setters should be private (domain driven design violate) -
-        // but don't know how to serialize to xml (maybe create Dto?)
         public float Value { get; set; }
         public Unit Unit { get; set; }
         
@@ -29,7 +27,7 @@ namespace SmartFridgeApp.Domain.Shared
         {
             if (value <= 0)
             {
-                throw new DomainException("Error while creating AmountValue","Value of FridgeItem must be > 0");
+                throw new AmountValueException("Error while creating AmountValue","Value must be grater than 0");
             }
             this.Value = value;
             this.Unit = unit;
@@ -37,19 +35,22 @@ namespace SmartFridgeApp.Domain.Shared
 
         public void DecreaseAmount(AmountValue amountValue)
         {
-            this.Value = this.Value - amountValue.Value;
+            if (amountValue.Value > this.Value)
+                this.Value = 0.0f;
+            else
+                this.Value = this.Value - amountValue.Value;
         }
 
         public void ResetAmount()
         {
-            this.Value = 0;
+            this.Value = 0.0f;
         }
 
         public int CompareTo(AmountValue obj)
         {
             if (obj.Unit.CompareTo(this.Unit) != 0)
             {
-                throw new DomainException("Error comparing AmountValues", "AmountValues have other units. Can't compare them!");
+                throw new AmountValueException("Error comparing AmountValues", "AmountValues have other units. Can't compare them!");
             }
 
             if (Math.Abs(Value - obj.Value) < TOLERANCE)
