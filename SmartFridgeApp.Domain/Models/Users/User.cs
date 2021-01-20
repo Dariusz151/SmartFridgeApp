@@ -77,8 +77,6 @@ namespace SmartFridgeApp.Domain.Models.Users
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
             fridgeItem.ConsumeFridgeItem(amountValue);
-
-            this.AddDomainEvent(new FridgeItemConsumed(fridgeItem));
         }
         
         private FridgeItem GetFridgeItem(long fridgeItemId)
