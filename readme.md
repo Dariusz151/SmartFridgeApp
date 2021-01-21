@@ -17,7 +17,11 @@ To be able to start using the application in everyday life, I had to create a pr
 I used React as I have some basics knowledge about this framework. 
 I'm not front-end developer so I'm aware of its imperfections. I would be grateful if someone wanted to support the front end part of the application.
 
-## Architecture
+# High-level view
+
+
+
+# Architecture
 
 In this application I used several programming concepts such as:
 - Onion Architecture (split into domain layer, infrastructure layer and application (API) layer)
@@ -45,7 +49,7 @@ I'm aware that in this case its over-engineering but I created this app to learn
 So while looking into the code you can see such a objects like aggregates, entities, value objects, domain events (building blocks) etc. 
 
 
-### Domain
+# Domain
 
 There are 3 main group of contexts in this app: 
 1. Fridge 
@@ -66,9 +70,18 @@ FridgeUsers and FridgeItems are *entities*.
 
 AmountValue is *value object*.
 
-> UML diagram.
+### Quartz and Outbox pattern
 
-### Stack
+I used Quartz to handle outbox messages. 
+I implemented outbox pattern by simple table in database - I save some of the events and then can handle them in hosted service.
+Quartz is triggering the job which checks if there is new records in db.
+
+
+### UML diagram.
+
+# Database structure
+
+# Stack
 
 I used this tools while developing app:
 - .NET Core 3.1
@@ -82,9 +95,10 @@ I used this tools while developing app:
 - Postman
 - NUnit (Unit testing)
 - Autofac (Dependency Injection)
+- Quartz
 - MediatR (for mediator in CQRS)
 
-### High-level view
+
 
 
 
@@ -93,7 +107,7 @@ I used this tools while developing app:
 - [Kamil Grzybek's Modular monolith repository](https://github.com/kgrzybek/modular-monolith-with-ddd "Github link")   
 - and other's articles from Kamil Grzybek's
 - Martin Fowler's articles [CQRS](https://martinfowler.com/bliki/CQRS.html "cqrs")
-
+- Quartz config https://andrewlock.net/using-scoped-services-inside-a-quartz-net-hosted-service-with-asp-net-core/
 
 
 
