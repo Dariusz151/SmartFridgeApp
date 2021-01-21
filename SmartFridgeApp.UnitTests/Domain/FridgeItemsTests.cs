@@ -46,7 +46,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void AmountValue_WithLessThanZero_ShouldThrowException()
         {
             AmountValue amountVal;
-            Assert.Throws(typeof(DomainException), () => amountVal = new AmountValue(-10.0f, Unit.Grams));
+            Assert.Throws(typeof(AmountValueException), () => amountVal = new AmountValue(-10.0f, Unit.Grams));
         }
 
         [Test]

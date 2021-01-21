@@ -38,7 +38,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             List<FoodProductDetails> list = new List<FoodProductDetails>();
             list.Add(foodProductDetails);
 
-            Assert.Throws(typeof(DomainException),
+            Assert.Throws(typeof(InvalidInputException),
                 () => recipe = new Recipe("recipe", "desc", recipeCategory, list, -1, 1));
         }
 
@@ -63,7 +63,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             list.Add(foodProductDetails);
 
-            Assert.Throws(typeof(DomainException),
+            Assert.Throws(typeof(InvalidInputException),
                 () => recipe = new Recipe(String.Empty, list));
         }
 
@@ -89,7 +89,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             list.Add(foodProductDetails);
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Easy);
 
-            Assert.Throws(typeof(DomainException), () => recipe.UpdateRecipe(String.Empty, "descUpdate", recipeCategory, 30, (int)LevelOfDifficulty.Easy));
+            Assert.Throws(typeof(InvalidInputException), () => recipe.UpdateRecipe(String.Empty, "descUpdate", recipeCategory, 30, (int)LevelOfDifficulty.Easy));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             list.Add(foodProductDetails);
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Easy);
 
-            Assert.Throws(typeof(DomainException), () => recipe.UpdateRecipe("updated", "descUpdate", recipeCategory, -1, (int)LevelOfDifficulty.Hard));
+            Assert.Throws(typeof(InvalidInputException), () => recipe.UpdateRecipe("updated", "descUpdate", recipeCategory, -1, (int)LevelOfDifficulty.Hard));
             Assert.AreEqual("recipe", recipe.Name);
             Assert.AreEqual("desc", recipe.Description);
             Assert.AreEqual(LevelOfDifficulty.Easy, recipe.LevelOfDifficulty);

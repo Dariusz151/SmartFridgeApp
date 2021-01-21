@@ -74,7 +74,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         [Test]
         public void ExistingFridge_AddNullUser_ShouldThrowDomainException()
         {
-            Assert.Throws(typeof(DomainException), () => _fridge.AddUser(_user));
+            Assert.Throws(typeof(InvalidInputException), () => _fridge.AddUser(_user));
             Assert.AreEqual(1, _fridge.DomainEvents.Count);
         }
 
@@ -98,30 +98,30 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void Fridge_RemoveUserThatNotExist_ShouldThrowException()
         {
             _user = new User(userName, userEmail);
-            
-            var usersCounts = _fridge.GetFridgeUsers().Count;
+
+            var usersCounts = _fridge.UsersCount;
 
             Assert.AreEqual(1, _fridge.DomainEvents.Count);
-            Assert.Throws(typeof(UserNotExistException), () => _fridge.RemoveUser(_user.Id));
+            Assert.Throws(typeof(InvalidInputException), () => _fridge.RemoveUser(_user.Id));
         }
 
         [Test]
         public void Fridge_CreateWithEmptyName_ShouldThrowException()
         {
             Fridge fridge2;
-            Assert.Throws(typeof(DomainException), () => fridge2 = new Fridge("", "adress", "desc"));
+            Assert.Throws(typeof(InvalidInputException), () => fridge2 = new Fridge("", "adress", "desc"));
         }
 
         [Test]
         public void Fridge_UpdateWithInvalidName_ShouldThrowException()
         {
-            Assert.Throws(typeof(DomainException), () => _fridge.ChangeFridgeName(""));
+            Assert.Throws(typeof(InvalidInputException), () => _fridge.ChangeFridgeName(""));
         }
 
         [Test]
         public void Fridge_UpdateWithInvalidDesc_ShouldThrowException()
         {
-            Assert.Throws(typeof(DomainException), () => _fridge.ChangeFridgeDesc(""));
+            Assert.Throws(typeof(InvalidInputException), () => _fridge.ChangeFridgeDesc(""));
         }
 
         [Test]

@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.API", "Smart
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.IntegrationTests", "SmartFridgeApp.IntegrationTests\SmartFridgeApp.IntegrationTests.csproj", "{464904F6-F2E1-4DA6-B063-C83732B31172}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartzTest", "QuartzTest\QuartzTest.csproj", "{620FA7CC-1F61-45BD-B6CD-29F5DD176656}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,12 +55,6 @@ Global
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Docker|Any CPU.Build.0 = Docker|Any CPU
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.Build.0 = Release|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Docker|Any CPU.Build.0 = Debug|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{620FA7CC-1F61-45BD-B6CD-29F5DD176656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

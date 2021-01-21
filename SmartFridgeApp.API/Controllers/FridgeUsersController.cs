@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.Users;
 using SmartFridgeApp.API.Users.AddFridgeUser;
 using SmartFridgeApp.API.Users.GetFridgeUsers;
 using SmartFridgeApp.API.Users.RemoveFridgeUser;
 using SmartFridgeApp.API.Users.UpdateFridgeUser;
 
-namespace SmartFridgeApp.API.Users
+namespace SmartFridgeApp.API.Controllers
 {
     [Route("api/fridgeUsers")]
     [ApiController]

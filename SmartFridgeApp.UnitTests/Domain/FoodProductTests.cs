@@ -42,7 +42,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         [Test]
         public void FoodProduct_CreateNewWithEmptyString_ShouldThrowException()
         {
-            Assert.Throws(typeof(DomainException), () => foodProduct = new FoodProduct(String.Empty, category));
+            Assert.Throws(typeof(InvalidInputException), () => foodProduct = new FoodProduct(String.Empty, category));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             foodProduct = new FoodProduct("Bułka", category);
 
-            Assert.Throws(typeof(DomainException), () => foodProduct.UpdateProductName(""));
+            Assert.Throws(typeof(InvalidInputException), () => foodProduct.UpdateProductName(""));
             Assert.AreEqual(foodProduct.Name, "Bułka");
         }
 
@@ -60,7 +60,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             foodProduct = new FoodProduct("Bułka", category);
             var newCategory = new Category(String.Empty);
 
-            Assert.Throws(typeof(DomainException), () => foodProduct.UpdateProductCategory(newCategory));
+            Assert.Throws(typeof(InvalidInputException), () => foodProduct.UpdateProductCategory(newCategory));
         }
 
         [Test]

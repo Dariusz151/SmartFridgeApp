@@ -26,9 +26,9 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
         public async Task GetAllFoodProductCategories_ReturnsSomeContent()
         {
             var expected = new List<string> 
-            { "Mięso", "Warzywa", "Owoce", 
-            "Słodycze", "Nabiał", "Makarony", 
-            "Ryże", "Inne" };
+            { "Mięso", "Tłuszcze", "Orzechy i nasiona", "Ryby i owoce morza", "Pieczywo", "Warzywa", "Owoce", "Napoje",
+            "Słodycze", "Nabiał i jaja", "Makarony, kasze i ryże", 
+            "Inne" };
 
             var model = await _client.GetFromJsonAsync<List<ExpectedFoodProductCategoryModel>>("");
             var modelArray = model.Select(x => x.Name).ToArray();

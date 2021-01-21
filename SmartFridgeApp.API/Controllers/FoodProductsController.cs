@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.FoodProducts;
 using SmartFridgeApp.API.FoodProducts.AddFoodProduct;
 using SmartFridgeApp.API.FoodProducts.Categories.CreateCategory;
 using SmartFridgeApp.API.FoodProducts.Categories.GetCategories;
@@ -14,7 +15,7 @@ using SmartFridgeApp.API.FoodProducts.UpdateFoodProduct;
 using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
-namespace SmartFridgeApp.API.FoodProducts
+namespace SmartFridgeApp.API.Controllers
 {
     [Route("api/foodProducts")]
     [ApiController]

@@ -9,8 +9,9 @@ using SmartFridgeApp.API.Fridges.GetFridges;
 using SmartFridgeApp.API.Fridges.UpdateFridge;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using SmartFridgeApp.API.Fridges;
 
-namespace SmartFridgeApp.API.Fridges
+namespace SmartFridgeApp.API.Controllers
 {
     [Route("api/fridges")]
     [ApiController]

@@ -17,7 +17,7 @@ namespace SmartFridgeApp.API.Notifications.Recipe
         public async Task Handle(RecipeAddedNotification notification, CancellationToken cancellationToken)
         {
             var recipeId = notification.RecipeId.ToString();
-            _notifier.SendMessage(recipeId, "Recipe added!");
+            _notifier.SendMessage(recipeId, "New recipe added!");
         }
     }
 }

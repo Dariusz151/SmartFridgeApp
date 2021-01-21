@@ -17,7 +17,7 @@ namespace SmartFridgeApp.API.Notifications.Fridge
         public async Task Handle(FridgeAddedNotification notification, CancellationToken cancellationToken)
         {
             var fridgeName = notification.FridgeId.ToString();
-            _notifier.SendMessage(fridgeName, "Welcome in SmartFridgeApp!");
+            _notifier.SendMessage(fridgeName, "New fridge added to application!");
         }
     }
 }

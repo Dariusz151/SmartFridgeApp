@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartFridgeApp.API.FridgeItems;
 using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
 using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
-namespace SmartFridgeApp.API.FridgeItems
+namespace SmartFridgeApp.API.Controllers
 {
     [Route("api/fridgeItems")]
     [ApiController]
