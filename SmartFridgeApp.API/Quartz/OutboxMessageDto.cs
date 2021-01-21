@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartFridgeApp.API.Outbox
+namespace SmartFridgeApp.API.Quartz
 {
     public class OutboxMessageDto
     {

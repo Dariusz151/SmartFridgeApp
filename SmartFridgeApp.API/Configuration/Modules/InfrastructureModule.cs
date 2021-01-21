@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using Autofac;
-using MediatR;
-using SmartFridgeApp.API.Notifications;
 using SmartFridgeApp.API.Notifications.Fridge;
 using SmartFridgeApp.API.Notifications.Recipe;
 using SmartFridgeApp.API.Notifications.Users;
@@ -17,7 +15,7 @@ using SmartFridgeApp.Infrastructure.Fridges;
 using SmartFridgeApp.Infrastructure.Recipes;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
-namespace SmartFridgeApp.API.Modules
+namespace SmartFridgeApp.API.Configuration.Modules
 {
     public class InfrastructureModule : Autofac.Module
     {

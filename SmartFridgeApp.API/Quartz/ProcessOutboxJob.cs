@@ -8,9 +8,8 @@ using Quartz;
 using SmartFridgeApp.API.Notifications.Fridge;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
-namespace SmartFridgeApp.API.Outbox
+namespace SmartFridgeApp.API.Quartz
 {
-    [DisallowConcurrentExecution]
     public class ProcessOutboxJob : IJob
     {
         private readonly IMediator _mediator;
@@ -26,6 +25,7 @@ namespace SmartFridgeApp.API.Outbox
 
         public async Task Execute(IJobExecutionContext context)
         {
+            Console.WriteLine("Execute ProcessOutboxJob");
             var connection = this._sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                "[OutboxMessage].[Id], " +
@@ -55,7 +55,6 @@ namespace SmartFridgeApp.API.Outbox
                     message.Id
                 });
             }
-
         }
     }
 }

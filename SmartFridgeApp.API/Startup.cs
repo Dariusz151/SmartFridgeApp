@@ -9,16 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
-using SmartFridgeApp.API.Modules;
 using SmartFridgeApp.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using SmartFridgeApp.API.Outbox;
-using System.Threading.Tasks;
 using SmartFridgeApp.API.Middleware;
+using Quartz.Spi;
+using SmartFridgeApp.API.Quartz;
+using SmartFridgeApp.API.Configuration.Modules;
 
 namespace SmartFridgeApp.API
 {
@@ -89,7 +89,10 @@ namespace SmartFridgeApp.API
                 });
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddSwaggerGen();
+
+            services.AddHostedService<QuartzHostedService>();
 
             services
                .AddEntityFrameworkSqlServer()
@@ -99,29 +102,15 @@ namespace SmartFridgeApp.API
                        .UseSqlServer(this.Configuration[SmartFridgeAppConnectionString]);
                });
 
-            services.AddControllers().AddJsonOptions(options => {
+            services
+                .AddControllers()
+                .AddJsonOptions(options => {
                 options.JsonSerializerOptions.Converters.Add(
                     new JsonStringEnumConverter()
                 );
             });
 
-
-            //var schedulerFactory = new StdSchedulerFactory();
-            //var scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
-            //scheduler.Start().GetAwaiter().GetResult();
-
-            //IJobDetail job = JobBuilder.Create<ProcessOutboxJob>()
-            //    .Build();
-
-            //ITrigger trigger = TriggerBuilder
-            //    .Create()
-            //    .StartNow()
-            //    .WithSimpleSchedule(x => x
-            //        .WithIntervalInSeconds(30)
-            //        .RepeatForever())
-            //    .Build();
-
-            //scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
+          
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
@@ -168,6 +157,7 @@ namespace SmartFridgeApp.API
             builder.RegisterModule(new InfrastructureModule(Configuration[SmartFridgeAppConnectionString]));
             builder.RegisterModule(new MediatorModule());
             builder.RegisterModule(new OutboxModule());
+            builder.RegisterModule(new QuartzModule());
             builder.Register(c =>
             {
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder<SmartFridgeAppContext>();

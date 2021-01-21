@@ -9,7 +9,7 @@ using MediatR;
 using MediatR.Pipeline;
 using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 
-namespace SmartFridgeApp.API.Modules
+namespace SmartFridgeApp.API.Configuration.Modules
 {
     public class MediatorModule : Autofac.Module
     {
