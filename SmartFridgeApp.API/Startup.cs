@@ -8,17 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
-using Quartz.Impl;
 using SmartFridgeApp.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using SmartFridgeApp.API.Middleware;
-using Quartz.Spi;
 using SmartFridgeApp.API.Quartz;
 using SmartFridgeApp.API.Configuration.Modules;
+using SmartFridgeApp.API.Configuration;
 
 namespace SmartFridgeApp.API
 {
@@ -43,55 +39,11 @@ namespace SmartFridgeApp.API
         {
             services.AddRazorPages();
             services.AddHealthChecks();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Development_Policy",
-                builder =>
-                {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                   
-                });
-                options.AddPolicy("Production_Policy",
-               builder =>
-               {
-                   builder
-                       .WithOrigins("http://localhost:3000", 
-                                    "https://localhost:3001")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod();
-
-               });
-            });
-
-            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]);
-            services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
-                    };
-                });
-
+            services.ConfigureCors();
+            services.ConfigureJwt(Configuration);
+            
             services.AddMediatR(Assembly.GetExecutingAssembly());
-
             services.AddSwaggerGen();
-
             services.AddHostedService<QuartzHostedService>();
 
             services
@@ -139,7 +91,7 @@ namespace SmartFridgeApp.API
             options.DefaultFileNames.Add("index.html");
             app.UseDefaultFiles(options);
             app.UseStaticFiles();
-           
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
