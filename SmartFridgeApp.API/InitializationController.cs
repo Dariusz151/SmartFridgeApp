@@ -28,6 +28,7 @@ namespace SmartFridgeApp.API
         RecipeCategory categorySniadanie;
         RecipeCategory categoryObiad;
         RecipeCategory categoryKolacja;
+        RecipeCategory categoryDesery;
 
         public InitializationController(
             IUnitOfWork unitOfWork, IFoodProductRepository foodProductRepository, SmartFridgeAppContext context)
@@ -37,9 +38,10 @@ namespace SmartFridgeApp.API
             _context = context;
             foodProducts = new List<FoodProduct>();
 
-            categorySniadanie = new RecipeCategory("Śniadanie");
-            categoryObiad = new RecipeCategory("Obiad");
-            categoryKolacja = new RecipeCategory("Kolacja");
+            categorySniadanie = new RecipeCategory("Breakfast");
+            categoryObiad = new RecipeCategory("Dinner");
+            categoryKolacja = new RecipeCategory("Supper");
+            categoryDesery = new RecipeCategory("Desserts");
         }
 
         /// <summary>
@@ -203,6 +205,7 @@ namespace SmartFridgeApp.API
             recipes.Add(Nalesniki(list));
             recipes.Add(NalesnikiBanan(list));
             recipes.Add(StekWolowy(list));
+            recipes.Add(CiastoSlodkieUsta(list));
 
             return recipes;
         }
@@ -221,6 +224,12 @@ namespace SmartFridgeApp.API
             var categoryOrzechy = new Category("Orzechy i nasiona");
             var categoryTluszcze = new Category("Tłuszcze");
             var categoryInne = new Category("Inne");
+
+            foodProducts.Add(new FoodProduct("Biszkopty", categoryInne));
+            foodProducts.Add(new FoodProduct("Dżem różany", categoryInne));
+            foodProducts.Add(new FoodProduct("Proszek do pieczenia", categoryInne));
+            foodProducts.Add(new FoodProduct("Galaretka cytrynowa", categoryInne));
+            foodProducts.Add(new FoodProduct("Czekolada gorzka", categorySlodycze));
 
             foodProducts.Add(new FoodProduct("Ciecierzyca", categoryInne));
             foodProducts.Add(new FoodProduct("Soczewica", categoryInne));
@@ -638,6 +647,61 @@ namespace SmartFridgeApp.API
             var desc = "3-4 minut na stek mocno krwisty. 4-5 minut na stek krwisty. 5-6 minut na stek średnio wysmażony. 6-7 minut na stek mocno wysmażony";
 
             var recipe = new Recipe("Stek wołowy z patelni", desc, categoryObiad, _foodProducts, 20, (int)LevelOfDifficulty.Hard);
+
+            return recipe;
+        }
+
+        private Recipe CiastoSlodkieUsta(IEnumerable<FoodProduct> list)
+        {
+            var biszkopty = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Biszkopty")).SingleOrDefault(),
+                new AmountValue(32, Unit.Pieces));
+            var maslo = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Masło")).SingleOrDefault(),
+               new AmountValue(200, Unit.Grams));
+            var dzem = new FoodProductDetails(
+              list.Where(x => x.Name.Equals("Dżem różany")).SingleOrDefault(),
+              new AmountValue(100, Unit.Grams));
+            var kakao = new FoodProductDetails(
+              list.Where(x => x.Name.Equals("Kakao")).SingleOrDefault(),
+              new AmountValue(100, Unit.Grams));
+            var cukier = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Cukier")).SingleOrDefault(),
+             new AmountValue(140, Unit.Grams));
+            var maka = new FoodProductDetails(
+             list.Where(x => x.Name.Equals("Mąka")).SingleOrDefault(),
+             new AmountValue(220, Unit.Grams));
+            var galaretka = new FoodProductDetails(
+                list.Where(x => x.Name.Equals("Galaretka cytrynowa")).SingleOrDefault(),
+                new AmountValue(1, Unit.Pieces));
+            var proszekDoPiecz = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Proszek do pieczenia")).SingleOrDefault(),
+               new AmountValue(2, Unit.Pieces));
+
+            var smietana30 = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Śmietana 30")).SingleOrDefault(),
+               new AmountValue(550, Unit.Mililiter));
+            var czekoladaGorzka = new FoodProductDetails(
+               list.Where(x => x.Name.Equals("Czekolada gorzka")).SingleOrDefault(),
+               new AmountValue(50, Unit.Grams));
+
+            var _foodProducts = new List<FoodProductDetails>();
+            _foodProducts.Add(biszkopty);
+            _foodProducts.Add(maslo);
+            _foodProducts.Add(dzem);
+            _foodProducts.Add(kakao);
+            _foodProducts.Add(cukier);
+            _foodProducts.Add(maka);
+            _foodProducts.Add(galaretka);
+            _foodProducts.Add(proszekDoPiecz);
+            _foodProducts.Add(smietana30);
+            _foodProducts.Add(czekoladaGorzka);
+
+            var desc = "Blachę o wym. 24 cm x 28 cm wyłóż papierem do pieczenia. Piekarnik rozgrzej do temp. 180°C. Biszkopty posmaruj marmoladą i posklejaj je po dwa. Białka oddziel od żółtek. Masło, kakao, cukier i wodę przełóż do garnka i zagotuj. Czekoladową masę pozostaw do wystudzenia. Mąkę i proszek do pieczenia przesiej. Do wystudzonej masy wmiksuj żółtka, a następnie dodaj mąkę i proszek do pieczenia, krótko miksując. Do masy wmieszaj delikatnie ubite białka. Cienko rozsmaruj część czekoladowego ciasta na dnie formy. Następnie ułóż na nim posklejane biszkopty i zalej je resztą ciasta. Czas pieczenia: ok. 40 min." +
+                "" +
+                "Zagotuj wodę i odmierz 200 ml. Do gorącej wody wsyp galaretkę i dokładnie rozmieszaj. Odstaw do wystudzenia. Śmietankę ubij na sztywno. Łyżkę ubitej śmietanki rozmieszaj z wystudzoną, ale wciąż płynną galaretką. Dolewaj ją cienkim strumieniem do śmietanki i dokładnie zmiksuj. Bananową piankę przełóż na wystudzone ciasto i wstaw do lodówki na ok. 2 h do stężenia.";
+
+            var recipe = new Recipe("Ciasto słodkie usta", desc, categoryDesery, _foodProducts, 60, (int)LevelOfDifficulty.Hard);
 
             return recipe;
         }
