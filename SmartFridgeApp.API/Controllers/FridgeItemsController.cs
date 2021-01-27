@@ -10,6 +10,7 @@ using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
 using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
 using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
 using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
+using SmartFridgeApp.API.Handlers.FridgeItems.ConsumeRecipe;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
 
 namespace SmartFridgeApp.API.Controllers
@@ -96,6 +97,23 @@ namespace SmartFridgeApp.API.Controllers
         {
             await _mediator.Send(new ConsumeFridgeItemCommand(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue));
            
+            return NoContent();
+        }
+
+
+        ///// <summary>
+        ///// Consume food products from given recipe.
+        ///// </summary>
+        [Route("ConsumeRecipe")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ConsumeRecipeAsync(
+            [FromBody] ConsumeRecipeRequest request)
+        {
+            await _mediator.Send(new ConsumeRecipeCommand(request.UserId, request.FridgeId, request.FoodProducts));
+
             return NoContent();
         }
     }

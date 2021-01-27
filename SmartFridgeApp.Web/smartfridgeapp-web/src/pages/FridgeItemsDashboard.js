@@ -95,6 +95,7 @@ const FridgeItemsDashboard = () => {
             check: (
               <MDBInput
                 label=" "
+                disabled={readOnly}
                 type="checkbox"
                 id={`checkbox${index}`}
                 onClick={() => checkHandler(item.foodProductId)}
@@ -202,6 +203,7 @@ const FridgeItemsDashboard = () => {
 
   const handleFindRecipes = () => {
     console.log(selectedItems);
+    console.log(selectedUserId);
     const obj = {
       foodProducts: selectedItems,
     };
@@ -227,7 +229,7 @@ const FridgeItemsDashboard = () => {
       .then((body) => {
         console.log(body.length);
         if (body.length > 0) {
-          const arr = ["siema", "siema2", "siema3"];
+          //const arr = ["siema", "siema2", "siema3"];
           console.log(body);
           setRecipesFound(body);
           setCarouselDialogState(true);
@@ -258,6 +260,8 @@ const FridgeItemsDashboard = () => {
         state={carouselDialogState}
         handleClose={handleCloseCarouselDialog}
         recipes={recipesFound}
+        userId={selectedUserId}
+        fridgeId={fridgeId}
       />
       {usersLoading ? (
         <div>

@@ -9,10 +9,14 @@ import Button from "@material-ui/core/Button";
 import CloseIcon from "@material-ui/icons/Close";
 import AddIcon from "@material-ui/icons/Add";
 
+import configData from "../../config_url.json";
+
 import CarouselSlide from "../CarouselSlide";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Arrow(props) {
   const { direction, clickFunction } = props;
@@ -22,7 +26,7 @@ function Arrow(props) {
   return <div onClick={clickFunction}>{icon}</div>;
 }
 
-const CarouselDialog = ({ state, handleClose, recipes }) => {
+const CarouselDialog = ({ state, handleClose, recipes, userId, fridgeId }) => {
   const [index, setIndex] = React.useState(0);
   const recipeContent = recipes[index];
   const numSlides = recipes.length;
@@ -35,8 +39,42 @@ const CarouselDialog = ({ state, handleClose, recipes }) => {
     setIndex(newIndex);
   };
 
+  const handleUseThisRecipe = () => {
+    const obj = {
+      userId: userId,
+      fridgeId: fridgeId,
+      foodProducts: recipeContent.foodProducts,
+    };
+
+    fetch(configData.SERVER_URL + "/api/fridgeItems/ConsumeRecipe", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          toast.error("Cant consume this recipe!", {
+            position: "bottom-center",
+            autoClose: 1500,
+          });
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then((response) => response.json())
+      .then((body) => {
+        console.log(body);
+        handleClose();
+      })
+      .catch((error) => console.log(error));
+    console.log("Recipe used by" + userId);
+  };
+
   return (
     <React.Fragment>
+      <ToastContainer />
       <Dialog
         open={state}
         onClose={handleClose}
@@ -69,9 +107,7 @@ const CarouselDialog = ({ state, handleClose, recipes }) => {
             color="primary"
             startIcon={<AddIcon />}
             variant="outlined"
-            onClick={() => {
-              console.log("use this recipe");
-            }}
+            onClick={handleUseThisRecipe}
           >
             Use this recipe
           </Button>

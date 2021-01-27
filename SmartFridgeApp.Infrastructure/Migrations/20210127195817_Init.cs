@@ -32,28 +32,11 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Address = table.Column<string>(maxLength: 100, nullable: true),
-                    Desc = table.Column<string>(maxLength: 250, nullable: true),
-                    IsWelcomed = table.Column<bool>(maxLength: 10, nullable: false)
+                    Desc = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fridges", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InternalCommands",
-                schema: "app",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Type = table.Column<string>(nullable: true),
-                    Data = table.Column<string>(nullable: true),
-                    EnqueueDate = table.Column<DateTime>(nullable: false),
-                    ProcessedDate = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InternalCommands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,10 +209,6 @@ namespace SmartFridgeApp.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "FridgeItems",
-                schema: "app");
-
-            migrationBuilder.DropTable(
-                name: "InternalCommands",
                 schema: "app");
 
             migrationBuilder.DropTable(

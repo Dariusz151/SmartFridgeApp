@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartFridgeApp.Domain.Models.FoodProducts;
 using SmartFridgeApp.Domain.Models.FridgeItems;
 using SmartFridgeApp.Domain.Models.Users.Events;
 using SmartFridgeApp.Domain.SeedWork;
@@ -72,18 +73,45 @@ namespace SmartFridgeApp.Domain.Models.Users
             
             this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
+
+        public void ConsumeRecipe(List<FoodProductDetails> products)
+        {
+            foreach (var product in products)
+            {
+                var fridgeItem = GetFridgeItem(product.FoodProductId);
+
+                ConsumeFridgeItem(fridgeItem, product.AmountValue);
+            }
+        }
         
         public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
-            fridgeItem.ConsumeFridgeItem(amountValue);
+            ConsumeFridgeItem(fridgeItem, amountValue);
         }
-        
+
+        private void ConsumeFridgeItem(FridgeItem item, AmountValue amountValue)
+        {
+            item.ConsumeFridgeItem(amountValue);
+        }
+
         private FridgeItem GetFridgeItem(long fridgeItemId)
         {
             try
             {
                 return _fridgeItems.Single(fi => fi.Id == fridgeItemId);
+            }
+            catch
+            {
+                throw new InvalidInputException("FridgeItem with given id does not exist.", "InvalidFridgeItemId");
+            }
+        }
+
+        private FridgeItem GetFridgeItem(short foodProductId)
+        {
+            try
+            {
+                return _fridgeItems.First(fi => fi.FoodProduct.FoodProductId == foodProductId);
             }
             catch
             {

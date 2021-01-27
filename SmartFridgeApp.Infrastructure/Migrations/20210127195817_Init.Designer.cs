@@ -10,8 +10,8 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20210120191229_DeleteIsWelcomed")]
-    partial class DeleteIsWelcomed
+    [Migration("20210127195817_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

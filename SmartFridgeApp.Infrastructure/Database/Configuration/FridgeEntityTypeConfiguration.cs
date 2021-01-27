@@ -50,6 +50,18 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.Property<DateTime>("ExpirationDate").HasColumnName("ExpirationDate");
                     f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
                     f.Property("IsConsumed").HasColumnName("IsConsumed");
+
+                    f.HasOne(x => x.FoodProduct).WithMany();
+
+                    //f.HasOne<FoodProduct>("FoodProduct", fp => {
+                    //    fp.ToTable("FoodProducts", SchemaNames.Application);
+                    //    fp.HasKey(b => b.FoodProductId);
+                    //    fp.Property("Name").HasColumnName("Name")
+                    //        .IsRequired()
+                    //        .HasMaxLength(40);
+
+                    //    fp.HasOne<Category>(c => c.Category);
+                    //});
                     
                     f.OwnsOne<AmountValue>("AmountValue", av =>
                     {
