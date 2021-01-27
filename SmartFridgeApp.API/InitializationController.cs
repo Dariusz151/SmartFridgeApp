@@ -229,6 +229,7 @@ namespace SmartFridgeApp.API
             foodProducts.Add(new FoodProduct("Dżem różany", categoryInne));
             foodProducts.Add(new FoodProduct("Proszek do pieczenia", categoryInne));
             foodProducts.Add(new FoodProduct("Galaretka cytrynowa", categoryInne));
+            foodProducts.Add(new FoodProduct("Kakao", categoryInne));
             foodProducts.Add(new FoodProduct("Czekolada gorzka", categorySlodycze));
 
             foodProducts.Add(new FoodProduct("Ciecierzyca", categoryInne));

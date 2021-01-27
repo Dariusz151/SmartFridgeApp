@@ -68,6 +68,12 @@ namespace SmartFridgeApp.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             IHostApplicationLifetime lifetime, IServiceProvider serviceProvider)
         {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService <SmartFridgeAppContext> ();
+                context.Database.Migrate();
+            }
+
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             if (env.IsDevelopment())
