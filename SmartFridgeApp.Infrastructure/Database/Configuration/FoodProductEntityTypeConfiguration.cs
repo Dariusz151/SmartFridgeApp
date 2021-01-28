@@ -12,6 +12,7 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
         {
             builder.ToTable("FoodProducts", SchemaNames.Application);
             builder.HasKey(b => b.FoodProductId);
+            builder.Property("FoodProductId").HasColumnName("FoodProductId").ValueGeneratedOnAdd();
             builder.Property("Name").HasColumnName("Name")
                 .IsRequired()
                 .HasMaxLength(40);

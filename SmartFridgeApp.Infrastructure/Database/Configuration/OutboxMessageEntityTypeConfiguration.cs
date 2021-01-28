@@ -9,7 +9,7 @@ namespace SmartFridgeApp.Infrastructure.Outbox
     {
         public void Configure(EntityTypeBuilder<OutboxMessage> builder)
         {
-            builder.ToTable("OutboxMessages", SchemaNames.Application);
+            builder.ToTable("OutboxMessages", SchemaNames.Internal);
 
             builder.HasKey(b => b.Id);
             builder.Property(b => b.Id).ValueGeneratedNever();

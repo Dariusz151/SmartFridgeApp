@@ -47,7 +47,7 @@ namespace SmartFridgeApp.Domain.Models.Users
         {
             try
             {
-                var foodProducts = _fridgeItems.Select(x => x.FoodProduct.FoodProductId);
+                var foodProducts = _fridgeItems.Select(x => x.FoodProduct.FoodProductId).ToList();
                 if (foodProducts.Contains(item.FoodProduct.FoodProductId))
                 {
                     _fridgeItems

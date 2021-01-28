@@ -24,6 +24,8 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
 
         public FridgeItem(FoodProduct foodProduct, string note, AmountValue amountValue)
         {
+            if (foodProduct is null)
+                throw new DomainException("Food product is null", "InvalidFoodProduct");
             AmountValue = amountValue;
             IsConsumed = false;
             Note = note;

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using SmartFridgeApp.Domain.Models.Fridges;
 using SmartFridgeApp.Domain.SeedWork.Exceptions;
+using System.Linq;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
 {
@@ -30,7 +31,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
         {
             try
             {
-                return await _context.Fridges.SingleAsync(x => x.Id == id);
+                return await _context.Fridges.Where(x=>x.Id == id).SingleAsync();
             }
             catch
             {
