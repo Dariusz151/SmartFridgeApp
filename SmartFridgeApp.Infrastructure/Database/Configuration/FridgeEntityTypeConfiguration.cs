@@ -51,7 +51,9 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
                     f.Property("IsConsumed").HasColumnName("IsConsumed");
 
-                    f.HasOne(x => x.FoodProduct).WithMany();
+                    //f.Has
+
+                    //f.HasOne(x => x.FoodProduct).WithMany();
 
                     //f.HasOne<FoodProduct>("FoodProduct", fp => {
                     //    fp.ToTable("FoodProducts", SchemaNames.Application);

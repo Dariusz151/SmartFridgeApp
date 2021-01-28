@@ -47,11 +47,11 @@ namespace SmartFridgeApp.Domain.Models.Users
         {
             try
             {
-                var foodProducts = _fridgeItems.Select(x => x.FoodProduct.FoodProductId).ToList();
-                if (foodProducts.Contains(item.FoodProduct.FoodProductId))
+                var foodProducts = _fridgeItems.Select(x => x.FoodProductId).ToList();
+                if (foodProducts.Contains(item.FoodProductId))
                 {
                     _fridgeItems
-                        .Where(x => x.FoodProduct.FoodProductId == item.FoodProduct.FoodProductId)
+                        .Where(x => x.FoodProductId == item.FoodProductId)
                         .First()
                         .IncreaseFridgeItemAmount(item.AmountValue);
                 }
@@ -111,7 +111,7 @@ namespace SmartFridgeApp.Domain.Models.Users
         {
             try
             {
-                return _fridgeItems.First(fi => fi.FoodProduct.FoodProductId == foodProductId);
+                return _fridgeItems.First(fi => fi.FoodProductId == foodProductId);
             }
             catch
             {

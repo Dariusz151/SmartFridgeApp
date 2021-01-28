@@ -228,7 +228,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                         .HasColumnName("ExpirationDate")
                                         .HasColumnType("datetime2");
 
-                                    b2.Property<short?>("FoodProductId")
+                                    b2.Property<short>("FoodProductId")
                                         .HasColumnType("smallint");
 
                                     b2.Property<bool>("IsConsumed")
@@ -253,7 +253,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                                     b2.HasOne("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", "FoodProduct")
                                         .WithMany()
-                                        .HasForeignKey("FoodProductId");
+                                        .HasForeignKey("FoodProductId")
+                                        .OnDelete(DeleteBehavior.Cascade)
+                                        .IsRequired();
 
                                     b2.WithOwner()
                                         .HasForeignKey("UserId");

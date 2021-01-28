@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "app");
+
+            migrationBuilder.EnsureSchema(
+                name: "internal");
 
             migrationBuilder.CreateTable(
                 name: "Categories",
@@ -40,22 +43,6 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OutboxMessages",
-                schema: "app",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    OccurredOn = table.Column<DateTime>(nullable: false),
-                    Type = table.Column<string>(nullable: true),
-                    Data = table.Column<string>(nullable: true),
-                    ProcessedDate = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RecipeCategories",
                 schema: "app",
                 columns: table => new
@@ -67,6 +54,22 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RecipeCategories", x => x.RecipeCategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                schema: "internal",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    OccurredOn = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true),
+                    ProcessedDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,7 +149,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FoodProductId = table.Column<short>(nullable: true),
+                    FoodProductId = table.Column<short>(nullable: false),
                     Note = table.Column<string>(maxLength: 1000, nullable: true),
                     Value = table.Column<float>(nullable: true),
                     Unit = table.Column<string>(nullable: true),
@@ -164,7 +167,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                         principalSchema: "app",
                         principalTable: "FoodProducts",
                         principalColumn: "FoodProductId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FridgeItems_Users_UserId",
                         column: x => x.UserId,
@@ -212,12 +215,12 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                 schema: "app");
 
             migrationBuilder.DropTable(
-                name: "OutboxMessages",
+                name: "Recipes",
                 schema: "app");
 
             migrationBuilder.DropTable(
-                name: "Recipes",
-                schema: "app");
+                name: "OutboxMessages",
+                schema: "internal");
 
             migrationBuilder.DropTable(
                 name: "FoodProducts",

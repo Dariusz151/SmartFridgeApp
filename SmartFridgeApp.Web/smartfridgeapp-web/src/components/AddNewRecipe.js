@@ -200,9 +200,6 @@ const AddNewRecipe = () => {
               <ToggleButton value="3" aria-label="right aligned">
                 <Typography style={styles.toggleBtn}>Supper</Typography>
               </ToggleButton>
-              <ToggleButton value="4" aria-label="right aligned">
-                <Typography style={styles.toggleBtn}>Other</Typography>
-              </ToggleButton>
             </ToggleButtonGroup>
           </Grid>
           <Grid item xs={9} style={styles.categoryToggleBtnGrp}></Grid>

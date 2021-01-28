@@ -9,9 +9,10 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
     public class FridgeItem : Entity
     {
         public long Id { get; private set; }
-        public FoodProduct FoodProduct { get; private set; }
+        public short FoodProductId { get; set; }
+        public virtual FoodProduct FoodProduct { get; set; }
         public string Note { get; private set; }
-        public AmountValue AmountValue { get; private set; }
+        public AmountValue AmountValue { get; set; }
         public DateTime ExpirationDate { get; set; }
         public DateTime EnteredAt { get; private set; }
         public bool IsConsumed { get; private set; } 
@@ -22,14 +23,14 @@ namespace SmartFridgeApp.Domain.Models.FridgeItems
 
         }
 
-        public FridgeItem(FoodProduct foodProduct, string note, AmountValue amountValue)
+        public FridgeItem(short foodProductId, string note, AmountValue amountValue)
         {
-            if (foodProduct is null)
-                throw new DomainException("Food product is null", "InvalidFoodProduct");
+            //if (foodProduct is null)
+            //    throw new DomainException("Food product is null", "InvalidFoodProduct");
             AmountValue = amountValue;
             IsConsumed = false;
             Note = note;
-            FoodProduct = foodProduct;
+            FoodProductId = foodProductId;
 
             EnteredAt = DateTime.Now;
         }

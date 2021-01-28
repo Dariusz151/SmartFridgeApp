@@ -10,8 +10,8 @@ using SmartFridgeApp.Infrastructure;
 namespace SmartFridgeApp.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartFridgeAppContext))]
-    [Migration("20210128224741_updateOutboxCommandSchema")]
-    partial class updateOutboxCommandSchema
+    [Migration("20210128233532_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -230,7 +230,7 @@ namespace SmartFridgeApp.Infrastructure.Migrations
                                         .HasColumnName("ExpirationDate")
                                         .HasColumnType("datetime2");
 
-                                    b2.Property<short?>("FoodProductId")
+                                    b2.Property<short>("FoodProductId")
                                         .HasColumnType("smallint");
 
                                     b2.Property<bool>("IsConsumed")
@@ -255,7 +255,9 @@ namespace SmartFridgeApp.Infrastructure.Migrations
 
                                     b2.HasOne("SmartFridgeApp.Domain.Models.FoodProducts.FoodProduct", "FoodProduct")
                                         .WithMany()
-                                        .HasForeignKey("FoodProductId");
+                                        .HasForeignKey("FoodProductId")
+                                        .OnDelete(DeleteBehavior.Cascade)
+                                        .IsRequired();
 
                                     b2.WithOwner()
                                         .HasForeignKey("UserId");
