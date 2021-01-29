@@ -8,8 +8,10 @@ export default function BottomMenu() {
         <div className="footer-copyright text-center teal darken-2">
           <MDBContainer style={{ minHeight: "30px" }}>
             <span>
-              <a href="https://www.smartfridgeapp.pl">Smartfridgeapp.pl | </a>
-              Dariusz Kozioł &copy; {new Date().getFullYear()}
+              <a href="https://www.smartfridgeapp.pl">
+                Smartfridgeapp.pl &copy;{" "}
+              </a>
+              {new Date().getFullYear()}
             </span>
           </MDBContainer>
         </div>

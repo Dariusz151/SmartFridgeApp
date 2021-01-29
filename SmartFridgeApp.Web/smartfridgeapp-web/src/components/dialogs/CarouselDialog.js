@@ -12,6 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import configData from "../../config_url.json";
 
 import CarouselSlide from "../CarouselSlide";
+import Grid from "@material-ui/core/Grid";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -21,7 +22,11 @@ import "react-toastify/dist/ReactToastify.css";
 function Arrow(props) {
   const { direction, clickFunction } = props;
   const icon =
-    direction === "left" ? <ChevronLeftIcon /> : <ChevronRightIcon />;
+    direction === "left" ? (
+      <ChevronLeftIcon style={{ fontSize: "5em" }} />
+    ) : (
+      <ChevronRightIcon style={{ fontSize: "5em" }} />
+    );
 
   return <div onClick={clickFunction}>{icon}</div>;
 }
@@ -46,6 +51,8 @@ const CarouselDialog = ({ state, handleClose, recipes, userId, fridgeId }) => {
       foodProducts: recipeContent.foodProducts,
     };
 
+    console.log(obj);
+
     fetch(configData.SERVER_URL + "/api/fridgeItems/ConsumeRecipe", {
       method: "post",
       headers: {
@@ -63,9 +70,8 @@ const CarouselDialog = ({ state, handleClose, recipes, userId, fridgeId }) => {
         }
         return response;
       })
-      .then((response) => response.json())
-      .then((body) => {
-        console.log(body);
+      .then((response) => {
+        console.log(response.status);
         handleClose();
       })
       .catch((error) => console.log(error));
@@ -75,25 +81,60 @@ const CarouselDialog = ({ state, handleClose, recipes, userId, fridgeId }) => {
   return (
     <React.Fragment>
       <ToastContainer />
+
       <Dialog
+        // maxWidth="lg"
+        // fullWidth
         open={state}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{recipeContent.name}</DialogTitle>
-        <DialogContent>
-          <span>
-            <Arrow
-              direction="left"
-              clickFunction={() => onArrowClick("left")}
-            />
-            <CarouselSlide content={{ recipe: recipeContent }} />
-            <Arrow
-              direction="right"
-              clickFunction={() => onArrowClick("right")}
-            />
-          </span>
-        </DialogContent>
+        <Grid container spacing={3}>
+          <Grid item>
+            {recipes.length > 1 ? (
+              <Arrow
+                direction="left"
+                clickFunction={() => onArrowClick("left")}
+              />
+            ) : (
+              <div></div>
+            )}
+          </Grid>
+          <Grid item>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                <h1>{recipeContent.name}</h1>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                <CarouselSlide content={{ recipe: recipeContent }} />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs>
+                {recipeContent.description}
+              </Grid>
+            </Grid>
+            {/* <Grid container spacing={3}>
+              <Grid item xs>
+               
+              </Grid>
+            </Grid> */}
+          </Grid>
+          <Grid item>
+            {recipes.length > 1 ? (
+              <Arrow
+                direction="right"
+                clickFunction={() => onArrowClick("right")}
+              />
+            ) : (
+              <div></div>
+            )}
+          </Grid>
+        </Grid>
+        {/* <Grid container spacing={3}>
+          <Grid item xs> */}
         <DialogActions>
           <Button
             onClick={handleClose}
@@ -112,6 +153,8 @@ const CarouselDialog = ({ state, handleClose, recipes, userId, fridgeId }) => {
             Use this recipe
           </Button>
         </DialogActions>
+        {/* </Grid>
+        </Grid> */}
       </Dialog>
     </React.Fragment>
   );

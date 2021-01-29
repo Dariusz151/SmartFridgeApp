@@ -26,7 +26,13 @@ const AddNewRecipe = () => {
     { foodProductId: 1, foodProductName: "fp" },
   ]);
   const [inputList, setInputList] = useState([
-    { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
+    {
+      foodProductId: 0,
+      foodProductName: "",
+      amount: "",
+      unit: "",
+      optional: false,
+    },
   ]);
 
   const handleClose = () => {
@@ -53,7 +59,13 @@ const AddNewRecipe = () => {
     setDifficulty("");
     setRequiredTime("");
     setInputList([
-      { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
+      {
+        foodProductId: 0,
+        foodProductName: "",
+        amount: "",
+        unit: "",
+        optional: false,
+      },
     ]);
   };
 
@@ -63,6 +75,7 @@ const AddNewRecipe = () => {
       const newProduct = {
         foodProductId: item.foodProductId,
         amountValue: { value: parseInt(item.amount), unit: item.unit },
+        optional: item.optional,
       };
       products.push(newProduct);
       return true;

@@ -1,11 +1,9 @@
 import React from "react";
 
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, Checkbox } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
-
 import UnitSelector from "./UnitSelector";
 
 const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
@@ -31,15 +29,29 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
   const handleAddClick = () => {
     setInputList([
       ...inputList,
-      { foodProductId: 0, foodProductName: "", amount: "", unit: "" },
+      {
+        foodProductId: 0,
+        foodProductName: "",
+        amount: "",
+        unit: "",
+        optional: false,
+      },
     ]);
   };
 
-  return inputList.map((x, i) => {
+  const handleCheckbox = (val, i) => {
+    const list = [...inputList];
+    const actualState = list[i].optional;
+
+    list[i].optional = !actualState;
+    setInputList(list);
+  };
+
+  return inputList.map((fp, i) => {
     return (
       <React.Fragment>
         <div className={styles.root}>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={2}>
               <div className="btn-box">
                 {inputList.length !== 1 && (
@@ -63,6 +75,12 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
                 )}
               </div>
             </Grid>
+            <Grid item xs={1}>
+              <Checkbox
+                checked={fp.optional}
+                onChange={() => handleCheckbox(fp, i)}
+              ></Checkbox>
+            </Grid>
             <Grid item xs={3}>
               <Autocomplete
                 id="foodproducts-combobox"
@@ -85,15 +103,15 @@ const FoodProductInput = ({ foodProducts, inputList, setInputList }) => {
                 )}
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <TextField
                 name="amount"
                 placeholder="Enter Amount"
-                value={x.amount}
+                value={fp.amount}
                 onChange={(e) => handleInputChange(e, i)}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <UnitSelector
                 unit={inputList[i].unit}
                 handleChangeUnit={(e) => handleChangeUnit(e, i)}
