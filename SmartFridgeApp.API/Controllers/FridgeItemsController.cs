@@ -5,13 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartFridgeApp.API.FridgeItems;
-using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
-using SmartFridgeApp.API.FridgeItems.ConsumeFridgeItem;
-using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
-using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
-using SmartFridgeApp.API.Handlers.FridgeItems.ConsumeRecipe;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
+using SmartFridgeApp.Core.Application.Features;
+using SmartFridgeApp.Core.Domain.Entities;
 
 namespace SmartFridgeApp.API.Controllers
 {

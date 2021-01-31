@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.Recipes;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Extensions;
 using SmartFridgeApp.Infrastructure.Database;
-using SmartFridgeApp.Infrastructure.Extensions;
 
 namespace SmartFridgeApp.Infrastructure.Recipes
 {

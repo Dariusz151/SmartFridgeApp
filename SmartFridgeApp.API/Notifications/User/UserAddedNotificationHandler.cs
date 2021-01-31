@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SmartFridgeApp.Domain.DomainServices;
+using SmartFridgeApp.Core.Contracts.DomainServices;
 
 namespace SmartFridgeApp.API.Notifications.Users
 {

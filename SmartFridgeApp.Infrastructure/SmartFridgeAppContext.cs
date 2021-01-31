@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.FridgeItems;
-using SmartFridgeApp.Domain.Models.Fridges;
-using SmartFridgeApp.Domain.Models.Recipes;
-using SmartFridgeApp.Domain.Models.Users;
-using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.SeedWork;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.Fridges;
 using SmartFridgeApp.Infrastructure.Outbox;
@@ -34,7 +30,6 @@ namespace SmartFridgeApp.Infrastructure
             modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new InternalCommandEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeCategoryEntityTypeConfiguration());
         }

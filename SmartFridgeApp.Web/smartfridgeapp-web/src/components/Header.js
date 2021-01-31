@@ -59,7 +59,7 @@ function Header() {
             </MDBNavItem>
             <MDBNavItem></MDBNavItem>
           </MDBNavbarNav>
-          {state.isAuthenticated ? (
+          {state.isAdmin ? (
             <MDBNavbarNav right>
               <MDBNavItem>
                 <MDBDropdown>
@@ -71,7 +71,7 @@ function Header() {
                       href="/fridges"
                       onClick={() =>
                         dispatch({
-                          type: "LOGOUT",
+                          type: "LOGOUT_ADMIN",
                         })
                       }
                     >

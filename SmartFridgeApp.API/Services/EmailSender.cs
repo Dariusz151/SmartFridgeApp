@@ -1,4 +1,4 @@
-﻿using SmartFridgeApp.Domain.DomainServices;
+﻿using SmartFridgeApp.Core.Contracts.DomainServices;
 using System;
 
 namespace SmartFridgeApp.API.Services

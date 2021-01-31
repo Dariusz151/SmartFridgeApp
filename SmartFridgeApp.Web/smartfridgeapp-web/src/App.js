@@ -16,28 +16,31 @@ import Recipes from "./pages/Recipes";
 import Header from "./components/Header";
 import BottomMenu from "./components/BottomMenu";
 import AdminLogin from "./components/AdminLogin";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 export const AuthContext = React.createContext();
 
 const initialState = {
-  isAuthenticated: false,
+  isAdmin: false,
   token: null,
+  loggedInUser: "",
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN":
+    case "LOGIN_ADMIN":
       sessionStorage.setItem("token", action.payload);
       return {
         ...state,
-        isAuthenticated: true,
+        isAdmin: true,
         token: action.payload,
       };
-    case "LOGOUT":
+    case "LOGOUT_ADMIN":
       sessionStorage.clear();
       return {
         ...state,
-        isAuthenticated: false,
+        isAdmin: false,
         token: null,
       };
     default:
@@ -52,7 +55,7 @@ function App() {
     const token = sessionStorage.getItem("token") || null;
     if (token) {
       dispatch({
-        type: "LOGIN",
+        type: "LOGIN_ADMIN",
         payload: sessionStorage.getItem("token"),
       });
     }
@@ -82,6 +85,12 @@ function App() {
             <Route path="/admin">
               <AdminLogin />
             </Route>
+            {/* <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
+            </Route> */}
             <Route path="/fridges">
               <FridgesDashboard />
             </Route>

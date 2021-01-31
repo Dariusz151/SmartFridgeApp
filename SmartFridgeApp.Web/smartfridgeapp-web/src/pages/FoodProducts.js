@@ -79,7 +79,7 @@ const FoodProducts = () => {
         // }}
       >
         <Button
-          disabled={!state.isAuthenticated}
+          disabled={!state.isAdmin}
           style={styles.topButton}
           variant="outlined"
           color="primary"

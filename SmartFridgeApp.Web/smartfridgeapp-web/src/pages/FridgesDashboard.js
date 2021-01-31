@@ -47,7 +47,7 @@ const FridgesDashboard = () => {
       fridgeId: fridgeId,
     };
 
-    if (state.isAuthenticated) {
+    if (state.isAdmin) {
       fetch(configData.SERVER_URL + "/api/fridges", {
         method: "delete",
         headers: {
@@ -96,7 +96,7 @@ const FridgesDashboard = () => {
           ),
           delete: (
             <Button
-              disabled={!state.isAuthenticated}
+              disabled={!state.isAdmin}
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}

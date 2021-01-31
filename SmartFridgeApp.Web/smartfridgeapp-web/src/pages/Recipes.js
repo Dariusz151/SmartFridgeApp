@@ -106,7 +106,7 @@ const Recipes = () => {
       <Container fixed>
         <div className="btn-group">
           <Button
-            disabled={!state.isAuthenticated}
+            disabled={!state.isAdmin}
             style={styles.topButton}
             variant="outlined"
             color="primary"

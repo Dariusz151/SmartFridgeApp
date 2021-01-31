@@ -57,7 +57,7 @@ const AdminLogin = () => {
       .then((response) => response.json())
       .then((data) => {
         dispatch({
-          type: "LOGIN",
+          type: "LOGIN_ADMIN",
           payload: data.value,
         });
       })

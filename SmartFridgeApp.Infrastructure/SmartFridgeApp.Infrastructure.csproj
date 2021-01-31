@@ -19,6 +19,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartFridgeApp.Domain\SmartFridgeApp.Domain.csproj" />
+    <ProjectReference Include="..\SmartFridgeApp.Core\SmartFridgeApp.Core.csproj" />
   </ItemGroup>
 </Project>

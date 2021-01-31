@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartFridgeApp.Domain.DomainServices;
-using SmartFridgeApp.Domain.Models.Recipes;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Contracts.DomainServices;
+using SmartFridgeApp.Core.Contracts.Repositories;
 
 namespace SmartFridgeApp.API.Services
 {

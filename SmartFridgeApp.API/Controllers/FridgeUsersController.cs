@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartFridgeApp.API.Users;
-using SmartFridgeApp.API.Users.AddFridgeUser;
-using SmartFridgeApp.API.Users.GetFridgeUsers;
-using SmartFridgeApp.API.Users.RemoveFridgeUser;
-using SmartFridgeApp.API.Users.UpdateFridgeUser;
+using SmartFridgeApp.Core.Application.Features;
+using SmartFridgeApp.Core.Domain.Entities;
 
 namespace SmartFridgeApp.API.Controllers
 {

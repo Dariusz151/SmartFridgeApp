@@ -7,7 +7,7 @@ using Autofac.Core;
 using Autofac.Features.Variance;
 using MediatR;
 using MediatR.Pipeline;
-using SmartFridgeApp.API.FridgeItems.GetFridgeItems;
+using SmartFridgeApp.Core.Application.Features;
 
 namespace SmartFridgeApp.API.Configuration.Modules
 {

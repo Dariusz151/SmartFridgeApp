@@ -5,15 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartFridgeApp.API.Recipes;
-using SmartFridgeApp.API.Recipes.AddRecipe;
-using SmartFridgeApp.API.Recipes.Categories.CreateCategory;
-using SmartFridgeApp.API.Recipes.Categories.GetCategories;
-using SmartFridgeApp.API.Recipes.DeleteRecipe;
-using SmartFridgeApp.API.Recipes.FindRecipes;
-using SmartFridgeApp.API.Recipes.GetRecipes;
-using SmartFridgeApp.API.Recipes.UpdateRecipe;
-using SmartFridgeApp.Domain.Models.Recipes;
+using SmartFridgeApp.Core.Application.Features;
+using SmartFridgeApp.Core.Domain.Entities;
 
 namespace SmartFridgeApp.API.Controllers
 {

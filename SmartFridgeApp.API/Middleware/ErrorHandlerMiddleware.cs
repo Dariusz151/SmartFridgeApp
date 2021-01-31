@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
+using SmartFridgeApp.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Net;

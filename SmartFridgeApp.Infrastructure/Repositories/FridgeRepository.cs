@@ -1,15 +1,23 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using SmartFridgeApp.Domain.Models.Fridges;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
 using System.Linq;
+using SmartFridgeApp.Core.Contracts.Repositories;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Exceptions;
+using System.Collections.Generic;
+using SmartFridgeApp.Core.Application.Features;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
 {
     public class FridgeRepository : IFridgeRepository
     {
         private readonly SmartFridgeAppContext _context;
+
+        public Task<IEnumerable<FridgeDto>> GetAllFridgesAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public FridgeRepository(SmartFridgeAppContext context)
         {
@@ -26,6 +34,7 @@ namespace SmartFridgeApp.Infrastructure.Fridges
             var fridge = await GetByIdAsync(fridgeId);
             _context.Fridges.Remove(fridge);
         }
+
 
         public async Task<Fridge> GetByIdAsync(Guid id)
         {

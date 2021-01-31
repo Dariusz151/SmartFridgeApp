@@ -7,7 +7,7 @@ using Autofac;
 using Autofac.Core;
 using MediatR;
 using Newtonsoft.Json;
-using SmartFridgeApp.Domain.SeedWork;
+using SmartFridgeApp.Core.SeedWork;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.Infrastructure

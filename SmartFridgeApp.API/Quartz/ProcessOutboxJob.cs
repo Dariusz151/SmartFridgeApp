@@ -6,6 +6,7 @@ using MediatR;
 using Newtonsoft.Json;
 using Quartz;
 using SmartFridgeApp.API.Notifications.Fridge;
+using SmartFridgeApp.Core.SeedWork;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.Quartz

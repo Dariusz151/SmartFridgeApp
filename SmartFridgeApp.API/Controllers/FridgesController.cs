@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartFridgeApp.API.Fridges.AddFridge;
 using System.Net;
 using System.Threading.Tasks;
-using SmartFridgeApp.API.Fridges.DeleteFridge;
-using SmartFridgeApp.API.Fridges.GetFridges;
-using SmartFridgeApp.API.Fridges.UpdateFridge;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using SmartFridgeApp.API.Fridges;
+using SmartFridgeApp.Core.Application.Features;
+using SmartFridgeApp.Core.Domain.Entities;
 
 namespace SmartFridgeApp.API.Controllers
 {

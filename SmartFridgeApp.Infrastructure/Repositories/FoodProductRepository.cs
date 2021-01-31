@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
+using SmartFridgeApp.Core.Contracts.Repositories;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.Infrastructure.FoodProducts
 {

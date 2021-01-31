@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using SmartFridgeApp.Domain.Models.Fridges.Events;
+using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Infrastructure.SeedWork;
 
 namespace SmartFridgeApp.API.Notifications.Users
