@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.FoodProducts.Events;
-using SmartFridgeApp.Domain.SeedWork;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
+using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

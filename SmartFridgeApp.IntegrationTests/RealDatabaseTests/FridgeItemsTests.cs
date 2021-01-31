@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using System.Net.Http.Json;
-using SmartFridgeApp.API.Fridges.AddFridge;
 using System.Text;
 using Newtonsoft.Json;
-using SmartFridgeApp.API.Users.AddFridgeUser;
-using SmartFridgeApp.API.FridgeItems.AddFridgeItem;
-using SmartFridgeApp.API.FridgeItems.RemoveFridgeItem;
 using System;
+using SmartFridgeApp.Core.Application.Features;
 
 namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 {
@@ -61,7 +58,7 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
             fridgeItemRequest.UserId = usersModelArray.Id;
             fridgeItem.FoodProductId = 1;
             fridgeItem.Note = "TestNote";
-            fridgeItem.Unit = Domain.Shared.Unit.Grams;
+            fridgeItem.Unit = Core.Domain.Shared.Unit.Grams;
             fridgeItem.Value = 10.0f;
 
             fridgeItemRequest.FridgeItem = fridgeItem;
@@ -72,7 +69,7 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 
             fridgeItem.FoodProductId = 3;
             fridgeItem.Note = "TestNote2";
-            fridgeItem.Unit = Domain.Shared.Unit.Grams;
+            fridgeItem.Unit = Core.Domain.Shared.Unit.Grams;
             fridgeItem.Value = 20.0f;
 
             fridgeItemRequest.FridgeItem = fridgeItem;
@@ -83,7 +80,7 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 
             fridgeItem.Note = "TestNote3";
             fridgeItem.FoodProductId = 6;
-            fridgeItem.Unit = Domain.Shared.Unit.Grams;
+            fridgeItem.Unit = Core.Domain.Shared.Unit.Grams;
             fridgeItem.Value = 30.0f;
 
             fridgeItemRequest.FridgeItem = fridgeItem;

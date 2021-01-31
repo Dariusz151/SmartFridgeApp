@@ -1,13 +1,11 @@
 ﻿using NUnit.Framework;
-using SmartFridgeApp.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SmartFridgeApp.Domain.Models.Fridges;
-using SmartFridgeApp.Domain.Models.Users;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
-using SmartFridgeApp.Domain.Models.Fridges.Events;
 using System.Linq;
+using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

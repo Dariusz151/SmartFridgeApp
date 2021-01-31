@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using SmartFridgeApp.Domain.Models.FoodProducts;
-using SmartFridgeApp.Domain.Models.Recipes;
-using SmartFridgeApp.Domain.SeedWork.Exceptions;
-using SmartFridgeApp.Domain.Shared;
+using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
 {

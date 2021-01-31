@@ -1,4 +1,6 @@
-﻿using SmartFridgeApp.Domain.Shared;
+﻿
+
+using SmartFridgeApp.Core.Domain.Shared;
 
 namespace SmartFridgeApp.IntegrationTests.Models
 {

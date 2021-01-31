@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartFridgeApp.API\SmartFridgeApp.API.csproj" />
+    <ProjectReference Include="..\SmartFridgeApp.Core\SmartFridgeApp.Core.csproj" />
   </ItemGroup>
 
 </Project>
