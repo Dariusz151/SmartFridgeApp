@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.SeedWork;
-using SmartFridgeApp.Core.Application.Features.Fridges.AddFridge;
 
 namespace SmartFridgeApp.Core.Application.Features
 {

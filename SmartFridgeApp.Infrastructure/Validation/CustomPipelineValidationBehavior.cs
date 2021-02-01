@@ -8,7 +8,8 @@ using MediatR;
 
 namespace SmartFridgeApp.Infrastructure.Validation
 {
-    public class CustomPipelineValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class CustomPipelineValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+        where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -28,10 +29,13 @@ namespace SmartFridgeApp.Infrastructure.Validation
             if (validationFailures.Any())
             {
                 var error = string.Join("\r\n", validationFailures);
-                throw new CustomValidationException(error);
+                throw new CustomValidationException(error, "ValidationException");
+            }
+            else
+            {
+                return next();
             }
 
-            return next();
         }
     }
 }
