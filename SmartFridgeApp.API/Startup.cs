@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using FluentValidation;
 using SmartFridgeApp.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
@@ -15,6 +16,9 @@ using SmartFridgeApp.API.Middleware;
 using SmartFridgeApp.API.Quartz;
 using SmartFridgeApp.API.Configuration.Modules;
 using SmartFridgeApp.API.Configuration;
+using FluentValidation.AspNetCore;
+using SmartFridgeApp.Core.Application.Features.Fridges.AddFridge;
+using SmartFridgeApp.Infrastructure.Validation;
 
 namespace SmartFridgeApp.API
 {
@@ -62,7 +66,10 @@ namespace SmartFridgeApp.API
                 );
             });
 
-          
+            AssemblyScanner.FindValidatorsInAssembly(typeof(AddFridgeCommandValidator).Assembly)
+              .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CustomPipelineValidationBehavior<,>));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,

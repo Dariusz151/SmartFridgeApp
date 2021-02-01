@@ -23,11 +23,6 @@ namespace SmartFridgeApp.Core.Application.Features
 
         public async Task<FridgeDto> Handle(AddFridgeCommand command, CancellationToken cancellationToken)
         {
-            var validator = new AddFridgeCommandValidator();
-            var result = validator.Validate(command);
-
-            Console.WriteLine(result);
-
             var fridge = new Fridge(command.Name, command.Address, command.Desc);
             await _fridgeRepository.AddAsync(fridge);
             await _unitOfWork.CommitAsync(cancellationToken);

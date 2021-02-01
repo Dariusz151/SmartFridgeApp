@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SmartFridgeApp.Core.Exceptions;
+using SmartFridgeApp.Infrastructure.Validation;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -32,6 +33,10 @@ namespace SmartFridgeApp.API.Middleware
 
                 switch (error)
                 {
+                    case CustomValidationException e:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        details = e.Details;
+                        break;
                     case AmountValueException e:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         details = e.Details;
