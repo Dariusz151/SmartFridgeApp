@@ -1,22 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29926.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{236166EB-0372-4433-A48F-34846FE675AB}"
-	ProjectSection(SolutionItems) = preProject
-		readme.md = readme.md
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Core", "src\SmartFridgeApp.Core\SmartFridgeApp.Core.csproj", "{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.UnitTests", "SmartFridgeApp.UnitTests\SmartFridgeApp.UnitTests.csproj", "{1D986608-3524-457D-9627-2B484A8D252A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.UnitTests", "test\SmartFridgeApp.UnitTests\SmartFridgeApp.UnitTests.csproj", "{96EA919F-10ED-452B-B705-E48B2E79789B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Infrastructure", "SmartFridgeApp.Infrastructure\SmartFridgeApp.Infrastructure.csproj", "{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Infrastructure", "src\SmartFridgeApp.Infrastructure\SmartFridgeApp.Infrastructure.csproj", "{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.API", "SmartFridgeApp.API\SmartFridgeApp.API.csproj", "{15D6B819-3B6C-4002-8BF3-8E655C436C08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.API", "src\SmartFridgeApp.API\SmartFridgeApp.API.csproj", "{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.IntegrationTests", "SmartFridgeApp.IntegrationTests\SmartFridgeApp.IntegrationTests.csproj", "{464904F6-F2E1-4DA6-B063-C83732B31172}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.IntegrationTests", "test\SmartFridgeApp.IntegrationTests\SmartFridgeApp.IntegrationTests.csproj", "{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartFridgeApp.Core", "SmartFridgeApp.Core\SmartFridgeApp.Core.csproj", "{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartFridgeApp.Shared", "src\SmartFridgeApp.Shared\SmartFridgeApp.Shared.csproj", "{B609A655-1909-4737-A2C4-168AC4169BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,36 +22,42 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1D986608-3524-457D-9627-2B484A8D252A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D986608-3524-457D-9627-2B484A8D252A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D986608-3524-457D-9627-2B484A8D252A}.Docker|Any CPU.ActiveCfg = Docker|Any CPU
-		{1D986608-3524-457D-9627-2B484A8D252A}.Docker|Any CPU.Build.0 = Docker|Any CPU
-		{1D986608-3524-457D-9627-2B484A8D252A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D986608-3524-457D-9627-2B484A8D252A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Docker|Any CPU.ActiveCfg = Docker|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Docker|Any CPU.Build.0 = Docker|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36E6B35A-6BB4-4CD9-B651-5027508B4E7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Docker|Any CPU.ActiveCfg = Docker|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Docker|Any CPU.Build.0 = Docker|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15D6B819-3B6C-4002-8BF3-8E655C436C08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Docker|Any CPU.ActiveCfg = Docker|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Docker|Any CPU.Build.0 = Docker|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{464904F6-F2E1-4DA6-B063-C83732B31172}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Docker|Any CPU.Build.0 = Debug|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F4719F6-A9E9-4FBD-A879-1E8F9916DB17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1064F72B-DB2B-421A-AB96-5CA8D4BF0179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Docker|Any CPU.ActiveCfg = Docker|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Docker|Any CPU.Build.0 = Docker|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96EA919F-10ED-452B-B705-E48B2E79789B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9BD2520-87E3-4BAB-A9E2-6C2770E4A326}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5A05C1-BB29-46D4-AAE2-84A0BFDAA8FB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF42F1C-66E3-45EC-AB1A-5CCB4BCBE6C5}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Docker|Any CPU.ActiveCfg = Debug|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Docker|Any CPU.Build.0 = Debug|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B609A655-1909-4737-A2C4-168AC4169BB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

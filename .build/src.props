@@ -1,0 +1,8 @@
+<Project>
+	<Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
+	
+	<PropertyGroup>
+		<Copyright>Dariusz Koziol</Copyright>
+		<LangVersion>$(LangVersion)</LangVersion>
+	</PropertyGroup>
+</Project>

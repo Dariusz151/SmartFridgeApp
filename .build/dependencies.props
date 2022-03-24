@@ -1,0 +1,31 @@
+<Project>
+	<PropertyGroup>
+		<NetVersion>net6.0</NetVersion>
+		<LangVersion>10</LangVersion>
+		<Configuration>Debug;Release;Docker</Configuration>
+		<AppVersion>0.9.0</AppVersion>
+		<Authors>Dariusz Koziol</Authors>
+		<Product>SmartFridgeApp</Product>
+		<PackageProjectUrl>smartfridgeapp.pl</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Dariusz151/SmartFridgeApp</RepositoryUrl>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<DapperVersion>2.0.35</DapperVersion>
+		<NewtonsoftVersion>12.0.3</NewtonsoftVersion>
+		<MediatRVersion>9.0.0</MediatRVersion>
+		<FluentValidationVersion>9.5.0</FluentValidationVersion>
+		<AutofacVersion>6.0.0</AutofacVersion>
+		<AutofacDIVersion>7.0.0</AutofacDIVersion>
+		<JsonNetVersion>1.0.23</JsonNetVersion>
+		<EntityFrameworkVersion>3.1.8</EntityFrameworkVersion>
+		<QuartzVersion>3.2.0</QuartzVersion>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<NUnitVersion>3.11.0</NUnitVersion>
+		<XUnitVersion>2.4.1</XUnitVersion>
+		<MicrosoftNetTestSdkVersion>15.9.0</MicrosoftNetTestSdkVersion>
+	</PropertyGroup>
+	
+</Project>
