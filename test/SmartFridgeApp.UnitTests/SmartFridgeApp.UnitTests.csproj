@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>$(NetVersion)</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<Configurations>$(Configuration)</Configurations>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="nunit" Version="$(NUnitVersion)" />
+		<PackageReference Include="NUnit3TestAdapter" Version="$(NUnitVersion)" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\SmartFridgeApp.Core\SmartFridgeApp.Core.csproj" />
+	</ItemGroup>
+  
+</Project>

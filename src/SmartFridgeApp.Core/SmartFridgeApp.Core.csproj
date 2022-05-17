@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>$(NetVersion)</TargetFramework>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="$(FluentValidationVersion)" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="$(FluentValidationVersion)" />
+    <PackageReference Include="MediatR" Version="$(MediatRVersion)" />
+    <PackageReference Include="Dapper" Version="$(DapperVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartFridgeApp.Shared\SmartFridgeApp.Shared.csproj" />
+  </ItemGroup>
+</Project>
