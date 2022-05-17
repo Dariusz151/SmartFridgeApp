@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "infrastructure up",
+      "windows": {
+        "command": "docker-compose.exe"
+      },
+      "args": [
+        "-f",
+        ".docker/docker-compose.infrastructure.yml",
+        "up",
+        "--remove-orphans",
+        "--force-recreate",
+        "--build",
+        "--timeout",
+        "0"
+      ]
+    }
+  ]
+}

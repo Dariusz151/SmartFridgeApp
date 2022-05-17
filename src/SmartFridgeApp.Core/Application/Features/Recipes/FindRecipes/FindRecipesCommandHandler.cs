@@ -4,9 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SmartFridgeApp.Core.Contracts.DomainServices;
-using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
-using SmartFridgeApp.Core.SeedWork;
 
 namespace SmartFridgeApp.Core.Application.Features
 {
