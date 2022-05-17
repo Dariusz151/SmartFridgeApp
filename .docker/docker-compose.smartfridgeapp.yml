@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  smartfridgeapp:
+    container_name: smartfridgeapp
+    image: smartfridgeapp
+    environment:
+      - SmartFridgeAppConnectionString=Server=smartfridgeapp.sql,1433;Initial Catalog=smartfridgeapp;Integrated Security=false;User ID=sa;Password=@Password;TrustServerCertificate=true;
+    ports:
+      - 8080:8080
+    build:
+      context: ../src/SmartFridgeApp.API
+      dockerfile: Dockerfile
+      args:
+        - SOURCE=./obj/docker/publish
+    depends_on:
+      - smartfridgeapp.sql
+    networks:
+      - smartfridgeapp-network
+
+networks:
+  smartfridgeapp-network:

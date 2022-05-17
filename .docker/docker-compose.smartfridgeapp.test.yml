@@ -1,0 +1,17 @@
+# version: "3.9"
+
+# services:
+#   smartfridegeapp.foodproducts.test:
+#     container_name: smartfridgeapp.test
+#     image: smartfridgeapp.test
+#     environment:
+#       ACCEPT_EULA: "Y"
+#       MSSQL_PID: "Developer"
+#       SA_PASSWORD: "@Password"
+#     ports:
+#       - 1433:1433
+#     networks:
+#       - smartfridgeapp-network
+
+# networks:
+#   smartfridgeapp-network:
