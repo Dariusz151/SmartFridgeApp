@@ -19,6 +19,7 @@ using SmartFridgeApp.API.Configuration;
 using FluentValidation.AspNetCore;
 using SmartFridgeApp.Core.Application.Features.Fridges.AddFridge;
 using SmartFridgeApp.Infrastructure.Validation;
+using Microsoft.OpenApi.Models;
 
 namespace SmartFridgeApp.API
 {
@@ -47,7 +48,32 @@ namespace SmartFridgeApp.API
             services.ConfigureJwt(Configuration);
             
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
             services.AddHostedService<QuartzHostedService>();
 
             services

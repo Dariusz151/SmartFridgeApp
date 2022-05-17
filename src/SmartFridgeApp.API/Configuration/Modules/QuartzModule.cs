@@ -8,6 +8,8 @@ namespace SmartFridgeApp.API.Configuration.Modules
 {
     public class QuartzModule : Autofac.Module
     {
+        private readonly string EveryHalfHour = "* 0/30 * * * ?";
+
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<JobFactory>()
@@ -24,7 +26,7 @@ namespace SmartFridgeApp.API.Configuration.Modules
             builder.RegisterType<ProcessOutboxJob>()
                 .SingleInstance();
 
-            builder.Register(c => new JobSchedule(jobType: typeof(ProcessOutboxJob), cronExpression: "0/30 * * * * ?"))
+            builder.Register(c => new JobSchedule(jobType: typeof(ProcessOutboxJob), cronExpression: EveryHalfHour))
                 .SingleInstance();
         }
     }
