@@ -1,17 +1,22 @@
-# version: "3.9"
+version: "3.9"
 
-# services:
-#   smartfridegeapp.foodproducts.test:
-#     container_name: smartfridgeapp.test
-#     image: smartfridgeapp.test
-#     environment:
-#       ACCEPT_EULA: "Y"
-#       MSSQL_PID: "Developer"
-#       SA_PASSWORD: "@Password"
-#     ports:
-#       - 1433:1433
-#     networks:
-#       - smartfridgeapp-network
+services:
+  smartfridegeapp.test:
+    container_name: smartfridgeapp.test
+    image: smartfridgeapp.test
+    environment:
+      - SmartFridgeAppConnectionString=Server=smartfridgeapp.sql,1433;Initial Catalog=smartfridgeapp;Integrated Security=false;User ID=sa;Password=@Password;TrustServerCertificate=true;
+    ports:
+      - 8082:8082
+    build:
+      context: ../test/SmartFridgeApp.IntegrationTests
+      dockerfile: Dockerfile.test
+      args:
+        - SOURCE=./obj/docker/publish
+    depends_on:
+      - smartfridgeapp.sql
+    networks:
+      - smartfridgeapp-network
 
-# networks:
-#   smartfridgeapp-network:
+networks:
+  smartfridgeapp-network:

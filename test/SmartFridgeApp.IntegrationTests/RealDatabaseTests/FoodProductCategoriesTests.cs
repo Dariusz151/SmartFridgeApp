@@ -8,6 +8,9 @@ using Xunit;
 using System.Linq;
 using System.Net.Http.Json;
 using System;
+using SmartFridgeApp.Core.Application.Features;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
 {
@@ -46,6 +49,24 @@ namespace SmartFridgeApp.IntegrationTests.RealDatabaseTests
             Assert.True(header.MaxAge.HasValue);
             Assert.Equal(TimeSpan.FromMinutes(5), header.MaxAge);
             Assert.True(header.Public);
+        }
+
+        [Fact]
+        public async Task GivenFoodProductsController_WhenCreateNewCategory_CategoriesTableShouldHave1Element()
+        {
+            CreateCategoryRequest request = new CreateCategoryRequest();
+            request.Name = "Category1";
+
+            string jsonObject = JsonConvert.SerializeObject(request);
+            StringContent content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
+            await _client.PostAsync("http://localhost/api/foodproducts/categories", content);
+
+            await Task.Delay(TimeSpan.FromSeconds(10));
+
+            var model = await _client.GetFromJsonAsync<List<ExpectedFoodProductCategoryModel>>("");
+            var modelArray = model.Select(x => x.Name).ToArray();
+
+            Assert.Contains("Category1", modelArray);
         }
     }
 }

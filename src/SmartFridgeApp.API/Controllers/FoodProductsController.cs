@@ -51,7 +51,7 @@ namespace SmartFridgeApp.API.Controllers
         /// <summary>
         /// Create new food product category.
         /// </summary>
-        [Authorize]
+        //[Authorize]
         [Route("/api/foodProducts/categories")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

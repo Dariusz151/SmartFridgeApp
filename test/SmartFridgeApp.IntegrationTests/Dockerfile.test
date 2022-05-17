@@ -1,0 +1,8 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0
+
+ARG SOURCE
+
+WORKDIR /app
+COPY obj/docker/publish/net6.0/linux-x64 .
+
+ENTRYPOINT ["bash", "-c", "sleep 15 && dotnet vstest SmartFridgeApp.IntegrationTests.dll"]
