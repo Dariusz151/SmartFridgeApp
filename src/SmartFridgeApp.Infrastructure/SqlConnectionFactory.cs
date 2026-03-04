@@ -1,27 +1,22 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Npgsql;
 using SmartFridgeApp.Infrastructure.SeedWork;
 using SmartFridgeApp.Shared.SeedWork;
 using System;
 using System.Data;
+using Microsoft.Extensions.Options;
+using SmartFridgeApp.Infrastructure.Database;
 
 namespace SmartFridgeApp.Infrastructure
 {
-    public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
+    public class SqlConnectionFactory(IOptions<DatabaseOptions> options) : ISqlConnectionFactory, IDisposable
     {
-        private readonly string _connectionString;
         private IDbConnection _connection;
-
-        public SqlConnectionFactory(string connectionString)
-        {
-            this._connectionString = connectionString;
-        }
 
         public IDbConnection GetOpenConnection()
         {
             if (this._connection == null || this._connection.State != ConnectionState.Open)
             {
-
-                this._connection = new SqlConnection(_connectionString);
+                this._connection = new NpgsqlConnection(options.Value.ConnectionString);
                 this._connection.Open();
             }
 

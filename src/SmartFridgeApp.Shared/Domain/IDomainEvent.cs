@@ -1,9 +1,8 @@
-﻿using MediatR;
-using System;
+﻿using System;
 
 namespace SmartFridgeApp.Shared.Domain
 {
-    public interface IDomainEvent : INotification
+    public interface IDomainEvent
     {
         DateTime OccurredOn { get; }
     }

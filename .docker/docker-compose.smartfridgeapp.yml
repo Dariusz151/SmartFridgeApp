@@ -1,11 +1,10 @@
-version: "3.9"
-
 services:
   smartfridgeapp:
     container_name: smartfridgeapp
     image: smartfridgeapp
     environment:
-      - SmartFridgeAppConnectionString=Server=smartfridgeapp.sql,1433;Initial Catalog=smartfridgeapp;Integrated Security=false;User ID=sa;Password=@Password;TrustServerCertificate=true;
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - SmartFridgeAppConnectionString=Host=smartfridgeapp.db;Port=5432;Database=smartfridgeapp;Username=postgres;Password=postgres
     ports:
       - 8080:8080
     build:
@@ -14,7 +13,20 @@ services:
       args:
         - SOURCE=./obj/docker/publish
     depends_on:
-      - smartfridgeapp.sql
+      - smartfridgeapp.db
+    networks:
+      - smartfridgeapp-network
+
+  smartfridgeapp.web:
+    container_name: smartfridgeapp.web
+    image: smartfridgeapp-web
+    build:
+      context: ../ui/SmartFridgeApp.Web/smartfridgeapp-web
+      dockerfile: Dockerfile
+    ports:
+      - 3000:80
+    depends_on:
+      - smartfridgeapp
     networks:
       - smartfridgeapp-network
 

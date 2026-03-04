@@ -30,6 +30,7 @@ packager-info.json
 
 
 appsettings.Development.json
+appsettings.Docker.json
 appsettings.Production.json
 SmartFridgeApp.API/Properties/PublishProfiles/
 SmartFridgeApp.API/web.config

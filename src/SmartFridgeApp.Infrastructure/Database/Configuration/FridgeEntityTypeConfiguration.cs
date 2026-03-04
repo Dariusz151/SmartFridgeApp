@@ -47,6 +47,9 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                     f.Property<DateTime>("ExpirationDate").HasColumnName("ExpirationDate");
                     f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
                     f.Property("IsConsumed").HasColumnName("IsConsumed");
+                    f.Property("IsWasted").HasColumnName("IsWasted");
+                    f.Property<DateTime?>("WastedAt").HasColumnName("WastedAt");
+                    f.Property("WasteReason").HasColumnName("WasteReason").HasMaxLength(500);
 
                     //f.Has
 

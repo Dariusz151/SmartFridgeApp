@@ -1,73 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Autofac;
-using Autofac.Core;
-using MediatR;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using SmartFridgeApp.Infrastructure.Notifications;
 using SmartFridgeApp.Infrastructure.SeedWork;
 using SmartFridgeApp.Shared.Domain;
 using SmartFridgeApp.Shared.Outbox;
+using SmartFridgeApp.Core.Application.Events;
 
 namespace SmartFridgeApp.Infrastructure
 {
-    public class DomainEventsDispatcher : IDomainEventsDispatcher
+    public class DomainEventsDispatcher(SmartFridgeAppContext context) : IDomainEventsDispatcher
     {
-        private readonly ILifetimeScope _lifetimeScope;
-        private readonly SmartFridgeAppContext _context;
-
-        public DomainEventsDispatcher(ILifetimeScope lifetimeScope, SmartFridgeAppContext context)
+        private static readonly JsonSerializerSettings JsonSettings = new()
         {
-            _lifetimeScope = lifetimeScope;
-            _context = context;
-        }
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            TypeNameHandling = TypeNameHandling.All
+        };
 
         public async Task DispatchEventsAsync()
         {
-            var domainEntities = this._context.ChangeTracker
+            var domainEntities = context.ChangeTracker
                 .Entries<Entity>()
-                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any()).ToList();
+                .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any())
+                .ToList();
 
             var domainEvents = domainEntities
                 .SelectMany(x => x.Entity.DomainEvents)
                 .ToList();
 
-            foreach (var ev in domainEvents)
-            {
-                Console.WriteLine(ev.OccurredOn);
-            }
-
-            var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
-            foreach (var domainEvent in domainEvents)
-            {
-                Type domainEventNotificationType = typeof(IDomainEventNotification<>);
-                var domainNotificationWithGenericType = domainEventNotificationType.MakeGenericType(domainEvent.GetType());
-                var domainNotification = _lifetimeScope.ResolveOptional(domainNotificationWithGenericType, new List<Parameter>
-                {
-                    new NamedParameter("domainEvent", domainEvent)
-                });
-
-                if (domainNotification != null)
-                {
-                    domainEventNotifications.Add(domainNotification as IDomainEventNotification<IDomainEvent>);
-                }
-            }
-
             domainEntities
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-            foreach (var domainEventNotification in domainEventNotifications)
+            foreach (var domainEvent in domainEvents)
             {
-                string type = domainEventNotification.GetType().FullName;
-                var data = JsonConvert.SerializeObject(domainEventNotification);
-                OutboxMessage outboxMessage = new OutboxMessage(
-                    domainEventNotification.DomainEvent.OccurredOn,
-                    type,
+                var notification = CreateNotification(domainEvent);
+                if (notification == null) continue;
+
+                var data = JsonConvert.SerializeObject(notification, JsonSettings);
+                var outboxMessage = new OutboxMessage(
+                    domainEvent.OccurredOn,
+                    notification.GetType().FullName!,
                     data);
-                await this._context.OutboxMessages.AddAsync(outboxMessage);
+
+                await context.OutboxMessages.AddAsync(outboxMessage);
             }
         }
+
+        private static object? CreateNotification(IDomainEvent domainEvent) => domainEvent switch
+        {
+            FridgeCreatedEvent e => new FridgeAddedNotification(e),
+            RecipeAddedEvent e => new RecipeAddedNotification(e),
+            UserAddedEvent e => new UserAddedNotification(e),
+            _ => null
+        };
     }
 }

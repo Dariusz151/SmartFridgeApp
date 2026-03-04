@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Domain.Shared;
@@ -102,9 +103,9 @@ namespace SmartFridgeApp.UnitTests.Domain
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Easy);
 
             Assert.Throws(typeof(InvalidInputException), () => recipe.UpdateRecipe("updated", "descUpdate", recipeCategory, -1, (int)LevelOfDifficulty.Hard));
-            Assert.AreEqual("recipe", recipe.Name);
-            Assert.AreEqual("desc", recipe.Description);
-            Assert.AreEqual(LevelOfDifficulty.Easy, recipe.LevelOfDifficulty);
+            ClassicAssert.AreEqual("recipe", recipe.Name);
+            ClassicAssert.AreEqual("desc", recipe.Description);
+            ClassicAssert.AreEqual(LevelOfDifficulty.Easy, recipe.LevelOfDifficulty);
         }
 
         [Test]
@@ -117,10 +118,10 @@ namespace SmartFridgeApp.UnitTests.Domain
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Easy);
 
             Assert.Throws(typeof(DomainException), () => recipe.UpdateRecipe("updated", "descUpdate", recipeCategory, 20, 5));
-            Assert.AreEqual("recipe", recipe.Name);
-            Assert.AreEqual("desc", recipe.Description);
-            Assert.AreEqual(30, recipe.RequiredTime);
-            Assert.AreEqual(LevelOfDifficulty.Easy, recipe.LevelOfDifficulty);
+            ClassicAssert.AreEqual("recipe", recipe.Name);
+            ClassicAssert.AreEqual("desc", recipe.Description);
+            ClassicAssert.AreEqual(30, recipe.RequiredTime);
+            ClassicAssert.AreEqual(LevelOfDifficulty.Easy, recipe.LevelOfDifficulty);
         }
 
         [Test]
@@ -133,10 +134,10 @@ namespace SmartFridgeApp.UnitTests.Domain
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Easy);
             recipe.UpdateRecipe("updated", String.Empty, recipeCategory, 20, (int)LevelOfDifficulty.Hard);
 
-            Assert.AreEqual("updated", recipe.Name);
-            Assert.AreEqual("desc", recipe.Description);
-            Assert.AreEqual(20, recipe.RequiredTime);
-            Assert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
+            ClassicAssert.AreEqual("updated", recipe.Name);
+            ClassicAssert.AreEqual("desc", recipe.Description);
+            ClassicAssert.AreEqual(20, recipe.RequiredTime);
+            ClassicAssert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
         }
 
         [Test]
@@ -149,9 +150,9 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             recipe = new Recipe("recipe", list);
 
-            Assert.AreEqual(1, recipe.FoodProducts.Count);
-            Assert.AreEqual(String.Empty, recipe.Description);
-            Assert.AreEqual("recipe", recipe.Name);
+            ClassicAssert.AreEqual(1, recipe.FoodProducts.Count);
+            ClassicAssert.AreEqual(String.Empty, recipe.Description);
+            ClassicAssert.AreEqual("recipe", recipe.Name);
         }
 
         [Test]
@@ -164,7 +165,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             recipe = new Recipe("recipe", "desc", list);
 
-            Assert.AreEqual(1, recipe.FoodProducts.Count);
+            ClassicAssert.AreEqual(1, recipe.FoodProducts.Count);
         }
 
         [Test]
@@ -177,9 +178,9 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             recipe = new Recipe("recipe", "desc", recipeCategory, list, 30, (int)LevelOfDifficulty.Hard);
 
-            Assert.AreEqual(1, recipe.FoodProducts.Count);
-            Assert.AreEqual(30, recipe.RequiredTime);
-            Assert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
+            ClassicAssert.AreEqual(1, recipe.FoodProducts.Count);
+            ClassicAssert.AreEqual(30, recipe.RequiredTime);
+            ClassicAssert.AreEqual(LevelOfDifficulty.Hard, recipe.LevelOfDifficulty);
         }
     }
 }

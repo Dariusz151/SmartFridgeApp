@@ -1,17 +1,21 @@
-version: "3.9"
-
 services:
-  smartfridgeapp.sql:
-    container_name: smartfridgeapp.sql
-    image: mcr.microsoft.com/mssql/server
+  smartfridgeapp.db:
+    container_name: smartfridgeapp.db
+    image: postgres:17-alpine
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Developer"
-      SA_PASSWORD: "@Password"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: smartfridgeapp
     ports:
-      - 1433:1433
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
     networks:
       - smartfridgeapp-network
+
+volumes:
+  pgdata:
 
 networks:
   smartfridgeapp-network:

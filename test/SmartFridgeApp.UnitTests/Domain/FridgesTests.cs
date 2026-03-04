@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
         [SetUp]
         public void BaseSetUp() {
-            string fridgeName = "lodówa";
+            string fridgeName = "lod�wa";
             string fridgeAddress = "Solika 5";
             string fridgeDesc = "BEKO";
             _fridge = new Fridge(fridgeName, fridgeAddress, fridgeDesc);
@@ -48,14 +49,14 @@ namespace SmartFridgeApp.UnitTests.Domain
             
             var countUsers = _fridge.GetFridgeUsers().Count;
 
-            Assert.AreEqual(count, countUsers);
+            ClassicAssert.AreEqual(count, countUsers);
         }
 
         [Test]
         public void Fridge_CreateNew_ShouldAddOneDomainEvent()
         {
-            Assert.AreEqual(1, _fridge.DomainEvents.Count);
-            Assert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
+            ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
+            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
         }
 
         [Test]
@@ -63,9 +64,9 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             _user = new User(userName, userEmail);
             _fridge.AddUser(_user);
-            Assert.AreEqual(2, _fridge.DomainEvents.Count);
-            Assert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
-            Assert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
+            ClassicAssert.AreEqual(2, _fridge.DomainEvents.Count);
+            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
+            ClassicAssert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
 
         }
 
@@ -73,7 +74,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void ExistingFridge_AddNullUser_ShouldThrowDomainException()
         {
             Assert.Throws(typeof(InvalidInputException), () => _fridge.AddUser(_user));
-            Assert.AreEqual(1, _fridge.DomainEvents.Count);
+            ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
         }
 
         [Test]
@@ -85,11 +86,11 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             var usersCounts = _fridge.GetFridgeUsers().Count;
 
-            Assert.AreEqual(3, _fridge.DomainEvents.Count);
-            Assert.AreEqual(0, usersCounts);
-            Assert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
-            Assert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
-            Assert.AreEqual(typeof(UserRemovedEvent), _fridge.DomainEvents.ElementAt(2).GetType());
+            ClassicAssert.AreEqual(3, _fridge.DomainEvents.Count);
+            ClassicAssert.AreEqual(0, usersCounts);
+            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
+            ClassicAssert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
+            ClassicAssert.AreEqual(typeof(UserRemovedEvent), _fridge.DomainEvents.ElementAt(2).GetType());
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             var usersCounts = _fridge.UsersCount;
 
-            Assert.AreEqual(1, _fridge.DomainEvents.Count);
+            ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
             Assert.Throws(typeof(InvalidInputException), () => _fridge.RemoveUser(_user.Id));
         }
 
@@ -126,14 +127,14 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void Fridge_UpdateWithValidName_ShouldBeFine()
         {
             _fridge.ChangeFridgeName("UpdatedFridge");
-           Assert.AreEqual("UpdatedFridge", _fridge.Name);
+           ClassicAssert.AreEqual("UpdatedFridge", _fridge.Name);
         }
 
         [Test]
         public void Fridge_UpdateWithValidDesc_ShouldBeFine()
         {
             _fridge.ChangeFridgeDesc("UpdatedFridgeDesc");
-            Assert.AreEqual("UpdatedFridgeDesc", _fridge.Desc);
+            ClassicAssert.AreEqual("UpdatedFridgeDesc", _fridge.Desc);
         }
     }
 }
