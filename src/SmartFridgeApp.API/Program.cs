@@ -33,7 +33,7 @@ public class Program
         builder.Services.AddHealthChecks();
 
         // CORS configuration
-        builder.Services.ConfigureCors();
+        builder.Services.ConfigureCors(builder.Configuration);
 
         // JWT authentication
         builder.Services.ConfigureJwt(builder.Configuration);
@@ -129,7 +129,6 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseHttpsRedirection();
 
         var defaultFilesOptions = new DefaultFilesOptions();
         defaultFilesOptions.DefaultFileNames.Clear();
@@ -140,6 +139,10 @@ public class Program
         app.MapControllers();
         app.MapRazorPages();
         app.MapHealthChecks("/healthcheck");
+
+        // Note: UseHttpsRedirection is intentionally omitted.
+        // Cloud Run terminates TLS at the load balancer; the container only receives HTTP.
+        // Enabling it here would cause redirect loops in production.
 
         app.Run();
     }

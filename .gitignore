@@ -31,7 +31,8 @@ packager-info.json
 
 appsettings.Development.json
 appsettings.Docker.json
-appsettings.Production.json
+# appsettings.Production.json is intentionally tracked — it contains only logging config.
+# All secrets are injected at runtime via GCP Secret Manager environment variables.
 SmartFridgeApp.API/Properties/PublishProfiles/
 SmartFridgeApp.API/web.config
 SmartFridgeApp.API/wwwroot/
