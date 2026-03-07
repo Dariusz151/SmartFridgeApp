@@ -17,7 +17,10 @@ namespace SmartFridgeApp.API.Configuration
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    // Required for external OAuth providers (Google) to store state during the handshake
+                    options.DefaultSignInScheme = "Cookies";
                 })
+                .AddCookie("Cookies")
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
@@ -28,7 +31,9 @@ namespace SmartFridgeApp.API.Configuration
                         ValidateAudience = true,
                         ValidAudience = configuration["Jwt:Audience"],
                         ValidIssuer = configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        RoleClaimType = "role",
+                        NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
                     };
                 });
         }

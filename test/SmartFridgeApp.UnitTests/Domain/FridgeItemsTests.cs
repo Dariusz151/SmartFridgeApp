@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         [SetUp]
         public void BaseSetUp()
         {
-            string fridgeName = "lodówa";
+            string fridgeName = "lod�wa";
             string fridgeAddress = "Solika 5";
             string fridgeDesc = "BEKO";
             _fridge = new Fridge(fridgeName, fridgeAddress, fridgeDesc);
@@ -37,7 +38,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
             var dateTime = DateTime.Now;
 
-            Assert.AreEqual(dateTime.ToShortDateString(), fridgeItem.EnteredAt.ToShortDateString());
+            ClassicAssert.AreEqual(dateTime.ToShortDateString(), fridgeItem.EnteredAt.ToShortDateString());
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             string noteUpdated = "updatedDesc";
 
             fridgeItem.UpdateFridgeItemNote(noteUpdated);
-            Assert.AreEqual(fridgeItem.Note, noteUpdated);
+            ClassicAssert.AreEqual(fridgeItem.Note, noteUpdated);
         }
 
         [Test]
@@ -74,7 +75,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            ClassicAssert.AreEqual(true, fridgeItem.IsConsumed);
         }
 
         [Test]
@@ -87,8 +88,8 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-            Assert.AreEqual(false, fridgeItem.IsConsumed);
-            Assert.AreEqual(10.0f, fridgeItem.AmountValue.Value);
+            ClassicAssert.AreEqual(false, fridgeItem.IsConsumed);
+            ClassicAssert.AreEqual(10.0f, fridgeItem.AmountValue.Value);
         }
 
         [Test]
@@ -101,7 +102,7 @@ namespace SmartFridgeApp.UnitTests.Domain
 
             fridgeItem.ConsumeFridgeItem(amountValToConsume);
 
-            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            ClassicAssert.AreEqual(true, fridgeItem.IsConsumed);
         }
 
         [Test]
@@ -114,7 +115,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
             fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
 
-            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            ClassicAssert.AreEqual(true, fridgeItem.IsConsumed);
             Assert.Throws(typeof(DomainException), () => fridgeItem.ConsumeFridgeItem(amountValToConsume));
         }
 
@@ -128,7 +129,7 @@ namespace SmartFridgeApp.UnitTests.Domain
             AmountValue amountValToConsume = new AmountValue(100.0f, Unit.Mililiter);
             fridgeItem.ConsumeFridgeItem(amountValToConsume); // first consume
 
-            Assert.AreEqual(true, fridgeItem.IsConsumed);
+            ClassicAssert.AreEqual(true, fridgeItem.IsConsumed);
             Assert.Throws(typeof(DomainException), () => fridgeItem.UpdateFridgeItemNote("updated"));
         }
     }

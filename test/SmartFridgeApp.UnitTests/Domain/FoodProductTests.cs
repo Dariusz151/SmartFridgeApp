@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Exceptions;
@@ -15,7 +16,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         [SetUp]
         public void BaseSetUp()
         {
-            category = new Category("Nabiał");
+            category = new Category("Nabia�");
         }
 
         [TestCase("mleko")]
@@ -26,16 +27,16 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void FoodProduct_CreateNew_ShouldHaveCorrectFormattedName(string productName)
         {
             FoodProduct foodProduct = new FoodProduct(productName, category);
-            Assert.AreEqual(foodProduct.Name, "Mleko");
+            ClassicAssert.AreEqual(foodProduct.Name, "Mleko");
         }
 
         [Test]
         public void FoodProduct_CreateNew_ShouldHaveDomainEvent()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
 
-            Assert.AreEqual(1, foodProduct.DomainEvents.Count);
-            Assert.AreEqual(typeof(FoodProductAddedEvent), foodProduct.DomainEvents.ElementAt(0).GetType());
+            ClassicAssert.AreEqual(1, foodProduct.DomainEvents.Count);
+            ClassicAssert.AreEqual(typeof(FoodProductAddedEvent), foodProduct.DomainEvents.ElementAt(0).GetType());
         }
 
         [Test]
@@ -47,16 +48,16 @@ namespace SmartFridgeApp.UnitTests.Domain
         [Test]
         public void FoodProduct_UpdateWithEmptyString_ShouldThrowException()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
 
             Assert.Throws(typeof(InvalidInputException), () => foodProduct.UpdateProductName(""));
-            Assert.AreEqual(foodProduct.Name, "Bułka");
+            ClassicAssert.AreEqual(foodProduct.Name, "Bu�ka");
         }
 
         [Test]
         public void FoodProduct_UpdateCategoryWitInvalidCategory_ShouldThrowException()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
             var newCategory = new Category(String.Empty);
 
             Assert.Throws(typeof(InvalidInputException), () => foodProduct.UpdateProductCategory(newCategory));
@@ -65,33 +66,33 @@ namespace SmartFridgeApp.UnitTests.Domain
         [Test]
         public void FoodProduct_UpdateName_ShouldChangeItsName()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
 
             foodProduct.UpdateProductName("Kurczak");
 
-            Assert.AreEqual(foodProduct.Name, "Kurczak");
+            ClassicAssert.AreEqual(foodProduct.Name, "Kurczak");
         }
 
         [Test]
         public void FoodProduct_UpdateCategory_ShouldChangeItsCategory()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
             var newCategory = new Category("Warzywa");
             foodProduct.UpdateProductCategory(newCategory);
 
-            Assert.AreEqual(foodProduct.Category, newCategory);
+            ClassicAssert.AreEqual(foodProduct.Category, newCategory);
         }
 
         [Test]
         public void FoodProduct_UpdateCategory_ShouldChangeItsCategoryAndName()
         {
-            foodProduct = new FoodProduct("Bułka", category);
+            foodProduct = new FoodProduct("Bu�ka", category);
 
             var newCategory = new Category("Warzywa");
             foodProduct.UpdateFoodProduct("Kurczak", newCategory);
 
-            Assert.AreEqual(foodProduct.Category, newCategory);
-            Assert.AreEqual(foodProduct.Name, "Kurczak");
+            ClassicAssert.AreEqual(foodProduct.Category, newCategory);
+            ClassicAssert.AreEqual(foodProduct.Name, "Kurczak");
         }
     }
 }

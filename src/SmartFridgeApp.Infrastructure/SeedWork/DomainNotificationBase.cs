@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MediatR;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace SmartFridgeApp.Infrastructure.SeedWork
 {
-    public class DomainNotificationBase<T> : IDomainEventNotification<T>, INotification
+    public class DomainNotificationBase<T> : IDomainEventNotification<T>
     {
         [JsonIgnore]
         public T DomainEvent { get; }

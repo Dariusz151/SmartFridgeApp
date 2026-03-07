@@ -29,7 +29,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
             Id = Guid.NewGuid();
             Name = name;
             Email = email;
-            _createdAt = DateTime.Now;
+            _createdAt = DateTime.UtcNow;
 
             this._fridgeItems = new List<FridgeItem>();
         }
@@ -40,7 +40,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
                 throw new InvalidInputException("User name can't be empty.", "InvalidUserName");
             Name = name;
         }
-        
+
         public void AddFridgeItem(FridgeItem item)
         {
             try
@@ -68,7 +68,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
             _fridgeItems.Remove(fridgeItem);
-            
+
             this.AddDomainEvent(new FridgeItemRemoved(fridgeItem));
         }
 
@@ -81,11 +81,17 @@ namespace SmartFridgeApp.Core.Domain.Entities
                 ConsumeFridgeItem(fridgeItem, product.AmountValue);
             }
         }
-        
+
         public void ConsumeFridgeItem(long fridgeItemId, AmountValue amountValue)
         {
             var fridgeItem = GetFridgeItem(fridgeItemId);
             ConsumeFridgeItem(fridgeItem, amountValue);
+        }
+
+        public void WasteFridgeItem(long fridgeItemId, string reason = null)
+        {
+            var fridgeItem = GetFridgeItem(fridgeItemId);
+            fridgeItem.WasteFridgeItem(reason);
         }
 
         private void ConsumeFridgeItem(FridgeItem item, AmountValue amountValue)

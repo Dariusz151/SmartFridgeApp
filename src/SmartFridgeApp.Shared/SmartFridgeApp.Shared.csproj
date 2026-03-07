@@ -4,8 +4,4 @@
 		<TargetFramework>$(NetVersion)</TargetFramework>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="MediatR" Version="$(MediatRVersion)" />
-	</ItemGroup>
-
 </Project>

@@ -6,7 +6,7 @@ public class DomainEventBase : IDomainEvent
 {
     public DomainEventBase()
     {
-        OccurredOn = DateTime.Now;
+        OccurredOn = DateTime.UtcNow;
     }
 
     public DateTime OccurredOn { get; }

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "tpinitCheckFieldsEqualToCompilerOptionModule": false
+  },
+  "include": ["src"]
+}

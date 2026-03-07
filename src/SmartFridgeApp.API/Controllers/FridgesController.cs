@@ -1,83 +1,71 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using SmartFridgeApp.Core.Application.Features;
-using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Application.Services;
 
 namespace SmartFridgeApp.API.Controllers
 {
     [Route("api/fridges")]
     [ApiController]
-    public class FridgesController : Controller
+    [Authorize]
+    public class FridgesController(IFridgeService fridgeService, IFridgeMemberService fridgeMemberService) : Controller
     {
-        private readonly IMediator _mediator;
+        private string GetUserEmail() =>
+            User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-        public FridgesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        /// <summary>
-        /// Get all available fridges.
-        /// </summary>
         [Route("")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FridgeDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllFridgesAsync()
-         {
-            return Ok(await _mediator.Send(new GetFridgesQuery()));
+        public async Task<IActionResult> GetAllFridgesAsync(CancellationToken ct)
+        {
+            var email = GetUserEmail();
+            return Ok(await fridgeMemberService.GetMyFridgesAsync(email, ct));
         }
 
-        /// <summary>
-        /// Register fridge.
-        /// </summary>
         [Route("")]
         [HttpPost]
         [ProducesResponseType(typeof(FridgeDto), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddFridgeAsync([FromBody]AddFridgeRequest request)
+        public async Task<IActionResult> AddFridgeAsync([FromBody] AddFridgeRequest request, CancellationToken ct)
         {
-            var fridge = await _mediator.Send(new AddFridgeCommand(request.Name, request.Address, request.Desc));
-            
+            var email = GetUserEmail();
+            var fridge = await fridgeService.AddFridgeAsync(request.Name, request.Address, request.Desc, ct);
+            await fridgeMemberService.AddCreatorAsync(fridge.Id, email, ct);
             return Created(string.Empty, fridge);
         }
 
-        /// <summary>
-        /// Register fridge.
-        /// </summary>
         [Route("")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateFridgeAsync([FromBody]UpdateFridgeRequest request)
+        public async Task<IActionResult> UpdateFridgeAsync([FromBody] UpdateFridgeRequest request, CancellationToken ct)
         {
-            await _mediator.Send(new UpdateFridgeCommand(request.FridgeId, request.Name, request.Desc));
-
+            await fridgeService.UpdateFridgeAsync(request.FridgeId, request.Name, request.Desc, ct);
             return Ok();
         }
 
-        /// <summary>
-        /// Delete fridge.
-        /// </summary>
         [Route("")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteFridgeAsync([FromBody]DeleteFridgeRequest request)
+        public async Task<IActionResult> DeleteFridgeAsync([FromBody] DeleteFridgeRequest request, CancellationToken ct)
         {
-            await _mediator.Send(new DeleteFridgeCommand(request.FridgeId));
-
+            await fridgeService.DeleteFridgeAsync(request.FridgeId, ct);
             return NoContent();
         }
     }
