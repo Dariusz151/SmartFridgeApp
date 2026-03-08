@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event.pull_request.merged == true
+    environment: prod
     permissions:
       contents: read
       id-token: write
