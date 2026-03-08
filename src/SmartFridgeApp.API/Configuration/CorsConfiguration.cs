@@ -1,32 +1,25 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SmartFridgeApp.API.Configuration
 {
     public static class CorsConfiguration
     {
-        public static void ConfigureCors(this IServiceCollection services)
+        public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
+            // FrontendUrl is supplied via appsettings or GCP Secret Manager env var at runtime
+            var frontendUrl = configuration["FrontendUrl"] ?? "http://localhost:3000";
+
             services.AddCors(options =>
             {
-                options.AddPolicy("Development_Policy",
-                builder =>
-                {
+                options.AddPolicy("Development_Policy", builder =>
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+                options.AddPolicy("Production_Policy", builder =>
                     builder
-                        .AllowAnyOrigin()
+                        .WithOrigins(frontendUrl)
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
-
-                });
-                options.AddPolicy("Production_Policy",
-               builder =>
-               {
-                   builder
-                       .WithOrigins("http://localhost:3000",
-                                    "https://localhost:3001")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod();
-
-               });
+                        .AllowAnyMethod());
             });
         }
     }
