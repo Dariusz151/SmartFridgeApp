@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetVersion)</TargetFramework>
-    <Configurations>$(Configuration)</Configurations>
+    <Configurations>$(Configurations)</Configurations>
 	<Version>$(AppVersion)</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
