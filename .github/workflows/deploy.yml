@@ -108,7 +108,7 @@ jobs:
           env_vars: |
             ASPNETCORE_ENVIRONMENT=Production
           secrets: |
-            SmartFridgeAppConnectionString=db-connection-string:latest
+            SmartFridgeAppConnectionString__ConnectionString=db-connection-string:latest
             Jwt__SecretKey=jwt-secret-key:latest
             Jwt__Issuer=jwt-issuer:latest
             Jwt__Audience=jwt-audience:latest

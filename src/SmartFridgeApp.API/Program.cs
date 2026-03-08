@@ -15,7 +15,9 @@ namespace SmartFridgeApp.API;
 
 public class Program
 {
-    private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString";
+    // Matches DatabaseOptions binding path in ServiceProviderExtensions.
+    // Env var override: SmartFridgeAppConnectionString__ConnectionString=<value>
+    private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString:ConnectionString";
 
     public static void Main(string[] args)
     {
