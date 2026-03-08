@@ -3,7 +3,7 @@ name: Deploy to GCP Cloud Run
 on:
   pull_request:
     branches: [master]
-    types: [closed]
+    types: [opened, synchronize, reopened, closed]
 
 env:
   SERVICE_NAME: smartfridgeapp-api
@@ -11,7 +11,7 @@ env:
 
 jobs:
   # ─────────────────────────────────────────────
-  # Job 1: Build & Test (always runs on PR close)
+  # Job 1: Build & Test (runs on every PR event)
   # ─────────────────────────────────────────────
   test:
     name: Build & Test
