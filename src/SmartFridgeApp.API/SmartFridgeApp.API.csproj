@@ -4,6 +4,7 @@
     <TargetFramework>$(NetVersion)</TargetFramework>
     <Configurations>$(Configurations)</Configurations>
 	<Version>$(AppVersion)</Version>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
