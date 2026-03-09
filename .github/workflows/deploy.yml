@@ -7,7 +7,9 @@ on:
 
 env:
   SERVICE_NAME: smartfridgeapp-api
+  SERVICE_NAME_WEB: smartfridgeapp-web
   IMAGE: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smartfridgeapp/api
+  IMAGE_WEB: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smartfridgeapp/web
 
 jobs:
   # ─────────────────────────────────────────────
@@ -124,5 +126,77 @@ jobs:
           URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
             --region=${{ secrets.GCP_REGION }} \
             --format='value(status.url)')
-          echo "::notice title=Deployed URL::$URL"
-          echo "Deployed to: $URL"
+          echo "::notice title=Deployed API URL::$URL"
+          echo "API deployed to: $URL"
+
+  # ─────────────────────────────────────────────
+  # Job 3: Deploy frontend to Cloud Run
+  # ─────────────────────────────────────────────
+  deploy-web:
+    name: Deploy Web to Cloud Run
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.event.pull_request.merged == true
+    environment: prod
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
+
+      # Get backend URL so Vite can bake it into the JS bundle at build time
+      - name: Get backend Cloud Run URL
+        id: backend_url
+        run: |
+          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --format='value(status.url)')
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f ui/SmartFridgeApp.Web/smartfridgeapp-web/Dockerfile \
+            --build-arg VITE_SERVER_URL=${{ steps.backend_url.outputs.url }} \
+            -t ${{ env.IMAGE_WEB }}:${{ github.sha }} \
+            -t ${{ env.IMAGE_WEB }}:latest \
+            ui/SmartFridgeApp.Web/smartfridgeapp-web
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.IMAGE_WEB }}:${{ github.sha }}
+          docker push ${{ env.IMAGE_WEB }}:latest
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME_WEB }}
+          region: ${{ secrets.GCP_REGION }}
+          image: ${{ env.IMAGE_WEB }}:${{ github.sha }}
+          flags: >-
+            --allow-unauthenticated
+            --port=80
+            --memory=256Mi
+            --min-instances=0
+            --max-instances=2
+            --service-account=${{ secrets.CLOUD_RUN_SA_EMAIL }}
+
+      - name: Print deployed URL
+        run: |
+          URL=$(gcloud run services describe ${{ env.SERVICE_NAME_WEB }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --format='value(status.url)')
+          echo "::notice title=Deployed Web URL::$URL"
+          echo "Web deployed to: $URL"
