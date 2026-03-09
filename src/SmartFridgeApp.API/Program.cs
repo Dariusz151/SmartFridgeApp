@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SmartFridgeApp.API.Configuration;
 using SmartFridgeApp.API.Middleware;
@@ -15,38 +16,25 @@ namespace SmartFridgeApp.API;
 
 public class Program
 {
-    // Matches DatabaseOptions binding path in ServiceProviderExtensions.
-    // Env var override: SmartFridgeAppConnectionString__ConnectionString=<value>
     private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString:ConnectionString";
 
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configuration
         builder.Configuration
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
             .AddEnvironmentVariables()
             .AddUserSecrets<Program>();
 
-        // Add services to the container
         builder.Services.AddRazorPages();
         builder.Services.AddHealthChecks();
 
-        // CORS configuration
         builder.Services.ConfigureCors(builder.Configuration);
-
-        // JWT authentication
         builder.Services.ConfigureJwt(builder.Configuration);
-
-        // Google authentication
         builder.Services.ConfigureGoogle(builder.Configuration);
-
-        // Infrastructure services
         builder.Services.AddInfrastructure(builder.Configuration);
-
-        // Swagger/OpenAPI
         builder.Services.AddSwaggerGen(option =>
         {
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -74,16 +62,13 @@ public class Program
             });
         });
 
-        // Background services
         builder.Services.AddHostedService<QuartzHostedService>();
 
-        // Database context
         builder.Services.AddDbContext<SmartFridgeAppContext>(options =>
         {
             options.UseNpgsql(builder.Configuration[SmartFridgeAppConnectionString]);
         });
 
-        // Controllers with JSON options
         builder.Services
             .AddControllers()
             .AddJsonOptions(options =>
@@ -92,21 +77,20 @@ public class Program
             });
 
         var app = builder.Build();
-
-        // Database initialization
-        // Note: Database schema is created by Docker init scripts (.docker/db-init)
-        // For development, the database will be auto-created on first run
-        // For production, use proper migrations: dotnet ef migrations add <name>
+        
         using (var scope = app.Services.CreateScope())
         {
-            var context = scope.ServiceProvider.GetRequiredService<SmartFridgeAppContext>();
-
-            // Only ensure database exists (doesn't create schema if it already exists)
-            // Comment this out if using migrations exclusively
-            context.Database.EnsureCreated();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            try
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SmartFridgeAppContext>();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Database initialization failed. The app will continue starting up.");
+            }
         }
 
-        // Configure the HTTP request pipeline
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
@@ -116,11 +100,9 @@ public class Program
         }
         else
         {
-            app.UseHsts();
             app.UseCors("Production_Policy");
         }
 
-        // Swagger configuration
         app.UseSwagger(c => c.SerializeAsV2 = true);
         app.UseSwaggerUI(c =>
         {
