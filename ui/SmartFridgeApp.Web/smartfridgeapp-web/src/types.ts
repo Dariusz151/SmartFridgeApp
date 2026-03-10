@@ -38,6 +38,7 @@ export interface FridgeItem {
   categoryName: string;
   value: number;
   unit: Unit;
+  expirationDate: string;
   userName?: string;
   userEmail?: string;
   userColor?: string;
@@ -60,6 +61,24 @@ export interface FridgeInvite {
   inviterEmail: string;
   inviterName: string;
   invitedAt: string;
+}
+
+export interface ExpiringItem {
+  fridgeItemId: number;
+  productName: string;
+  categoryName: string;
+  value: number;
+  unit: string;
+  expirationDate: string;
+  daysUntilExpiry: number;
+  userName: string;
+  userEmail: string;
+}
+
+export interface FridgeScore {
+  fridgeId: string;
+  wasteScore: number;
+  rank: string;
 }
 
 export interface RecipeFoodProduct {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.Infrastructure.Recipes

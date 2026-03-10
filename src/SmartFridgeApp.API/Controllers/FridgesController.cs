@@ -26,10 +26,21 @@ namespace SmartFridgeApp.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<FridgeDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllFridgesAsync(CancellationToken ct)
+        public async Task<IActionResult> GetMyFridgesAsync(CancellationToken ct)
         {
             var email = GetUserEmail();
             return Ok(await fridgeMemberService.GetMyFridgesAsync(email, ct));
+        }
+
+        [Route("all")]
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(IEnumerable<FridgeDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllFridgesAsync(CancellationToken ct)
+        {
+            return Ok(await fridgeService.GetFridgesAsync(ct));
         }
 
         [Route("")]
@@ -40,8 +51,7 @@ namespace SmartFridgeApp.API.Controllers
         public async Task<IActionResult> AddFridgeAsync([FromBody] AddFridgeRequest request, CancellationToken ct)
         {
             var email = GetUserEmail();
-            var fridge = await fridgeService.AddFridgeAsync(request.Name, request.Address, request.Desc, ct);
-            await fridgeMemberService.AddCreatorAsync(fridge.Id, email, ct);
+            var fridge = await fridgeService.AddFridgeWithCreatorAsync(request.Name, request.Address, request.Desc, email, ct);
             return Created(string.Empty, fridge);
         }
 

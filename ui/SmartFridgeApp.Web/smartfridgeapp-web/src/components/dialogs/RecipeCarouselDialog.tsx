@@ -27,11 +27,11 @@ interface Props {
   open: boolean;
   onClose: () => void;
   recipes: Recipe[];
-  userId: string;
+  memberId: number;
   fridgeId: string;
 }
 
-export default function RecipeCarouselDialog({ open, onClose, recipes, userId, fridgeId }: Props) {
+export default function RecipeCarouselDialog({ open, onClose, recipes, memberId, fridgeId }: Props) {
   const [index, setIndex] = useState(0);
   const { submit } = useSubmit();
 
@@ -48,7 +48,7 @@ export default function RecipeCarouselDialog({ open, onClose, recipes, userId, f
   const handleUseRecipe = async () => {
     const result = await submit(
       "/api/fridgeItems/ConsumeRecipe",
-      { userId, fridgeId, foodProducts: recipe.foodProducts },
+      { memberId, fridgeId, foodProducts: recipe.foodProducts },
       {
         auth: true,
         successMessage: "Recipe consumed!",

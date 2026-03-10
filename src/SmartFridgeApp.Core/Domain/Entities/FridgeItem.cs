@@ -1,5 +1,5 @@
 ﻿using System;
-using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Events;
 using SmartFridgeApp.Core.Domain.Shared;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Shared.Domain;
@@ -11,6 +11,7 @@ public class FridgeItem : Entity
     public long Id { get; private set; }
     public short FoodProductId { get; set; }
     public virtual FoodProduct FoodProduct { get; set; }
+    public int MemberId { get; private set; }
     public string Note { get; private set; }
     public AmountValue AmountValue { get; set; }
     public DateTime ExpirationDate { get; set; }
@@ -19,23 +20,34 @@ public class FridgeItem : Entity
     public bool IsWasted { get; private set; }
     public DateTime? WastedAt { get; private set; }
     public string WasteReason { get; private set; }
-    public bool IsOutdated() => DateTime.Compare(ExpirationDate, DateTime.UtcNow) > 1;
+    public bool IsOutdated() => ExpirationDate < DateTime.UtcNow;
 
     private FridgeItem()
     {
 
     }
 
-    public FridgeItem(short foodProductId, string note, AmountValue amountValue)
+    public FridgeItem(short foodProductId, string note, AmountValue amountValue, int memberId)
     {
-        //if (foodProduct is null)
-        //    throw new DomainException("Food product is null", "InvalidFoodProduct");
         AmountValue = amountValue;
         IsConsumed = false;
+        IsWasted = false;
         Note = note;
         FoodProductId = foodProductId;
+        MemberId = memberId;
 
         EnteredAt = DateTime.UtcNow;
+    }
+
+    public static FridgeItem Reconstitute(long id, AmountValue amountValue, bool isConsumed, bool isWasted)
+    {
+        var item = new FridgeItem();
+        item.Id = id;
+        item.AmountValue = amountValue;
+        item.IsConsumed = isConsumed;
+        item.IsWasted = isWasted;
+
+        return item;
     }
 
     public void SetExpirationDate(DateTime datetime)
@@ -85,6 +97,8 @@ public class FridgeItem : Entity
             IsConsumed = false;
             this.AmountValue.DecreaseAmount(amountValue);
         }
+
+        AddDomainEvent(new FridgeItemConsumedDomainEvent(Id, MemberId));
     }
 
     public void WasteFridgeItem(string reason = null)
@@ -97,5 +111,7 @@ public class FridgeItem : Entity
         IsWasted = true;
         WastedAt = DateTime.UtcNow;
         WasteReason = reason;
+
+        AddDomainEvent(new FridgeItemWastedDomainEvent(Id, MemberId, reason));
     }
 }

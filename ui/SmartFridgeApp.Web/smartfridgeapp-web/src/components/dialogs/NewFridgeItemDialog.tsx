@@ -17,28 +17,37 @@ import type { FoodProduct, Unit } from "@/types";
 
 interface Props {
   fridgeId: string;
-  selectedUserId: string;
+  memberId: number;
   open: boolean;
   onClose: () => void;
 }
 
-export default function NewFridgeItemDialog({ fridgeId, selectedUserId, open, onClose }: Props) {
+export default function NewFridgeItemDialog({ fridgeId, memberId, open, onClose }: Props) {
   const { data: foodProducts } = useFetch<FoodProduct[]>("/api/foodProducts");
   const { submit, loading } = useSubmit();
   const [foodProductId, setFoodProductId] = useState(0);
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState<Unit>("NotAssigned");
 
+  // Default expiration: 7 days from now
+  const defaultExpiration = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString().slice(0, 10);
+  };
+  const [expirationDate, setExpirationDate] = useState(defaultExpiration());
+
   const handleAdd = async () => {
     const result = await submit(
       `/api/fridgeItems/${fridgeId}/add`,
       {
-        userId: selectedUserId,
+        memberId,
         fridgeItem: {
           foodProductId,
           value: parseInt(value),
           note: "",
           unit,
+          expirationDate: new Date(expirationDate).toISOString(),
         },
       },
       {
@@ -51,6 +60,7 @@ export default function NewFridgeItemDialog({ fridgeId, selectedUserId, open, on
       setFoodProductId(0);
       setValue("");
       setUnit("NotAssigned");
+      setExpirationDate(defaultExpiration());
       onClose();
     }
   };
@@ -79,6 +89,14 @@ export default function NewFridgeItemDialog({ fridgeId, selectedUserId, open, on
             }}
           />
           <UnitSelector value={unit} onChange={setUnit} size="medium" />
+          <TextField
+            label="Expiration Date"
+            type="date"
+            fullWidth
+            value={expirationDate}
+            onChange={(e) => setExpirationDate(e.target.value)}
+            slotProps={{ inputLabel: { shrink: true } }}
+          />
         </Stack>
       </DialogContent>
       <DialogActions>

@@ -16,17 +16,17 @@ namespace SmartFridgeApp.API.Controllers
     [Authorize]
     public class FridgeItemsController(IFridgeItemService fridgeItemService) : Controller
     {
-        [Route("{fridgeId}/{userId}")]
+        [Route("{fridgeId}/{memberId:int}")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FridgeItemDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetFridgeItemsByUserAsync(
+        public async Task<IActionResult> GetFridgeItemsByMemberAsync(
             [FromRoute] Guid fridgeId,
-            [FromRoute] Guid userId,
+            [FromRoute] int memberId,
             CancellationToken ct)
         {
-            return Ok(await fridgeItemService.GetFridgeItemsByUserAsync(userId, fridgeId, ct));
+            return Ok(await fridgeItemService.GetFridgeItemsByMemberAsync(memberId, ct));
         }
 
         [Route("{fridgeId}")]
@@ -42,7 +42,7 @@ namespace SmartFridgeApp.API.Controllers
         }
 
         /// <summary>
-        /// Add FridgeItem to fridge (for user).
+        /// Add FridgeItem to fridge (for member).
         /// </summary>
         [Route("{fridgeId}/add")]
         [HttpPost]
@@ -54,7 +54,7 @@ namespace SmartFridgeApp.API.Controllers
             [FromBody] AddFridgeItemRequest request,
             CancellationToken ct)
         {
-            await fridgeItemService.AddFridgeItemAsync(fridgeId, request.FridgeItem, request.UserId, ct);
+            await fridgeItemService.AddFridgeItemAsync(fridgeId, request.FridgeItem, request.MemberId, ct);
             return Created(string.Empty, null);
         }
 
@@ -71,7 +71,7 @@ namespace SmartFridgeApp.API.Controllers
             [FromBody] RemoveFridgeItemRequest request,
             CancellationToken ct)
         {
-            await fridgeItemService.RemoveFridgeItemAsync(request.FridgeItemId, request.UserId, fridgeId, ct);
+            await fridgeItemService.RemoveFridgeItemAsync(request.FridgeItemId, request.MemberId, fridgeId, ct);
             return NoContent();
         }
 
@@ -88,7 +88,7 @@ namespace SmartFridgeApp.API.Controllers
             [FromBody] ConsumeFridgeItemRequest request,
             CancellationToken ct)
         {
-            await fridgeItemService.ConsumeFridgeItemAsync(request.FridgeItemId, request.UserId, fridgeId, request.AmountValue, ct);
+            await fridgeItemService.ConsumeFridgeItemAsync(request.FridgeItemId, request.MemberId, fridgeId, request.AmountValue, ct);
             return NoContent();
         }
 
@@ -104,7 +104,7 @@ namespace SmartFridgeApp.API.Controllers
             [FromBody] ConsumeRecipeRequest request,
             CancellationToken ct)
         {
-            await fridgeItemService.ConsumeRecipeAsync(request.UserId, request.FridgeId, request.FoodProducts, ct);
+            await fridgeItemService.ConsumeRecipeAsync(request.MemberId, request.FridgeId, request.FoodProducts, ct);
             return NoContent();
         }
 
@@ -118,7 +118,7 @@ namespace SmartFridgeApp.API.Controllers
             [FromBody] WasteFridgeItemRequest request,
             CancellationToken ct)
         {
-            await fridgeItemService.WasteFridgeItemAsync(request.FridgeItemId, request.UserId, fridgeId, request.Reason, ct);
+            await fridgeItemService.WasteFridgeItemAsync(request.FridgeItemId, request.MemberId, fridgeId, request.Reason, ct);
             return NoContent();
         }
 
@@ -134,6 +134,52 @@ namespace SmartFridgeApp.API.Controllers
             CancellationToken ct)
         {
             return Ok(await fridgeItemService.GetMonthlyWasteReportAsync(fridgeId, year, month, ct));
+        }
+
+        /// <summary>
+        /// Get items expiring soon for a fridge.
+        /// </summary>
+        [Route("{fridgeId}/expiring")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ExpiringItemDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetExpiringItemsAsync(
+            [FromRoute] Guid fridgeId,
+            [FromQuery] int days = 3,
+            CancellationToken ct = default)
+        {
+            return Ok(await fridgeItemService.GetExpiringItemsAsync(fridgeId, days, ct));
+        }
+
+        /// <summary>
+        /// Get the fridge's overall waste score (gamification).
+        /// </summary>
+        [Route("{fridgeId}/score")]
+        [HttpGet]
+        [ProducesResponseType(typeof(FridgeScoreDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetFridgeScoreAsync(
+            [FromRoute] Guid fridgeId,
+            CancellationToken ct)
+        {
+            return Ok(await fridgeItemService.GetFridgeScoreAsync(fridgeId, ct));
+        }
+
+        /// <summary>
+        /// Get the fridge's shopping status (inventory tracker).
+        /// </summary>
+        [Route("{fridgeId}/shopping-status")]
+        [HttpGet]
+        [ProducesResponseType(typeof(ShoppingStatusDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetShoppingStatusAsync(
+            [FromRoute] Guid fridgeId,
+            CancellationToken ct)
+        {
+            return Ok(await fridgeItemService.GetShoppingStatusAsync(fridgeId, ct));
         }
     }
 }

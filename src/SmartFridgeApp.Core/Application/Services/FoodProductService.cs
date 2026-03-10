@@ -6,6 +6,7 @@ using Dapper;
 using SmartFridgeApp.Core.Application.Features;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Shared.SeedWork;
 
 namespace SmartFridgeApp.Core.Application.Services;

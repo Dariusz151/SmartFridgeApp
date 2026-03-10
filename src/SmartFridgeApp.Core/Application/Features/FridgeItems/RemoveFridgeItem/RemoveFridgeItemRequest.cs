@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace SmartFridgeApp.Core.Application.Features
+﻿namespace SmartFridgeApp.Core.Application.Features
 {
     public class RemoveFridgeItemRequest
     {
         public long FridgeItemId { get; set; }
-        public Guid UserId { get; set; }
+        public int MemberId { get; set; }
     }
 }

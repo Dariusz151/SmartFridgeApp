@@ -4,6 +4,7 @@ using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
@@ -28,15 +29,6 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             FoodProduct foodProduct = new FoodProduct(productName, category);
             ClassicAssert.AreEqual(foodProduct.Name, "Mleko");
-        }
-
-        [Test]
-        public void FoodProduct_CreateNew_ShouldHaveDomainEvent()
-        {
-            foodProduct = new FoodProduct("Bu�ka", category);
-
-            ClassicAssert.AreEqual(1, foodProduct.DomainEvents.Count);
-            ClassicAssert.AreEqual(typeof(FoodProductAddedEvent), foodProduct.DomainEvents.ElementAt(0).GetType());
         }
 
         [Test]

@@ -4,7 +4,7 @@ services:
     image: smartfridgeapp
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-      - SmartFridgeAppConnectionString=Host=smartfridgeapp.db;Port=5432;Database=smartfridgeapp;Username=postgres;Password=postgres
+      - SmartFridgeAppConnectionString__ConnectionString=Host=smartfridgeapp.db;Port=5432;Database=smartfridgeapp;Username=postgres;Password=postgres
     ports:
       - 8080:8080
     build:
@@ -23,6 +23,8 @@ services:
     build:
       context: ../ui/SmartFridgeApp.Web/smartfridgeapp-web
       dockerfile: Dockerfile
+      args:
+        - VITE_SERVER_URL=http://localhost:8080
     ports:
       - 3000:80
     depends_on:

@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.Core.Domain.Shared
@@ -10,14 +10,14 @@ namespace SmartFridgeApp.Core.Domain.Shared
 
         public float Value { get; set; }
         public Unit Unit { get; set; }
-        
+
         private AmountValue()
         {
 
         }
-        
+
         public AmountValue(float value)
-            :this(value, Unit.NotAssigned)
+            : this(value, Unit.NotAssigned)
         {
 
         }
@@ -27,7 +27,7 @@ namespace SmartFridgeApp.Core.Domain.Shared
         {
             if (value <= 0)
             {
-                throw new AmountValueException("Error while creating AmountValue","Value must be grater than 0");
+                throw new AmountValueException("Error while creating AmountValue", "Value must be grater than 0");
             }
             this.Value = value;
             this.Unit = unit;

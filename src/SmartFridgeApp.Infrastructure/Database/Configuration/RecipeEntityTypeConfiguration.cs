@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Extensions;
 using SmartFridgeApp.Infrastructure.Database;
 
@@ -35,11 +36,13 @@ namespace SmartFridgeApp.Infrastructure.Recipes
                 .IsRequired()
                 .HasColumnName("LevelOfDifficulty");
 
-            var converter = new ValueConverter<List<FoodProductDetails>, string>(v=>v.XmlSerializeToString().ToString(), v=>v.XmlDeserializeFromString<List<FoodProductDetails>>());
-            
+            var converter = new ValueConverter<List<FoodProductDetails>, string>(v => v.XmlSerializeToString().ToString(), v => v.XmlDeserializeFromString<List<FoodProductDetails>>());
+
             builder.Property("FoodProducts").HasColumnName("FoodProducts").HasConversion(converter);
 
-            builder.HasOne<RecipeCategory>(c => c.RecipeCategory);
+            builder.HasOne(r => r.RecipeCategory)
+                .WithMany()
+                .HasForeignKey("RecipeCategoryId");
         }
     }
 }

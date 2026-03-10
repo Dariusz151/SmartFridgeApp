@@ -14,22 +14,43 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useAuth } from "@/context/AuthContext";
 import { useFetch } from "@/hooks/useApi";
 import RecipeDetailsDialog from "@/components/dialogs/RecipeDetailsDialog";
 import type { Recipe } from "@/types";
 
-const difficultyLabels: Record<string, { label: string; color: "success" | "warning" | "error" }> = {
-  "1": { label: "Easy", color: "success" },
-  "2": { label: "Medium", color: "warning" },
-  "3": { label: "Hard", color: "error" },
+const difficultyColors: Record<string, "success" | "warning" | "error"> = {
+  Easy: "success",
+  Medium: "warning",
+  Hard: "error",
 };
 
-const categoryLabels: Record<string, { label: string; emoji: string; color: "info" | "warning" | "secondary" }> = {
-  "1": { label: "Breakfast", emoji: "🍳", color: "info" },
-  "2": { label: "Dinner", emoji: "🍽️", color: "warning" },
-  "3": { label: "Supper", emoji: "🥘", color: "secondary" },
+const categoryLabels: Record<string, { emoji: string; color: "info" | "warning" | "secondary" | "success" | "error" | "primary" | "default" }> = {
+  "Śniadanie":  { emoji: "🍳", color: "info" },
+  "Obiad":      { emoji: "🍖", color: "warning" },
+  "Kolacja":    { emoji: "🥘", color: "secondary" },
+  "Drink":      { emoji: "🍹", color: "success" },
+  "Przekąska":  { emoji: "🥨", color: "default" },
+  "Deser":      { emoji: "🍰", color: "error" },
+  "Zupa":       { emoji: "🍲", color: "primary" },
+  // English fallbacks
+  Breakfast: { emoji: "🍳", color: "info" },
+  Dinner:    { emoji: "🍖", color: "warning" },
+  Supper:    { emoji: "🥘", color: "secondary" },
+  Snack:     { emoji: "🥨", color: "default" },
+  Dessert:   { emoji: "🍰", color: "error" },
+  Soup:      { emoji: "🍲", color: "primary" },
 };
+
+/** Return 1-4 clock icons based on recipe time (minutes) */
+function timeClocks(minutes: number | string): number {
+  const m = Number(minutes);
+  if (m <= 15) return 1;
+  if (m <= 30) return 2;
+  if (m <= 60) return 3;
+  return 4;
+}
 
 export default function Recipes() {
   const { state } = useAuth();
@@ -53,29 +74,45 @@ export default function Recipes() {
       {
         field: "recipeCategory",
         headerName: "Category",
-        width: 140,
+        width: 160,
         renderCell: (params) => {
-          const c = categoryLabels[String(params.value)];
+          const name = String(params.value ?? "");
+          const c = categoryLabels[name];
           return c ? (
-            <Chip label={`${c.emoji} ${c.label}`} size="small" color={c.color} sx={{ borderRadius: 2 }} />
-          ) : params.value;
+            <Chip label={`${c.emoji} ${name}`} size="small" color={c.color} sx={{ borderRadius: 2 }} />
+          ) : (
+            <Chip label={name || "—"} size="small" variant="outlined" sx={{ borderRadius: 2 }} />
+          );
         },
       },
       {
         field: "requiredTime",
         headerName: "Time",
-        width: 110,
-        renderCell: (params) => (
-          <Chip label={`⏱️ ${params.value} min`} size="small" variant="outlined" />
-        ),
+        width: 140,
+        renderCell: (params) => {
+          const count = timeClocks(params.value);
+          return (
+            <Stack direction="row" spacing={0.25} alignItems="center" sx={{ height: "100%" }}>
+              {Array.from({ length: count }).map((_, i) => (
+                <AccessTimeIcon key={i} sx={{ fontSize: 18, color: "text.secondary" }} />
+              ))}
+              <Typography variant="body2" sx={{ ml: 0.5 }}>
+                {params.value} min
+              </Typography>
+            </Stack>
+          );
+        },
       },
       {
         field: "levelOfDifficulty",
         headerName: "Difficulty",
         width: 120,
         renderCell: (params) => {
-          const d = difficultyLabels[String(params.value)];
-          return d ? <Chip label={d.label} size="small" color={d.color} /> : params.value;
+          const label = String(params.value ?? "");
+          const chipColor = difficultyColors[label];
+          return chipColor
+            ? <Chip label={label} size="small" color={chipColor} />
+            : <Chip label={label || "—"} size="small" variant="outlined" />;
         },
       },
       {
@@ -84,6 +121,7 @@ export default function Recipes() {
         width: 130,
         sortable: false,
         filterable: false,
+        disableColumnMenu: true,
         renderCell: (params) => (
           <Button
             size="small"

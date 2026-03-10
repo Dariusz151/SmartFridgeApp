@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartFridgeApp.Core.Domain.Entities;
-using SmartFridgeApp.Core.Domain.Shared;
 using SmartFridgeApp.Infrastructure.Database;
 
 namespace SmartFridgeApp.Infrastructure.Fridges
@@ -20,59 +18,40 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 .HasMaxLength(100);
             builder.Property("Desc").HasColumnName("Desc")
                 .HasMaxLength(250);
+            builder.Property(b => b.WasteScore)
+                .HasColumnName("WasteScore")
+                .IsRequired()
+                .HasDefaultValue(1000);
 
-            builder.OwnsMany<User>("_users", x =>
-            {
-                x.ToTable("Users", SchemaNames.Application);
-                x.HasKey(u => u.Id);
-                x.WithOwner().HasForeignKey("FridgeId");
-                x.Property<Guid>("Id").ValueGeneratedNever();
-                x.Property("Name").HasColumnName("Name")
-                    .IsRequired()
-                    .HasMaxLength(100);
-                x.Property("Email").HasColumnName("Email")
-                    .IsRequired()
-                    .HasMaxLength(250);
-                x.Property("_createdAt").HasColumnName("CreatedAt");
-                
-                x.OwnsMany<FridgeItem>("_fridgeItems", f =>
-                {
-                    f.ToTable("FridgeItems", SchemaNames.Application);
-                    f.HasKey(k => k.Id);
-                    f.WithOwner()
-                        .HasForeignKey("UserId");
+            builder.Property(b => b.ActiveItemCount)
+                .HasColumnName("ActiveItemCount")
+                .IsRequired()
+                .HasDefaultValue(0);
 
-                    f.Property("Note").HasColumnName("Note")
-                        .HasMaxLength(1000);
-                    f.Property<DateTime>("ExpirationDate").HasColumnName("ExpirationDate");
-                    f.Property<DateTime>("EnteredAt").HasColumnName("EnteredAt");
-                    f.Property("IsConsumed").HasColumnName("IsConsumed");
-                    f.Property("IsWasted").HasColumnName("IsWasted");
-                    f.Property<DateTime?>("WastedAt").HasColumnName("WastedAt");
-                    f.Property("WasteReason").HasColumnName("WasteReason").HasMaxLength(500);
+            builder.Property(b => b.AverageItemCount)
+                .HasColumnName("AverageItemCount")
+                .IsRequired()
+                .HasDefaultValue(0.0);
 
-                    //f.Has
+            builder.Property(b => b.InventorySampleCount)
+                .HasColumnName("InventorySampleCount")
+                .IsRequired()
+                .HasDefaultValue(0);
 
-                    //f.HasOne(x => x.FoodProduct).WithMany();
+            builder.Property(b => b.CreatedAt)
+                .HasColumnName("CreatedAt")
+                .IsRequired()
+                .HasDefaultValueSql("NOW()");
 
-                    //f.HasOne<FoodProduct>("FoodProduct", fp => {
-                    //    fp.ToTable("FoodProducts", SchemaNames.Application);
-                    //    fp.HasKey(b => b.FoodProductId);
-                    //    fp.Property("Name").HasColumnName("Name")
-                    //        .IsRequired()
-                    //        .HasMaxLength(40);
+            builder.Ignore(b => b.DomainEvents);
 
-                    //    fp.HasOne<Category>(c => c.Category);
-                    //});
-                    
-                    f.OwnsOne<AmountValue>("AmountValue", av =>
-                    {
-                        av.Property(p => p.Value).HasColumnName("Value");
-                        av.Property(p => p.Unit).HasColumnName("Unit").HasConversion(con => con.ToString(),
-                            c => (Unit) Enum.Parse(typeof(Unit), c));
-                    });
-                });
-            });
+            builder.HasMany(b => b.Members)
+                .WithOne()
+                .HasForeignKey(fm => fm.FridgeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Metadata.FindNavigation(nameof(Fridge.Members))!
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

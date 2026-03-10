@@ -1,4 +1,5 @@
 ﻿
+using System.Text.Json.Serialization;
 using SmartFridgeApp.Core.Domain.Entities;
 
 namespace SmartFridgeApp.Core.Domain.Shared
@@ -10,9 +11,10 @@ namespace SmartFridgeApp.Core.Domain.Shared
         public AmountValue AmountValue { get; set; }
         public bool IsOptional { get; set; }
 
-        private FoodProductDetails()
+        [JsonConstructor]
+        public FoodProductDetails()
         {
-            
+
         }
 
         public void SetOptional()

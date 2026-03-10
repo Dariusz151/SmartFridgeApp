@@ -1,8 +1,5 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NUnit.Framework.Legacy;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.Entities;
@@ -14,101 +11,24 @@ namespace SmartFridgeApp.UnitTests.Domain
     public class FridgesTests
     {
         private Fridge _fridge;
-        private User _user;
-        private const string userName = "Dario";
-        private const string userEmail = "dario@gmail.com";
 
         [SetUp]
-        public void BaseSetUp() {
-            string fridgeName = "lod�wa";
-            string fridgeAddress = "Solika 5";
-            string fridgeDesc = "BEKO";
-            _fridge = new Fridge(fridgeName, fridgeAddress, fridgeDesc);
-        }
-
-        [Test]
-        public void Fridge_AddSameUser_ShouldThrowDomainException()
+        public void BaseSetUp()
         {
-            _user = new User(userName, userEmail);
-            _fridge.AddUser(_user);
-
-            Assert.Throws(typeof(DomainException), () => _fridge.AddUser(_user));
-        }
-
-        [TestCase(1)]
-        [TestCase(5)]
-        [TestCase(55)]
-        [Test]
-        public void Fridge_AddUsers_ShouldHaveAmountOfUsersInList(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                _user = new User(userName, userEmail);
-                _fridge.AddUser(_user);
-            }
-            
-            var countUsers = _fridge.GetFridgeUsers().Count;
-
-            ClassicAssert.AreEqual(count, countUsers);
+            _fridge = new Fridge("lodowka", "Solika 5", "BEKO");
         }
 
         [Test]
         public void Fridge_CreateNew_ShouldAddOneDomainEvent()
         {
             ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
-            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
-        }
-
-        [Test]
-        public void ExistingFridge_AddUser_ShouldHaveTwoDomainEvents()
-        {
-            _user = new User(userName, userEmail);
-            _fridge.AddUser(_user);
-            ClassicAssert.AreEqual(2, _fridge.DomainEvents.Count);
-            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
-            ClassicAssert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
-
-        }
-
-        [Test]
-        public void ExistingFridge_AddNullUser_ShouldThrowDomainException()
-        {
-            Assert.Throws(typeof(InvalidInputException), () => _fridge.AddUser(_user));
-            ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
-        }
-
-        [Test]
-        public void Fridge_RemoveUser_ShouldDeleteFromListAndHaveProperDomainEvents()
-        {
-            _user = new User(userName, userEmail);
-            _fridge.AddUser(_user);
-            _fridge.RemoveUser(_user.Id);
-
-            var usersCounts = _fridge.GetFridgeUsers().Count;
-
-            ClassicAssert.AreEqual(3, _fridge.DomainEvents.Count);
-            ClassicAssert.AreEqual(0, usersCounts);
-            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.ElementAt(0).GetType());
-            ClassicAssert.AreEqual(typeof(UserAddedEvent), _fridge.DomainEvents.ElementAt(1).GetType());
-            ClassicAssert.AreEqual(typeof(UserRemovedEvent), _fridge.DomainEvents.ElementAt(2).GetType());
-        }
-
-        [Test]
-        public void Fridge_RemoveUserThatNotExist_ShouldThrowException()
-        {
-            _user = new User(userName, userEmail);
-
-            var usersCounts = _fridge.UsersCount;
-
-            ClassicAssert.AreEqual(1, _fridge.DomainEvents.Count);
-            Assert.Throws(typeof(InvalidInputException), () => _fridge.RemoveUser(_user.Id));
+            ClassicAssert.AreEqual(typeof(FridgeCreatedEvent), _fridge.DomainEvents.First().GetType());
         }
 
         [Test]
         public void Fridge_CreateWithEmptyName_ShouldThrowException()
         {
-            Fridge fridge2;
-            Assert.Throws(typeof(InvalidInputException), () => fridge2 = new Fridge("", "adress", "desc"));
+            Assert.Throws(typeof(InvalidInputException), () => _ = new Fridge("", "address", "desc"));
         }
 
         [Test]
@@ -127,7 +47,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         public void Fridge_UpdateWithValidName_ShouldBeFine()
         {
             _fridge.ChangeFridgeName("UpdatedFridge");
-           ClassicAssert.AreEqual("UpdatedFridge", _fridge.Name);
+            ClassicAssert.AreEqual("UpdatedFridge", _fridge.Name);
         }
 
         [Test]

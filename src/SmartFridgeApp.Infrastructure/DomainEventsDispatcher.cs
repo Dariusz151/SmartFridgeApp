@@ -8,6 +8,7 @@ using SmartFridgeApp.Infrastructure.SeedWork;
 using SmartFridgeApp.Shared.Domain;
 using SmartFridgeApp.Shared.Outbox;
 using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Events;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -52,7 +53,7 @@ namespace SmartFridgeApp.Infrastructure
         {
             FridgeCreatedEvent e => new FridgeAddedNotification(e),
             RecipeAddedEvent e => new RecipeAddedNotification(e),
-            UserAddedEvent e => new UserAddedNotification(e),
+            ShoppingNeededDomainEvent e => new ShoppingNeededNotification(e),
             _ => null
         };
     }
