@@ -40,7 +40,7 @@ import { useParams } from "react-router-dom";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import NewFridgeItemDialog from "@/components/dialogs/NewFridgeItemDialog";
 import RecipeCarouselDialog from "@/components/dialogs/RecipeCarouselDialog";
-import type { FridgeItem, FridgeMember, Recipe, ExpiringItem, FridgeScore } from "@/types";
+import type { FridgeItem, FridgeMember, Recipe, ExpiringItem, FridgeScore, ShoppingStatus } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
@@ -135,6 +135,9 @@ export default function FridgeItemsDashboard() {
   const { data: fridgeScore, refetch: refetchScore } =
     useFetch<FridgeScore>(`/api/fridgeItems/${fridgeId}/score`, true);
 
+  const { data: shoppingStatus, refetch: refetchShopping } =
+    useFetch<ShoppingStatus>(`/api/fridgeItems/${fridgeId}/shopping-status`, true);
+
   const isReadOnly = showAll || !selectedUserId;
 
   const isCreator = members.some(
@@ -176,8 +179,9 @@ export default function FridgeItemsDashboard() {
       setConsumeAmounts((prev) => ({ ...prev, [fridgeItemId]: 0 }));
       refetchItems();
       refetchScore();
+      refetchShopping();
     },
-    [consumeAmounts, fridgeId, selectedUserId, submit, refetchItems, refetchScore],
+    [consumeAmounts, fridgeId, selectedUserId, submit, refetchItems, refetchScore, refetchShopping],
   );
 
   const handleWaste = useCallback(async () => {
@@ -196,7 +200,8 @@ export default function FridgeItemsDashboard() {
     setWasteReason("");
     refetchItems();
     refetchScore();
-  }, [wasteItemId, wasteReason, fridgeId, selectedUserId, submit, refetchItems, refetchScore]);
+    refetchShopping();
+  }, [wasteItemId, wasteReason, fridgeId, selectedUserId, submit, refetchItems, refetchScore, refetchShopping]);
 
   const handleFindRecipes = async () => {
     if (selectedItems.length === 0) {
@@ -225,6 +230,32 @@ export default function FridgeItemsDashboard() {
         headerName: "Product",
         flex: 1,
         minWidth: 160,
+        renderCell: (params) => {
+          const days = daysUntil(params.row.expirationDate);
+          const dot =
+            days <= 0  ? { color: "#d32f2f", title: "Expired!" } :
+            days <= 1  ? { color: "#f44336", title: "Expires tomorrow" } :
+            days <= 3  ? { color: "#ff9800", title: `${days} days left` } :
+            null;
+          return (
+            <Stack direction="row" alignItems="center" spacing={0.75} sx={{ height: "100%" }}>
+              {dot && (
+                <Tooltip title={dot.title}>
+                  <Box
+                    sx={{
+                      width: 10, height: 10,
+                      borderRadius: "50%",
+                      bgcolor: dot.color,
+                      flexShrink: 0,
+                      boxShadow: `0 0 4px ${dot.color}`,
+                    }}
+                  />
+                </Tooltip>
+              )}
+              <Typography variant="body2" noWrap>{params.value}</Typography>
+            </Stack>
+          );
+        },
       },
       {
         field: "categoryName",
@@ -348,6 +379,7 @@ export default function FridgeItemsDashboard() {
     refetchItems();
     refetchExpiring();
     refetchScore();
+    refetchShopping();
   };
 
   return (
@@ -403,26 +435,35 @@ export default function FridgeItemsDashboard() {
         )}
       </Paper>
 
-      {/* Expiring items warning */}
-      {expiringItems && expiringItems.length > 0 && (
-        <Alert
-          severity="warning"
-          icon={<WarningAmberIcon />}
-          sx={{ mb: 2, borderRadius: 3 }}
-        >
-          <AlertTitle>Items expiring soon!</AlertTitle>
-          {expiringItems.slice(0, 5).map((ei) => (
-            <Typography key={ei.fridgeItemId} variant="body2">
-              <strong>{ei.productName}</strong> — {ei.daysUntilExpiry <= 0 ? "EXPIRED" : `${ei.daysUntilExpiry} day(s) left`}
-              {ei.userName ? ` (${ei.userName})` : ""}
-            </Typography>
-          ))}
-          {expiringItems.length > 5 && (
-            <Typography variant="body2" color="text.secondary">
-              ...and {expiringItems.length - 5} more
-            </Typography>
+      {/* Expiring items warning + shopping low banner */}
+      {(expiringItems && expiringItems.length > 0 || shoppingStatus?.isShoppingNeeded) && (
+        <Stack spacing={1} sx={{ mb: 2 }}>
+          {expiringItems && expiringItems.length > 0 && (
+            <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ borderRadius: 3 }}>
+              <AlertTitle>Items expiring soon!</AlertTitle>
+              {expiringItems.slice(0, 5).map((ei) => (
+                <Typography key={ei.fridgeItemId} variant="body2">
+                  <strong>{ei.productName}</strong> — {ei.daysUntilExpiry <= 0 ? "EXPIRED" : `${ei.daysUntilExpiry} day(s) left`}
+                  {ei.userName ? ` (${ei.userName})` : ""}
+                </Typography>
+              ))}
+              {expiringItems.length > 5 && (
+                <Typography variant="body2" color="text.secondary">
+                  ...and {expiringItems.length - 5} more
+                </Typography>
+              )}
+            </Alert>
           )}
-        </Alert>
+          {shoppingStatus?.isShoppingNeeded && (
+            <Alert severity="error" sx={{ borderRadius: 3 }}>
+              <AlertTitle>🛒 Fridge is running low!</AlertTitle>
+              <Typography variant="body2">
+                Only <strong>{shoppingStatus.activeItemCount}</strong> item{shoppingStatus.activeItemCount !== 1 ? "s" : ""} left
+                {" "}(average is <strong>{shoppingStatus.averageItemCount.toFixed(1)}</strong>). Time to go shopping!
+              </Typography>
+            </Alert>
+          )}
+        </Stack>
       )}
 
       {/* User selector + Show all checkbox */}
@@ -552,6 +593,7 @@ export default function FridgeItemsDashboard() {
         onClose={() => {
           setItemDialogOpen(false);
           refetchItems();
+          refetchShopping();
         }}
       />
       {carouselOpen && recipes.length > 0 && (

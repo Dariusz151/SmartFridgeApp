@@ -25,7 +25,6 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
-import KitchenIcon from "@mui/icons-material/Kitchen";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
@@ -111,7 +110,7 @@ export default function Header() {
     <AppBar position="sticky" color="primary" elevation={0}>
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ gap: 1 }}>
-          <KitchenIcon sx={{ mr: 0.5 }} />
+          <Box sx={{ fontSize: 28, lineHeight: 1, mr: 0.5 }}>🧊</Box>
           <Typography
             variant="h6"
             component={RouterLink}
@@ -146,7 +145,7 @@ export default function Header() {
               >
                 <Box sx={{ width: 260, pt: 2 }}>
                   <Box sx={{ textAlign: "center", mb: 2 }}>
-                    <KitchenIcon sx={{ fontSize: 40, color: "primary.main" }} />
+                    <Box sx={{ fontSize: 40, lineHeight: 1 }}>🧊</Box>
                     <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.5 }}>SmartFridgeApp</Typography>
                   </Box>
                   <List>

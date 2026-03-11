@@ -1,4 +1,5 @@
-import { Box, Typography, Link } from "@mui/material";
+import { Box, Typography, Link, Stack } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function Footer() {
   return (
@@ -13,17 +14,24 @@ export default function Footer() {
         textAlign: "center",
       }}
     >
-      <Typography variant="body2">
-        <Link
-          href="https://www.smartfridgeapp.pl"
-          color="inherit"
-          underline="hover"
-          sx={{ fontWeight: 600 }}
-        >
-          smartfridgeapp.pl
-        </Link>
-        {" "}© {new Date().getFullYear()}
-      </Typography>
+      <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+        <Typography variant="body2">
+          Made with
+        </Typography>
+        <FavoriteIcon sx={{ fontSize: 16, color: "#ff6f3c" }} />
+        <Typography variant="body2">
+          by{" "}
+          <Link
+            href="https://www.smartfridgeapp.pl"
+            color="inherit"
+            underline="hover"
+            sx={{ fontWeight: 600 }}
+          >
+            smartfridgeapp.pl
+          </Link>
+          {" "}© {new Date().getFullYear()}
+        </Typography>
+      </Stack>
     </Box>
   );
 }
