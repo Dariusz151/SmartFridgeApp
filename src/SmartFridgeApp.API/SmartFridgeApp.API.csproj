@@ -9,9 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="Dapper" Version="$(DapperVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerVersion)"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="$(GoogleAuthVersion)"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="$(GoogleAuthVersion)" />
     <PackageReference Include="Quartz" Version="$(QuartzVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EntityFrameworkVersion)">

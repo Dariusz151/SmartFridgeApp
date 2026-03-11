@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Text.Json.Serialization;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,17 @@ public class Program
             .AddEnvironmentVariables()
             .AddUserSecrets<Program>();
 
+        // Trust the X-Forwarded-Proto / X-Forwarded-For headers from Cloud Run's load balancer
+        // so ASP.NET Core uses https:// when building OAuth redirect URIs.
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            // Cloud Run LB is outside the default loopback-only range — clear the defaults
+            // so all forwarded headers are trusted.
+            options.KnownIPNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
+
         // Add services to the container
         builder.Services.AddRazorPages();
         builder.Services.AddHealthChecks();
@@ -43,6 +57,9 @@ public class Program
 
         // Infrastructure services
         builder.Services.AddInfrastructure(builder.Configuration);
+
+        // IP rate limiting
+        builder.Services.ConfigureRateLimiting(builder.Configuration);
 
         // Swagger/OpenAPI
         builder.Services.AddSwaggerGen(option =>
@@ -105,6 +122,12 @@ public class Program
         }
 
         // Configure the HTTP request pipeline
+        // MUST be first — rewrites scheme/host before any other middleware reads them
+        app.UseForwardedHeaders();
+
+        // IP rate limiting — early in pipeline to reject before heavy processing
+        app.UseIpRateLimiting();
+
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
