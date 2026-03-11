@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Infrastructure.FoodProducts;
+using SmartFridgeApp.Infrastructure.FridgeItems;
+using SmartFridgeApp.Infrastructure.FridgeMembers;
 using SmartFridgeApp.Infrastructure.Fridges;
 using SmartFridgeApp.Infrastructure.Outbox;
 using SmartFridgeApp.Infrastructure.Recipes;
@@ -11,7 +14,7 @@ namespace SmartFridgeApp.Infrastructure
     public class SmartFridgeAppContext : DbContext
     {
         public DbSet<Fridge> Fridges { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<FridgeMember> FridgeMembers { get; set; }
         public DbSet<FridgeItem> FridgeItems { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
@@ -21,12 +24,14 @@ namespace SmartFridgeApp.Infrastructure
 
         public SmartFridgeAppContext(DbContextOptions options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new FridgeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new FridgeMemberEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new FridgeItemEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new FoodProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());

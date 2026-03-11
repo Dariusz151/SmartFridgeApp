@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Infrastructure.Database;
 
 namespace SmartFridgeApp.Infrastructure.FoodProducts
@@ -17,7 +18,9 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
                 .IsRequired()
                 .HasMaxLength(40);
 
-            builder.HasOne<Category>(c => c.Category);
+            builder.HasOne(fp => fp.Category)
+                .WithMany()
+                .HasForeignKey("CategoryId");
         }
     }
 }

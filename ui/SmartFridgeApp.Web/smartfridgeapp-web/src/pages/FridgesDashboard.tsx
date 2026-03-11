@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -23,9 +23,20 @@ import NewFridgeDialog from "@/components/dialogs/NewFridgeDialog";
 import type { Fridge } from "@/types";
 
 export default function FridgesDashboard() {
-  const { state } = useAuth();  const navigate = useNavigate();  const { data, loading, refetch } = useFetch<Fridge[]>("/api/fridges", true);
+  const { state } = useAuth();  const navigate = useNavigate();  const fridgesEndpoint = state.isAdmin ? "/api/fridges/all" : "/api/fridges";
+  const { data, loading, refetch } = useFetch<Fridge[]>(fridgesEndpoint, true);
   const { submit } = useSubmit();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const autoNavigated = useRef(false);
+
+  // Auto-navigate to fridge details when user belongs to exactly one fridge (first load only)
+  useEffect(() => {
+    if (!loading && data && data.length === 1 && !autoNavigated.current && !sessionStorage.getItem("fridges_visited")) {
+      autoNavigated.current = true;
+      sessionStorage.setItem("fridges_visited", "1");
+      navigate(`/fridgeitems/${data[0]!.id}`, { replace: true });
+    }
+  }, [loading, data, navigate]);
 
   const handleDelete = async (fridgeId: string) => {
     await submit("/api/fridges", { fridgeId }, {

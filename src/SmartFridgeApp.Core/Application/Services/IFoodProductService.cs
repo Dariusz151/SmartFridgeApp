@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SmartFridgeApp.Core.Application.Features;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 
 namespace SmartFridgeApp.Core.Application.Services;
 

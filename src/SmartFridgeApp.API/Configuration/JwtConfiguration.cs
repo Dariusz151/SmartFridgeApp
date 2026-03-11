@@ -25,6 +25,7 @@ namespace SmartFridgeApp.API.Configuration
                 {
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = false;
+                    options.MapInboundClaims = false;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,

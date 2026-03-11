@@ -1,10 +1,11 @@
 ﻿using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Shared.Domain;
 
 namespace SmartFridgeApp.Core.Domain.Entities
 {
-    public class FoodProduct : Entity, IAggregateRoot
+    public class FoodProduct
     {
         public short FoodProductId { get; set; }
         public string Name { get; set; }
@@ -20,8 +21,6 @@ namespace SmartFridgeApp.Core.Domain.Entities
             ValidateFoodProductName(name);
             Name = UppercaseFirst(name.ToLower());
             Category = category;
-
-            this.AddDomainEvent(new FoodProductAddedEvent(this));
         }
 
         public void UpdateFoodProduct(string newName, Category category)

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.Core.Application.Features;
 using SmartFridgeApp.Core.Application.Services;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 
 namespace SmartFridgeApp.API.Controllers
 {

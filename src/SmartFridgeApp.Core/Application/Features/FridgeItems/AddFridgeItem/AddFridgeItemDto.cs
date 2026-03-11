@@ -1,5 +1,4 @@
-﻿
-
+﻿using System;
 using SmartFridgeApp.Core.Domain.Shared;
 
 namespace SmartFridgeApp.Core.Application.Features
@@ -10,5 +9,6 @@ namespace SmartFridgeApp.Core.Application.Features
         public float Value { get; set; }
         public string Note { get; set; }
         public Unit Unit { get; set; }
+        public DateTime ExpirationDate { get; set; }
     }
 }

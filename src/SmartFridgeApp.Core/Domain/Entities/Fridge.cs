@@ -1,9 +1,10 @@
 ﻿using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Events;
+using SmartFridgeApp.Core.Domain.Services;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Shared.Domain;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SmartFridgeApp.Core.Domain.Entities
 {
@@ -13,8 +14,22 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public string Name { get; private set; }
         public string Address { get; private set; }
         public string Desc { get; private set; }
-        public int UsersCount { get; }
-        private List<User> _users;
+        public DateTime CreatedAt { get; private set; }
+
+        public int WasteScore { get; private set; } = 1000;
+
+        // ── Members ──
+        private readonly List<FridgeMember> _members = [];
+        public IReadOnlyCollection<FridgeMember> Members => _members.AsReadOnly();
+
+        // ── Inventory tracking (shopping reminder) ──
+        public int ActiveItemCount { get; private set; }
+        public double AverageItemCount { get; private set; }
+        public int InventorySampleCount { get; private set; }
+
+        private const double SmoothingFactor = 0.15;
+        private const double ShoppingThreshold = 0.5;
+        private const int MinSamplesForAlert = 5;
 
         private Fridge()
         {
@@ -28,57 +43,14 @@ namespace SmartFridgeApp.Core.Domain.Entities
             Address = address;
             Name = name;
             Desc = desc;
-
-            _users = new List<User>();
-            UsersCount = _users.Count;
+            CreatedAt = DateTime.UtcNow;
 
             AddDomainEvent(new FridgeCreatedEvent(this));
         }
 
-        public void AddUser(User user)
+        public void AddMember(FridgeMember member)
         {
-            if (user is null)
-                throw new InvalidInputException("User object cant be null to add to fridge.", "InvalidUserObject");
-            if (_users.Count(u => u.Id == user.Id) > 0)
-            {
-                throw new DomainException("Same user exists in this fridge.", "UserExist");
-            }
-
-            _users.Add(user);
-
-            this.AddDomainEvent(new UserAddedEvent(user));
-        }
-
-        public void RemoveUser(Guid userId)
-        {
-            var user = GetFridgeUser(userId);
-            _users.Remove(user);
-
-            this.AddDomainEvent(new UserRemovedEvent(user));
-        }
-        
-        public List<Guid> GetFridgeUsers()
-        {
-            try
-            {
-                return _users.Select(x => x.Id).ToList();
-            }
-            catch (ArgumentNullException)
-            {
-                throw new AppException("Can't get fridge users.","GetFridgeUsersFailed");
-            }
-        }
-
-        public User GetFridgeUser(Guid userId)
-        {
-            try
-            {
-                return _users.Single(u => u.Id == userId);
-            }
-            catch
-            {
-                throw new InvalidInputException("This user does not belong to this fridge.", "UserNotBelongToFridge");
-            }
+            _members.Add(member);
         }
 
         public void ChangeFridgeName(string name)
@@ -93,6 +65,48 @@ namespace SmartFridgeApp.Core.Domain.Entities
             if (string.IsNullOrEmpty(desc))
                 throw new InvalidInputException("Fridge should have a description.", "InvalidFridgeDesc");
             Desc = desc;
+        }
+
+        public void RecordItemConsumed(IFridgeScoringPolicy policy)
+            => WasteScore += policy.CalculateConsumeReward();
+
+        public void RecordItemWasted(IFridgeScoringPolicy policy)
+            => WasteScore += policy.CalculateWastePenalty();
+
+        public void RecordItemExpired(IFridgeScoringPolicy policy)
+            => WasteScore += policy.CalculateExpiredItemPenalty();
+
+        // ── Inventory tracking ──
+
+        public void RecordItemAdded()
+        {
+            ActiveItemCount++;
+            UpdateAverage();
+        }
+
+        public void RecordItemRemoved()
+        {
+            if (ActiveItemCount > 0)
+                ActiveItemCount--;
+
+            UpdateAverage();
+
+            if (IsShoppingNeeded())
+                AddDomainEvent(new ShoppingNeededDomainEvent(Id, ActiveItemCount, AverageItemCount));
+        }
+
+        public bool IsShoppingNeeded()
+            => InventorySampleCount >= MinSamplesForAlert
+               && AverageItemCount > 0
+               && ActiveItemCount < AverageItemCount * ShoppingThreshold;
+
+        private void UpdateAverage()
+        {
+            InventorySampleCount++;
+
+            AverageItemCount = InventorySampleCount == 1
+                ? ActiveItemCount
+                : SmoothingFactor * ActiveItemCount + (1 - SmoothingFactor) * AverageItemCount;
         }
     }
 }

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain
@@ -10,16 +11,11 @@ namespace SmartFridgeApp.UnitTests.Domain
     [TestFixture]
     public class WastedFridgeItemTests
     {
-        Fridge _fridge;
-        User _user;
         Category _category;
 
         [SetUp]
         public void BaseSetUp()
         {
-            _fridge = new Fridge("lodówka", "Solika 5", "BEKO");
-            _user = new User("Dario", "dario@mail.com");
-            _fridge.AddUser(_user);
             _category = new Category("Warzywa");
         }
 
@@ -28,7 +24,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             fridgeItem.WasteFridgeItem("expired");
 
@@ -43,7 +39,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(50.0f, Unit.Grams);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             fridgeItem.WasteFridgeItem();
 
@@ -57,7 +53,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             fridgeItem.WasteFridgeItem("spoiled");
 
@@ -69,7 +65,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             var consumeAmount = new AmountValue(100.0f, Unit.Mililiter);
             fridgeItem.ConsumeFridgeItem(consumeAmount);
@@ -83,7 +79,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             fridgeItem.WasteFridgeItem("expired");
 
@@ -96,7 +92,7 @@ namespace SmartFridgeApp.UnitTests.Domain
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             fridgeItem.WasteFridgeItem("expired");
 
@@ -104,31 +100,11 @@ namespace SmartFridgeApp.UnitTests.Domain
         }
 
         [Test]
-        public void User_WasteFridgeItem_ShouldDelegateToFridgeItem()
-        {
-            var foodProduct = new FoodProduct("Mleko", _category);
-            var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
-
-            _user.AddFridgeItem(fridgeItem);
-            _user.WasteFridgeItem(fridgeItem.Id, "spoiled");
-
-            ClassicAssert.AreEqual(true, fridgeItem.IsWasted);
-            ClassicAssert.AreEqual("spoiled", fridgeItem.WasteReason);
-        }
-
-        [Test]
-        public void User_WasteFridgeItem_WithInvalidId_ShouldThrowException()
-        {
-            Assert.Throws(typeof(InvalidInputException), () => _user.WasteFridgeItem(999, "reason"));
-        }
-
-        [Test]
         public void FridgeItem_WastedAt_ShouldBeRecentTimestamp()
         {
             var foodProduct = new FoodProduct("Mleko", _category);
             var amountValue = new AmountValue(100.0f, Unit.Mililiter);
-            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue);
+            var fridgeItem = new FridgeItem(foodProduct.FoodProductId, "desc", amountValue, 1);
 
             var before = DateTime.UtcNow;
             fridgeItem.WasteFridgeItem("expired");

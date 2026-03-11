@@ -111,7 +111,7 @@ INSERT INTO app."FoodProducts" ("FoodProductId", "Name", "CategoryId") VALUES
 (86, 'Czekolada', 4),
 (87, 'Lody', 4),
 (88, 'Baton', 4),
-(89, 'Czekolada', 4),
+(89, 'Ciastka', 4),
 -- Beverages (6)
 (90, 'Kawa', 6),
 (91, 'Herbata', 6),
@@ -227,21 +227,6 @@ ON CONFLICT ("RecipeCategoryId") DO NOTHING;
 -- Update sequence for RecipeCategories
 SELECT setval('app."RecipeCategories_RecipeCategoryId_seq"', (SELECT MAX("RecipeCategoryId") FROM app."RecipeCategories"));
 
--- Seed Fridges
-INSERT INTO app."Fridges" ("Id", "Name", "Address", "Desc") VALUES
-('abfcb234-1d83-4375-a096-04d46aaf1bee', 'Dragana', 'Dragana', 'Dragana'),
-('3a3c26b7-22bb-447d-b62e-43b0dcb3b827', 'Ełk', 'Ełk', 'Ełk'),
-('08e8ee56-23da-4508-a014-a35f81b05495', 'Solikowskiego', 'Solik', 'Solik')
-ON CONFLICT ("Id") DO NOTHING;
-
--- Seed Users
-INSERT INTO app."Users" ("Id", "Name", "Email", "FridgeId", "CreatedAt") VALUES
-('65521999-83e8-4843-8111-063fed963848', 'Andrzej', 'andrzej@andrzej.pl', '3a3c26b7-22bb-447d-b62e-43b0dcb3b827', '2021-01-27T20:00:00'::timestamp),
-('3ffcfa2d-cf25-4de0-8cc8-27ada6f1db1a', 'Olga', 'olga@olga.pl', 'abfcb234-1d83-4375-a096-04d46aaf1bee', '2021-01-28T23:30:00'::timestamp),
-('d3f73dac-5f87-43f0-bd26-558f55e5f6fd', 'Stefan', 'stefan@stefi.pl', '08e8ee56-23da-4508-a014-a35f81b05495', '2021-01-28T23:50:12.9995185'::timestamp),
-('9b8bf183-5747-4109-aba4-fde821a0ba94', 'Dariusz', 'dariusz@dariusz.pl', 'abfcb234-1d83-4375-a096-04d46aaf1bee', '2021-01-28T23:00:00'::timestamp)
-ON CONFLICT ("Id") DO NOTHING;
-
 -- Seed Recipes
 INSERT INTO app."Recipes" ("RecipeId", "Name", "Description", "RequiredTime", "LevelOfDifficulty", "RecipeCategoryId", "FoodProducts") VALUES
 ('8112af41-9dc6-4819-87e2-19ec2c2c7566', 'kurczak z ryzem', 'kiurczak z ryzem', 35, 2, 2, '<?xml version="1.0" encoding="utf-16"?>
@@ -329,11 +314,3 @@ INSERT INTO app."Recipes" ("RecipeId", "Name", "Description", "RequiredTime", "L
   </FoodProductDetails>
 </ArrayOfFoodProductDetails>')
 ON CONFLICT ("RecipeId") DO NOTHING;
-
--- Seed Sample Fridge Item
-INSERT INTO app."FridgeItems" ("Id", "FoodProductId", "Note", "Value", "Unit", "ExpirationDate", "EnteredAt", "IsConsumed", "UserId") VALUES
-(1, 60, '', 22, 'Pieces', '0001-01-01T00:00:00'::timestamp, '2021-01-28T23:50:40.8603569'::timestamp, false, '9b8bf183-5747-4109-aba4-fde821a0ba94')
-ON CONFLICT ("Id") DO NOTHING;
-
--- Update sequence for FridgeItems
-SELECT setval('app."FridgeItems_Id_seq"', (SELECT MAX("Id") FROM app."FridgeItems"));

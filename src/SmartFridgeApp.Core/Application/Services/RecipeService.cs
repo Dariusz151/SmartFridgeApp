@@ -10,6 +10,7 @@ using SmartFridgeApp.Core.Contracts.DomainServices;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Core.Extensions;
 using SmartFridgeApp.Shared.SeedWork;

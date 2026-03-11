@@ -5,6 +5,7 @@ using NUnit.Framework.Legacy;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Domain.Shared;
+using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 
 namespace SmartFridgeApp.UnitTests.Domain

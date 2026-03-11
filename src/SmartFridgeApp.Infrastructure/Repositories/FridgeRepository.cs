@@ -14,14 +14,25 @@ namespace SmartFridgeApp.Infrastructure.Fridges
     {
         private readonly SmartFridgeAppContext _context;
 
-        public Task<IEnumerable<FridgeDto>> GetAllFridgesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public FridgeRepository(SmartFridgeAppContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<FridgeDto>> GetAllFridgesAsync()
+        {
+            return await _context.Fridges
+                .AsNoTracking()
+                .Select(f => new FridgeDto
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    Address = f.Address,
+                    Desc = f.Desc,
+                    WasteScore = f.WasteScore,
+                    CreatedAt = f.CreatedAt
+                })
+                .ToListAsync();
         }
 
         public async Task AddAsync(Fridge fridge)

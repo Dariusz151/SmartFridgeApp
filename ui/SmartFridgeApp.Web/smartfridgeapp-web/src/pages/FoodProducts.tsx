@@ -119,7 +119,6 @@ export default function FoodProducts() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            disabled={!state.isAdmin}
             onClick={() => setDialogOpen(true)}
           >
             Add New
@@ -146,7 +145,6 @@ export default function FoodProducts() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            disabled={!state.isAdmin}
             onClick={() => setDialogOpen(true)}
           >
             Add First Product
