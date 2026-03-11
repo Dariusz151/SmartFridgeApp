@@ -18,13 +18,12 @@ namespace SmartFridgeApp.API;
 
 public class Program
 {
-    private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString";
+    private const string SmartFridgeAppConnectionString = "SmartFridgeAppOptions:ConnectionString";
 
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configuration
         builder.Configuration
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
@@ -42,26 +41,15 @@ public class Program
             options.KnownProxies.Clear();
         });
 
-        // Add services to the container
         builder.Services.AddRazorPages();
         builder.Services.AddHealthChecks();
 
-        // CORS configuration
         builder.Services.ConfigureCors(builder.Configuration);
-
-        // JWT authentication
         builder.Services.ConfigureJwt(builder.Configuration);
-
-        // Google authentication
         builder.Services.ConfigureGoogle(builder.Configuration);
-
-        // Infrastructure services
         builder.Services.AddInfrastructure(builder.Configuration);
-
-        // IP rate limiting
         builder.Services.ConfigureRateLimiting(builder.Configuration);
 
-        // Swagger/OpenAPI
         builder.Services.AddSwaggerGen(option =>
         {
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -89,16 +77,12 @@ public class Program
             });
         });
 
-        // Background services
         builder.Services.AddHostedService<QuartzHostedService>();
-
-        // Database context
         builder.Services.AddDbContext<SmartFridgeAppContext>(options =>
         {
             options.UseNpgsql(builder.Configuration[SmartFridgeAppConnectionString]);
         });
 
-        // Controllers with JSON options
         builder.Services
             .AddControllers()
             .AddJsonOptions(options =>
@@ -141,7 +125,6 @@ public class Program
             app.UseCors("Production_Policy");
         }
 
-        // Swagger configuration
         app.UseSwagger(c => c.SerializeAsV2 = true);
         app.UseSwaggerUI(c =>
         {
