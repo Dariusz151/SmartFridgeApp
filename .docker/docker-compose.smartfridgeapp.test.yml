@@ -3,7 +3,7 @@ services:
     container_name: smartfridgeapp.test
     image: smartfridgeapp.test
     environment:
-      - SmartFridgeAppConnectionString=Host=smartfridgeapp.db;Port=5432;Database=smartfridgeapp;Username=postgres;Password=postgres
+      - SmartFridgeAppOptions=Host=smartfridgeapp.db;Port=5432;Database=smartfridgeapp;Username=postgres;Password=postgres
     ports:
       - "127.0.0.1:8082:8082"
     build:

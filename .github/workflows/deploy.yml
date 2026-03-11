@@ -106,7 +106,7 @@ jobs:
             --port=8080
             --memory=512Mi
             --min-instances=0
-            --max-instances=3
+            --max-instances=2
             --service-account=${{ secrets.CLOUD_RUN_SA_EMAIL }}
           env_vars: |
             ASPNETCORE_ENVIRONMENT=Production
@@ -115,8 +115,6 @@ jobs:
             Jwt__SecretKey=jwt-secret-key:latest
             Jwt__Issuer=jwt-issuer:latest
             Jwt__Audience=jwt-audience:latest
-            AuthUsername=auth-username:latest
-            AuthPassword=auth-password:latest
             FrontendUrl=frontend-url:latest
             Google__ClientId=google-client-id:latest
             Google__ClientSecret=google-client-secret:latest

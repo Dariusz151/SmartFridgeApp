@@ -81,6 +81,13 @@ export interface FridgeScore {
   rank: string;
 }
 
+export interface ShoppingStatus {
+  fridgeId: string;
+  activeItemCount: number;
+  averageItemCount: number;
+  isShoppingNeeded: boolean;
+}
+
 export interface RecipeFoodProduct {
   foodProductId: number;
   foodProductName: string;

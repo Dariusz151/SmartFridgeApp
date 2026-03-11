@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Net;
 using System.Text.Json.Serialization;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SmartFridgeApp.API.Configuration;
 using SmartFridgeApp.API.Middleware;
@@ -16,7 +18,7 @@ namespace SmartFridgeApp.API;
 
 public class Program
 {
-    private const string SmartFridgeAppConnectionString = "SmartFridgeAppConnectionString:ConnectionString";
+    private const string SmartFridgeAppConnectionString = "SmartFridgeAppOptions:ConnectionString";
 
     public static void Main(string[] args)
     {
@@ -28,6 +30,17 @@ public class Program
             .AddEnvironmentVariables()
             .AddUserSecrets<Program>();
 
+        // Trust the X-Forwarded-Proto / X-Forwarded-For headers from Cloud Run's load balancer
+        // so ASP.NET Core uses https:// when building OAuth redirect URIs.
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            // Cloud Run LB is outside the default loopback-only range — clear the defaults
+            // so all forwarded headers are trusted.
+            options.KnownIPNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
+
         builder.Services.AddRazorPages();
         builder.Services.AddHealthChecks();
 
@@ -35,6 +48,8 @@ public class Program
         builder.Services.ConfigureJwt(builder.Configuration);
         builder.Services.ConfigureGoogle(builder.Configuration);
         builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.ConfigureRateLimiting(builder.Configuration);
+
         builder.Services.AddSwaggerGen(option =>
         {
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -63,7 +78,6 @@ public class Program
         });
 
         builder.Services.AddHostedService<QuartzHostedService>();
-
         builder.Services.AddDbContext<SmartFridgeAppContext>(options =>
         {
             options.UseNpgsql(builder.Configuration[SmartFridgeAppConnectionString]);
@@ -77,19 +91,26 @@ public class Program
             });
 
         var app = builder.Build();
-        
+
+        // Database initialization
+        // Note: Database schema is created by Docker init scripts (.docker/db-init)
+        // For development, the database will be auto-created on first run
+        // For production, use proper migrations: dotnet ef migrations add <name>
         using (var scope = app.Services.CreateScope())
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            try
-            {
-                var context = scope.ServiceProvider.GetRequiredService<SmartFridgeAppContext>();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Database initialization failed. The app will continue starting up.");
-            }
+            var context = scope.ServiceProvider.GetRequiredService<SmartFridgeAppContext>();
+
+            // Only ensure database exists (doesn't create schema if it already exists)
+            // Comment this out if using migrations exclusively
+            context.Database.EnsureCreated();
         }
+
+        // Configure the HTTP request pipeline
+        // MUST be first — rewrites scheme/host before any other middleware reads them
+        app.UseForwardedHeaders();
+
+        // IP rate limiting — early in pipeline to reject before heavy processing
+        app.UseIpRateLimiting();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
@@ -100,6 +121,7 @@ public class Program
         }
         else
         {
+            app.UseHsts();
             app.UseCors("Production_Policy");
         }
 
@@ -113,6 +135,7 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseHttpsRedirection();
 
         var defaultFilesOptions = new DefaultFilesOptions();
         defaultFilesOptions.DefaultFileNames.Clear();
@@ -123,10 +146,6 @@ public class Program
         app.MapControllers();
         app.MapRazorPages();
         app.MapHealthChecks("/healthcheck");
-
-        // Note: UseHttpsRedirection is intentionally omitted.
-        // Cloud Run terminates TLS at the load balancer; the container only receives HTTP.
-        // Enabling it here would cause redirect loops in production.
 
         app.Run();
     }

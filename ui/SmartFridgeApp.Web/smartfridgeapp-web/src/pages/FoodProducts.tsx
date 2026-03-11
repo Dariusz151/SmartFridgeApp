@@ -18,31 +18,16 @@ import NewFoodProductDialog from "@/components/dialogs/NewFoodProductDialog";
 import type { FoodProduct, FoodProductCategory } from "@/types";
 
 const categoryEmoji: Record<string, string> = {
-  // Polish category names
-  "Nabiał": "🧀",
-  "Mięso": "🥩",
-  "Warzywa": "🥦",
-  "Owoce": "🍎",
-  "Napoje": "🥤",
-  "Pieczywo": "🍞",
-  "Ryby": "🐟",
-  "Mróżonki": "❄️",
-  "Przekąski": "🍿",
-  "Przyprawy": "🧂",
-  "Słodycze": "🍫",
-  "Jajka": "🥚",
-  "Dania gotowe": "🍱",
-  // English fallbacks
-  "Dairy": "🧀",
-  "Meat": "🥩",
-  "Vegetables": "🥦",
-  "Fruits": "🍎",
-  "Beverages": "🥤",
-  "Bakery": "🍞",
-  "Seafood": "🐟",
-  "Frozen": "❄️",
-  "Snacks": "🍿",
-  "Condiments": "🧂",
+  Dairy: "🧀",
+  Meat: "🥩",
+  Vegetables: "🥦",
+  Fruits: "🍎",
+  Beverages: "🥤",
+  Bakery: "🍞",
+  Seafood: "🐟",
+  Frozen: "🧊",
+  Snacks: "🍿",
+  Condiments: "🧂",
 };
 
 export default function FoodProducts() {
@@ -58,6 +43,11 @@ export default function FoodProducts() {
       headerName: "Name",
       flex: 1,
       minWidth: 180,
+      renderCell: (params) => (
+        <Typography variant="body2" fontWeight={600}>
+          {categoryEmoji[params.row.foodProductCategory] ?? "🥚"} {params.value}
+        </Typography>
+      ),
     },
     {
       field: "foodProductCategory",
@@ -119,6 +109,7 @@ export default function FoodProducts() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
+            disabled={!state.isAdmin}
             onClick={() => setDialogOpen(true)}
           >
             Add New
@@ -145,6 +136,7 @@ export default function FoodProducts() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
+            disabled={!state.isAdmin}
             onClick={() => setDialogOpen(true)}
           >
             Add First Product
