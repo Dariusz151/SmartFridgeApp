@@ -5,9 +5,11 @@ using SmartFridgeApp.API.Services;
 using SmartFridgeApp.Core.Application.Services;
 using SmartFridgeApp.Core.Contracts.Auth;
 using SmartFridgeApp.Core.Contracts.DomainServices;
+using SmartFridgeApp.Core.Contracts.ExternalRecipes;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Services;
 using SmartFridgeApp.Infrastructure;
+using SmartFridgeApp.Infrastructure.ExternalRecipes;
 using SmartFridgeApp.Infrastructure.Database;
 using SmartFridgeApp.Infrastructure.Auth;
 using SmartFridgeApp.Infrastructure.FoodProducts;
@@ -51,6 +53,11 @@ public static class ServiceProviderExtensions
         services.AddScoped<IFridgeItemService, FridgeItemService>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IFridgeMemberService, FridgeMemberService>();
+        services.AddScoped<IRecipeImportService, RecipeImportService>();
+
+        // External recipe sources
+        services.Configure<SpoonacularOptions>(configuration.GetSection("Spoonacular"));
+        services.AddHttpClient<IExternalRecipeSource, SpoonacularRecipeSource>();
 
         // Notification handlers
         services.AddScoped<IDomainEventNotificationHandler<FridgeAddedNotification>, FridgeAddedNotificationHandler>();

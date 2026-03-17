@@ -15,8 +15,9 @@ import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import { useAuth } from "@/context/AuthContext";
-import { useFetch } from "@/hooks/useApi";
+import { useFetch, useSubmit } from "@/hooks/useApi";
 import RecipeDetailsDialog from "@/components/dialogs/RecipeDetailsDialog";
 import type { Recipe } from "@/types";
 
@@ -57,6 +58,21 @@ export default function Recipes() {
   const navigate = useNavigate();
   const { data: rawRecipes, loading, refetch } = useFetch<Recipe[]>("/api/recipes");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const { submit, loading: importing } = useSubmit();
+
+  const handleImport = async () => {
+    const result = await submit<{ importedCount: number; skippedCount: number; errors: string[] }>(
+      "/api/recipes/import?batchSize=5",
+      null,
+      {
+        method: "POST",
+        auth: true,
+        successMessage: "Recipes imported successfully!",
+        errorMessage: "Failed to import recipes",
+      },
+    );
+    if (result) refetch();
+  };
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -122,7 +138,7 @@ export default function Recipes() {
         sortable: false,
         filterable: false,
         disableColumnMenu: true,
-: (params) => (
+        renderCell: (params) => (
           <Button
             size="small"
             variant="contained"
@@ -172,6 +188,17 @@ export default function Recipes() {
 
       <Box sx={{ mb: 3, display: "flex", alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap", gap: 1 }}>
         <Stack direction="row" spacing={1}>
+          {state.isAdmin && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={importing ? <CircularProgress size={18} /> : <CloudDownloadIcon />}
+              disabled={importing}
+              onClick={handleImport}
+            >
+              {importing ? "Importing..." : "Import Recipes"}
+            </Button>
+          )}
           <Button
             variant="contained"
             startIcon={<AddIcon />}
