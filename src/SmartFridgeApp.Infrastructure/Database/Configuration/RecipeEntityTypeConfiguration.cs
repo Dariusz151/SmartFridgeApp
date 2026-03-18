@@ -40,6 +40,14 @@ namespace SmartFridgeApp.Infrastructure.Recipes
 
             builder.Property("FoodProducts").HasColumnName("FoodProducts").HasConversion(converter);
 
+            builder.Property(r => r.InsertedAt)
+                .HasColumnName("InsertedAt")
+                .IsRequired()
+                .HasDefaultValueSql("NOW()");
+
+            builder.Property(r => r.UpdatedAt)
+                .HasColumnName("UpdatedAt");
+
             builder.HasOne(r => r.RecipeCategory)
                 .WithMany()
                 .HasForeignKey("RecipeCategoryId");

@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS app."FoodProducts" (
     "FoodProductId" SMALLSERIAL PRIMARY KEY,
     "Name" VARCHAR(40) NOT NULL,
     "CategoryId" SMALLINT NOT NULL,
+    "InsertedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "UpdatedAt"  TIMESTAMP,
     CONSTRAINT "FK_FoodProducts_Categories" FOREIGN KEY ("CategoryId")
         REFERENCES app."Categories"("CategoryId") ON DELETE CASCADE
 );
@@ -40,7 +42,8 @@ CREATE TABLE IF NOT EXISTS app."Fridges" (
     "ActiveItemCount"      INTEGER      NOT NULL DEFAULT 0,
     "AverageItemCount"     FLOAT        NOT NULL DEFAULT 0,
     "InventorySampleCount" INTEGER      NOT NULL DEFAULT 0,
-    "CreatedAt"            TIMESTAMP    NOT NULL DEFAULT NOW()
+    "CreatedAt"            TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"            TIMESTAMP
 );
 
 -- Table: AppUsers (authentication accounts — email/password and Google OAuth)
@@ -49,7 +52,8 @@ CREATE TABLE IF NOT EXISTS app."AppUsers" (
     "PasswordHash" VARCHAR(500) NULL,
     "Name"         VARCHAR(100) NULL,
     "Role"         VARCHAR(50)  NOT NULL DEFAULT 'User',
-    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW()
+    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"    TIMESTAMP
 );
 
 -- Table: FridgeMembers (links AppUsers to Fridges, handles invites)
@@ -63,6 +67,7 @@ CREATE TABLE IF NOT EXISTS app."FridgeMembers" (
     "Status"     VARCHAR(50)  NOT NULL DEFAULT 'Pending',
     "Color"      VARCHAR(7)   NOT NULL DEFAULT '#000000',
     "InvitedAt"  TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"  TIMESTAMP,
     CONSTRAINT "FK_FridgeMembers_Fridges"   FOREIGN KEY ("FridgeId") REFERENCES app."Fridges"("Id")    ON DELETE CASCADE,
     CONSTRAINT "FK_FridgeMembers_AppUsers"  FOREIGN KEY ("Email")    REFERENCES app."AppUsers"("Email") ON DELETE CASCADE,
     CONSTRAINT "UQ_FridgeMembers"           UNIQUE ("FridgeId", "Email")
@@ -82,6 +87,7 @@ CREATE TABLE IF NOT EXISTS app."FridgeItems" (
     "WastedAt"       TIMESTAMP,
     "WasteReason"    VARCHAR(500),
     "MemberId"       INTEGER      NOT NULL,
+    "UpdatedAt"      TIMESTAMP,
     CONSTRAINT "FK_FridgeItems_FoodProducts"  FOREIGN KEY ("FoodProductId") REFERENCES app."FoodProducts"("FoodProductId") ON DELETE CASCADE,
     CONSTRAINT "FK_FridgeItems_FridgeMembers" FOREIGN KEY ("MemberId")      REFERENCES app."FridgeMembers"("Id")           ON DELETE CASCADE
 );
@@ -95,6 +101,8 @@ CREATE TABLE IF NOT EXISTS app."Recipes" (
     "LevelOfDifficulty" SMALLINT     NOT NULL DEFAULT 0,
     "RecipeCategoryId"  SMALLINT,
     "FoodProducts"      TEXT         NOT NULL,
+    "InsertedAt"        TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"         TIMESTAMP,
     CONSTRAINT "FK_Recipes_RecipeCategories" FOREIGN KEY ("RecipeCategoryId")
         REFERENCES app."RecipeCategories"("RecipeCategoryId") ON DELETE SET NULL
 );

@@ -44,6 +44,9 @@ internal class FridgeMemberEntityTypeConfiguration : IEntityTypeConfiguration<Fr
             .HasColumnName("InvitedAt")
             .IsRequired();
 
+        builder.Property(fm => fm.UpdatedAt)
+            .HasColumnName("UpdatedAt");
+
         builder.HasIndex(fm => new { fm.FridgeId, fm.Email }).IsUnique();
     }
 }

@@ -122,7 +122,7 @@ export default function Recipes() {
         sortable: false,
         filterable: false,
         disableColumnMenu: true,
-: (params) => (
+        renderCell: (params) => (
           <Button
             size="small"
             variant="contained"

@@ -20,6 +20,7 @@ public class FridgeItem : Entity
     public bool IsWasted { get; private set; }
     public DateTime? WastedAt { get; private set; }
     public string WasteReason { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
     public bool IsOutdated() => ExpirationDate < DateTime.UtcNow;
 
     private FridgeItem()
@@ -57,17 +58,20 @@ public class FridgeItem : Entity
             throw new DomainException("Cant set past expiration date!", "InvalidExpirationDate");
         }
         ExpirationDate = datetime;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void ChangeFridgeItemAmount(AmountValue amountValue)
     {
         AmountValue = amountValue;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void IncreaseFridgeItemAmount(AmountValue amountValue)
     {
         // handle unit - what if units are different?
         AmountValue = new AmountValue(AmountValue.Value + amountValue.Value, AmountValue.Unit);
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void UpdateFridgeItemNote(string note)
@@ -78,6 +82,7 @@ public class FridgeItem : Entity
             throw new DomainException("This item is wasted! Cant update details.", "UpdateFridgeItemFailed");
 
         this.Note = note;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void ConsumeFridgeItem(AmountValue amountValue)
@@ -98,6 +103,7 @@ public class FridgeItem : Entity
             this.AmountValue.DecreaseAmount(amountValue);
         }
 
+        UpdatedAt = DateTime.UtcNow;
         AddDomainEvent(new FridgeItemConsumedDomainEvent(Id, MemberId));
     }
 
@@ -111,6 +117,7 @@ public class FridgeItem : Entity
         IsWasted = true;
         WastedAt = DateTime.UtcNow;
         WasteReason = reason;
+        UpdatedAt = DateTime.UtcNow;
 
         AddDomainEvent(new FridgeItemWastedDomainEvent(Id, MemberId, reason));
     }

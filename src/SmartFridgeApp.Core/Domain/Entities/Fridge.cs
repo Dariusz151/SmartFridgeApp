@@ -15,6 +15,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public string Address { get; private set; }
         public string Desc { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         public int WasteScore { get; private set; } = 1000;
 
@@ -58,6 +59,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
             if (string.IsNullOrEmpty(name))
                 throw new InvalidInputException("Fridge should have a name.", "InvalidFridgeName");
             Name = name;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void ChangeFridgeDesc(string desc)
@@ -65,16 +67,26 @@ namespace SmartFridgeApp.Core.Domain.Entities
             if (string.IsNullOrEmpty(desc))
                 throw new InvalidInputException("Fridge should have a description.", "InvalidFridgeDesc");
             Desc = desc;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void RecordItemConsumed(IFridgeScoringPolicy policy)
-            => WasteScore += policy.CalculateConsumeReward();
+        {
+            WasteScore += policy.CalculateConsumeReward();
+            UpdatedAt = DateTime.UtcNow;
+        }
 
         public void RecordItemWasted(IFridgeScoringPolicy policy)
-            => WasteScore += policy.CalculateWastePenalty();
+        {
+            WasteScore += policy.CalculateWastePenalty();
+            UpdatedAt = DateTime.UtcNow;
+        }
 
         public void RecordItemExpired(IFridgeScoringPolicy policy)
-            => WasteScore += policy.CalculateExpiredItemPenalty();
+        {
+            WasteScore += policy.CalculateExpiredItemPenalty();
+            UpdatedAt = DateTime.UtcNow;
+        }
 
         // ── Inventory tracking ──
 
@@ -82,6 +94,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
         {
             ActiveItemCount++;
             UpdateAverage();
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void RecordItemRemoved()
@@ -90,6 +103,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
                 ActiveItemCount--;
 
             UpdateAverage();
+            UpdatedAt = DateTime.UtcNow;
 
             if (IsShoppingNeeded())
                 AddDomainEvent(new ShoppingNeededDomainEvent(Id, ActiveItemCount, AverageItemCount));

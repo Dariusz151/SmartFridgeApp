@@ -43,6 +43,9 @@ namespace SmartFridgeApp.Infrastructure.Fridges
                 .IsRequired()
                 .HasDefaultValueSql("NOW()");
 
+            builder.Property(b => b.UpdatedAt)
+                .HasColumnName("UpdatedAt");
+
             builder.Ignore(b => b.DomainEvents);
 
             builder.HasMany(b => b.Members)
