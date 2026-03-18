@@ -66,7 +66,7 @@ namespace SmartFridgeApp.Infrastructure.Auth
                 """
                 INSERT INTO app."AppUsers" ("Email", "Name", "Role", "CreatedAt")
                 VALUES (@Email, @Name, 'User', @CreatedAt)
-                ON CONFLICT ("Email") DO UPDATE SET "Name" = EXCLUDED."Name"
+                ON CONFLICT ("Email") DO UPDATE SET "Name" = EXCLUDED."Name", "UpdatedAt" = @CreatedAt
                 """,
                 new { Email = email, Name = name, CreatedAt = DateTime.UtcNow });
         }

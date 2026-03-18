@@ -10,7 +10,9 @@ SELECT
     fp."FoodProductId", 
     fp."Name", 
     c."CategoryId",
-    c."Name" as "Category"
+    c."Name" as "Category",
+    fp."InsertedAt",
+    fp."UpdatedAt"
 FROM app."FoodProducts" as fp
 INNER JOIN app."Categories" c ON c."CategoryId" = fp."CategoryId";
 
@@ -40,13 +42,13 @@ WHERE fi."IsConsumed" = false AND fi."IsWasted" = false;
 -- View: Fridges (includes WasteScore and CreatedAt)
 DROP VIEW IF EXISTS app.v_fridges;
 CREATE VIEW app.v_fridges AS
-SELECT "Id", "Name", "Address", "Desc", "WasteScore", "CreatedAt"
+SELECT "Id", "Name", "Address", "Desc", "WasteScore", "CreatedAt", "UpdatedAt"
 FROM app."Fridges";
 
 -- View: Member Fridges — fridges accessible to a member (for GetMyFridgesAsync)
 DROP VIEW IF EXISTS app.v_member_fridges;
 CREATE VIEW app.v_member_fridges AS
-SELECT f."Id", f."Name", f."Address", f."Desc", f."WasteScore", f."CreatedAt",
+SELECT f."Id", f."Name", f."Address", f."Desc", f."WasteScore", f."CreatedAt", f."UpdatedAt",
        fm."Email"
 FROM app."Fridges" f
 INNER JOIN app."FridgeMembers" fm ON fm."FridgeId" = f."Id"
@@ -55,7 +57,7 @@ WHERE fm."Status" = 'Accepted';
 -- View: Fridge Members (accepted only — for backwards compat / reporting)
 DROP VIEW IF EXISTS app.v_fridgemembers;
 CREATE VIEW app.v_fridgemembers AS
-SELECT fm."Id", fm."FridgeId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt"
+SELECT fm."Id", fm."FridgeId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt", fm."UpdatedAt"
 FROM app."FridgeMembers" fm
 LEFT JOIN app."AppUsers" au ON au."Email" = fm."Email"
 WHERE fm."Status" = 'Accepted';
@@ -94,7 +96,9 @@ SELECT
     r."Description", 
     r."FoodProducts", 
     r."RequiredTime", 
-    r."LevelOfDifficulty"
+    r."LevelOfDifficulty",
+    r."InsertedAt",
+    r."UpdatedAt"
 FROM app."Recipes" as r
 LEFT JOIN app."RecipeCategories" as rc ON rc."RecipeCategoryId" = r."RecipeCategoryId";
 

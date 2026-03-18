@@ -114,7 +114,7 @@ public class Program
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
         {
             app.UseDeveloperExceptionPage();
             app.UseCors("Development_Policy");

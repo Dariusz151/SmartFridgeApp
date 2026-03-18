@@ -54,6 +54,9 @@ internal class FridgeItemEntityTypeConfiguration : IEntityTypeConfiguration<Frid
             .HasColumnName("WasteReason")
             .HasMaxLength(500);
 
+        builder.Property(fi => fi.UpdatedAt)
+            .HasColumnName("UpdatedAt");
+
         // AmountValue is stored as two columns: Value and Unit
         builder.OwnsOne(fi => fi.AmountValue, av =>
         {

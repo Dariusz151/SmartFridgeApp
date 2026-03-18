@@ -1,4 +1,5 @@
-﻿using SmartFridgeApp.Core.Application.Events;
+﻿using System;
+using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Shared.Domain;
@@ -10,6 +11,8 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public short FoodProductId { get; set; }
         public string Name { get; set; }
         public Category Category { get; set; }
+        public DateTime InsertedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         private FoodProduct()
         {
@@ -21,6 +24,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
             ValidateFoodProductName(name);
             Name = UppercaseFirst(name.ToLower());
             Category = category;
+            InsertedAt = DateTime.UtcNow;
         }
 
         public void UpdateFoodProduct(string newName, Category category)
@@ -33,12 +37,14 @@ namespace SmartFridgeApp.Core.Domain.Entities
         {
             ValidateFoodProductName(newName);
             Name = UppercaseFirst(newName);
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void UpdateProductCategory(Category category)
         {
              ValidateFoodProductCategory(category);
              Category = category;
+             UpdatedAt = DateTime.UtcNow;
         }
 
         private void ValidateFoodProductName(string name)
