@@ -1,3 +1,0 @@
-﻿-- FridgeMembers seed data
--- Admin is NOT an explicit member of any fridge; they see all fridges via role check.
--- Fridge-specific memberships are seeded in 06-dev-seed.sql.

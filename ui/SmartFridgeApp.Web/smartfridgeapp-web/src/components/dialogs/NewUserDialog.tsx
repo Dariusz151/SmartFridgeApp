@@ -13,19 +13,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSubmit } from "@/hooks/useApi";
 
 interface Props {
-  fridgeId: string;
+  kitchenId: string;
   open: boolean;
   onClose: () => void;
 }
 
-export default function NewUserDialog({ fridgeId, open, onClose }: Props) {
+export default function NewUserDialog({ kitchenId, open, onClose }: Props) {
   const { submit, loading } = useSubmit();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
   const handleAdd = async () => {
     const result = await submit(
-      `/api/fridgeUsers/${fridgeId}`,
+      `/api/fridgeUsers/${kitchenId}`,
       { user: { name, email } },
       {
         auth: true,

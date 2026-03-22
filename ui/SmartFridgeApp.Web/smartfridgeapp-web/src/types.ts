@@ -11,7 +11,7 @@ export interface FoodProductCategory {
   name: string;
 }
 
-export interface Fridge {
+export interface Kitchen {
   id: string;
   name: string;
   address: string;
@@ -32,21 +32,19 @@ export interface AmountValue {
 export type Unit = "Grams" | "Pieces" | "Mililiter" | "NotAssigned";
 
 export interface FridgeItem {
-  fridgeItemId: string;
+  stockItemId: string;
   foodProductId: number;
-  productName: string;
-  categoryName: string;
-  value: number;
+  memberId: number;
+  amount: number;
   unit: Unit;
   expirationDate: string;
-  userName?: string;
-  userEmail?: string;
-  userColor?: string;
+  note?: string;
+  stockedAt: string;
 }
 
-export interface FridgeMember {
+export interface KitchenMember {
   id: number;
-  fridgeId: string;
+  kitchenId: string;
   email: string;
   name: string;
   memberRole: string;
@@ -54,35 +52,33 @@ export interface FridgeMember {
   color: string;
 }
 
-export interface FridgeInvite {
+export interface KitchenInvite {
   id: number;
-  fridgeId: string;
-  fridgeName: string;
+  kitchenId: string;
+  kitchenName: string;
   inviterEmail: string;
   inviterName: string;
   invitedAt: string;
 }
 
 export interface ExpiringItem {
-  fridgeItemId: number;
-  productName: string;
-  categoryName: string;
-  value: number;
+  stockItemId: string;
+  foodProductId: number;
+  amount: number;
   unit: string;
   expirationDate: string;
   daysUntilExpiry: number;
-  userName: string;
-  userEmail: string;
+  memberId: number;
 }
 
-export interface FridgeScore {
-  fridgeId: string;
+export interface KitchenScore {
+  kitchenId: string;
   wasteScore: number;
   rank: string;
 }
 
 export interface ShoppingStatus {
-  fridgeId: string;
+  kitchenId: string;
   activeItemCount: number;
   averageItemCount: number;
   isShoppingNeeded: boolean;

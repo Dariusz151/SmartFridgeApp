@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthContext, authReducer, initialAuthState } from "@/context/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FridgesDashboard from "@/pages/FridgesDashboard";
-import FridgeItemsDashboard from "@/pages/FridgeItemsDashboard";
+import KitchensDashboard from "@/pages/KitchensDashboard";
+import KitchenItemsDashboard from "@/pages/KitchenItemsDashboard";
 import FoodProducts from "@/pages/FoodProducts";
 import Recipes from "@/pages/Recipes";
 import AddNewRecipe from "@/pages/AddNewRecipe";
@@ -40,9 +40,9 @@ export default function App() {
 
           <Box component="main" sx={{ flex: 1, py: 3, px: 2 }}>
             <Routes>
-              <Route path="/" element={<Navigate to="/fridges" replace />} />
-              <Route path="/fridges" element={<ProtectedRoute token={state.token}><FridgesDashboard /></ProtectedRoute>} />
-              <Route path="/fridgeitems/:fridgeId" element={<ProtectedRoute token={state.token}><FridgeItemsDashboard /></ProtectedRoute>} />
+              <Route path="/" element={<Navigate to="/Kitchens" replace />} />
+              <Route path="/Kitchens" element={<ProtectedRoute token={state.token}><KitchensDashboard /></ProtectedRoute>} />
+              <Route path="/KitchenItems/:kitchenId" element={<ProtectedRoute token={state.token}><KitchenItemsDashboard /></ProtectedRoute>} />
               <Route path="/foodProducts" element={<ProtectedRoute token={state.token}><FoodProducts /></ProtectedRoute>} />
               <Route path="/recipes" element={<ProtectedRoute token={state.token}><Recipes /></ProtectedRoute>} />
               <Route path="/recipes/add" element={<ProtectedRoute token={state.token}><AddNewRecipe /></ProtectedRoute>} />

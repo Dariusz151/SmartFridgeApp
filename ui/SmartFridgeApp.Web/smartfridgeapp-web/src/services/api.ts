@@ -80,7 +80,7 @@ export const api = {
 
   // Invite endpoints
   getPendingInvites: () =>
-    request<{ id: number; fridgeId: string; fridgeName: string; inviterEmail: string; inviterName: string; invitedAt: string }[]>(
+    request<{ id: number; kitchenId: string; kitchenName: string; inviterEmail: string; inviterName: string; invitedAt: string }[]>(
       "/api/invites/pending", { auth: true },
     ),
 
@@ -90,12 +90,12 @@ export const api = {
   declineInvite: (inviteId: number) =>
     request<void>(`/api/invites/${inviteId}/decline`, { method: "POST", auth: true }),
 
-  inviteUser: (fridgeId: string, email: string) =>
-    request<void>(`/api/fridges/${fridgeId}/invite`, { method: "POST", body: { email }, auth: true }),
+  inviteUser: (kitchenId: string, email: string) =>
+    request<void>(`/api/Kitchens/${kitchenId}/invite`, { method: "POST", body: { email }, auth: true }),
 
-  getFridgeMembers: (fridgeId: string) =>
-    request<{ id: number; fridgeId: string; email: string; name: string; memberRole: string; status: string; color: string }[]>(
-      `/api/fridges/${fridgeId}/members`, { auth: true },
+  getKitchenMembers: (kitchenId: string) =>
+    request<{ id: number; kitchenId: string; email: string; name: string; memberRole: string; status: string; color: string }[]>(
+      `/api/Kitchens/${kitchenId}/members`, { auth: true },
     ),
 };
 

@@ -37,7 +37,7 @@ export default function LoginPage() {
       const data = await api.login(email, password);
       dispatch({ type: "LOGIN_ADMIN", payload: { token: data.token, role: data.role, name: data.name, email: data.email } });
       toast.success(`Welcome${data.name ? `, ${data.name}` : ""}!`, { position: "bottom-center", autoClose: 1500 });
-      navigate("/fridges");
+      navigate("/Kitchens");
     } catch {
       toast.error("Invalid email or password.", { position: "bottom-center", autoClose: 2500 });
     } finally {

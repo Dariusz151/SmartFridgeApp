@@ -7,15 +7,14 @@ using SmartFridgeApp.Core.Contracts.Auth;
 using SmartFridgeApp.Core.Contracts.DomainServices;
 using SmartFridgeApp.Core.Contracts.ExternalRecipes;
 using SmartFridgeApp.Core.Contracts.Repositories;
-using SmartFridgeApp.Core.Domain.Services;
 using SmartFridgeApp.Infrastructure;
 using SmartFridgeApp.Infrastructure.ExternalRecipes;
 using SmartFridgeApp.Infrastructure.Database;
 using SmartFridgeApp.Infrastructure.Auth;
 using SmartFridgeApp.Infrastructure.FoodProducts;
-using SmartFridgeApp.Infrastructure.FridgeItems;
-using SmartFridgeApp.Infrastructure.FridgeMembers;
-using SmartFridgeApp.Infrastructure.Fridges;
+using SmartFridgeApp.Infrastructure.KitchenMembers;
+using SmartFridgeApp.Infrastructure.Kitchens;
+using SmartFridgeApp.Infrastructure.Inventory;
 using SmartFridgeApp.Infrastructure.Notifications;
 using SmartFridgeApp.Infrastructure.Recipes;
 using SmartFridgeApp.Infrastructure.SeedWork;
@@ -31,28 +30,30 @@ public static class ServiceProviderExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration[$"{Consts.SmartFridgeAppConnectionStringLabel}:ConnectionString"];
         services.Configure<DatabaseOptions>(configuration.GetSection(Consts.SmartFridgeAppConnectionStringLabel));
+
+        // Marten event store (inventory)
+        services.AddMartenEventStore(connectionString);
 
         // Infrastructure
         services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddScoped<IAppUserService, AppUserService>();
-        services.AddScoped<IFridgeRepository, FridgeRepository>();
-        services.AddScoped<IFridgeMemberRepository, FridgeMemberRepository>();
-        services.AddScoped<IFridgeItemRepository, FridgeItemRepository>();
+        services.AddScoped<IKitchenRepository, KitchenRepository>();
+        services.AddScoped<IKitchenMemberRepository, KitchenMemberRepository>();
         services.AddScoped<IFoodProductRepository, FoodProductRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeFinderService, RecipeFinderService>();
         services.AddScoped<INotifier, EmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
-        services.AddSingleton<IFridgeScoringPolicy, DefaultFridgeScoringPolicy>();
 
         // Application services
-        services.AddScoped<IFridgeService, FridgeService>();
+        services.AddScoped<IKitchenService, KitchenService>();
         services.AddScoped<IFoodProductService, FoodProductService>();
-        services.AddScoped<IFridgeItemService, FridgeItemService>();
+        services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IRecipeService, RecipeService>();
-        services.AddScoped<IFridgeMemberService, FridgeMemberService>();
+        services.AddScoped<IKitchenMemberService, KitchenMemberService>();
         services.AddScoped<IRecipeImportService, RecipeImportService>();
 
         // External recipe sources
@@ -60,7 +61,7 @@ public static class ServiceProviderExtensions
         services.AddHttpClient<IExternalRecipeSource, SpoonacularRecipeSource>();
 
         // Notification handlers
-        services.AddScoped<IDomainEventNotificationHandler<FridgeAddedNotification>, FridgeAddedNotificationHandler>();
+        services.AddScoped<IDomainEventNotificationHandler<KitchenAddedNotification>, KitchenAddedNotificationHandler>();
         services.AddScoped<IDomainEventNotificationHandler<RecipeAddedNotification>, RecipeAddedNotificationHandler>();
 
         // Quartz

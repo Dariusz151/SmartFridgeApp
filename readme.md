@@ -1,7 +1,7 @@
 # Purpose of the application
 
 Application for managing kitchen products and recipes. 
-Users can create fridges, join them and add list of food products. 
+Users can create Kitchens, join them and add list of food products. 
 App has also list of recipes and based on selected food products user can find recipe to make.
 
 I am automatically the first user of this app, because it was created to help me manage the preparing of everyday dinners. :)
@@ -9,7 +9,7 @@ I have a lot of ideas to new features and application growth - only limitation i
 Please do not hesitate to provide me any feedback/comments about the app.
 
 
-#### Link to app: [SmartFridgeApp](https://smartfridgeapp.pl/ "Link to app")
+#### Link to app: [SmartFridgeApp](https://SmartFridgeApp.pl/ "Link to app")
 
 # Front-end app
 
@@ -67,11 +67,11 @@ So while looking into the code you can see such a objects like aggregates, entit
 ### Domain
 
 There are 3 main group of contexts in this app: 
-1. Fridge 
+1. Kitchen 
 2. Recipe
 3. Food product
 
-**Fridges** contain users (**FridgeUser**) who have a list of **FridgeItems**. 
+**Kitchens** contain users (**FridgeUser**) who have a list of **KitchenItems**. 
 
 Each FridgeItem consists of **FoodProduct** (connected by id), **AmountValue** and other additional properties like note or expiration date.
 
@@ -79,9 +79,9 @@ Each FridgeItem consists of **FoodProduct** (connected by id), **AmountValue** a
 
 **Recipes** have a list of **FoodProduct** and description how to prepare this recipe from this items.
 
-In this case Fridge, FoodProduct and Recipe are *aggregates*. 
+In this case Kitchen, FoodProduct and Recipe are *aggregates*. 
 
-FridgeUsers and FridgeItems are *entities*.
+FridgeUsers and KitchenItems are *entities*.
 
 AmountValue is *value object*.
 

@@ -63,6 +63,8 @@ public class RecipeImportService(
         var result = new RecipeImportResult();
 
         var externalRecipes = await externalRecipeSource.FetchRecipesAsync(batchSize, ct);
+        
+        Console.WriteLine(externalRecipes.Count);
 
         var existingFoodProducts = (await foodProductRepository.GetAllAsync()).ToList();
         var existingRecipes = await recipeRepository.GetAllRecipesAsync();
@@ -78,6 +80,7 @@ public class RecipeImportService(
         {
             try
             {
+                Console.WriteLine(external.Title);
                 if (existingRecipeNames.Contains(external.Title))
                 {
                     result.SkippedCount++;
@@ -98,6 +101,7 @@ public class RecipeImportService(
 
                     if (isNew)
                     {
+                        Console.WriteLine("Adding new ingredient");
                         await foodProductRepository.AddAsync(foodProduct);
                         newFoodProducts.Add(foodProduct);
                         result.NewFoodProducts.Add(foodProduct.Name);
@@ -140,6 +144,8 @@ public class RecipeImportService(
                     foodProductDetailsList,
                     external.ReadyInMinutes > 0 ? external.ReadyInMinutes : 1,
                     (int)difficulty);
+                
+                Console.WriteLine($"Adding new recipe: {recipe.Name} ");
 
                 await recipeRepository.AddRecipeAsync(recipe);
                 existingRecipeNames.Add(recipeName);

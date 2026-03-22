@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Infrastructure.Validation;
 using System;
@@ -45,7 +45,7 @@ namespace SmartFridgeApp.API.Middleware
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         details = e.Details;
                         break;
-                    case InvalidFridgeException e:
+                    case InvalidKitchenException e:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         details = e.Details;
                         break;
@@ -58,10 +58,6 @@ namespace SmartFridgeApp.API.Middleware
                         details = e.Details;
                         break;
                     case FoodProductNotFoundException e:
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        details = e.Details;
-                        break;
-                    case FridgeItemNotExistException e:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         details = e.Details;
                         break;

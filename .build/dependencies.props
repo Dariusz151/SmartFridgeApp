@@ -20,6 +20,7 @@
 		<JwtBearerVersion>10.0.3</JwtBearerVersion>
 		<GoogleAuthVersion>10.0.3</GoogleAuthVersion>
 		<BCryptVersion>4.0.3</BCryptVersion>
+		<MartenVersion>8.26.0</MartenVersion>
 	</PropertyGroup>
 	
 	<PropertyGroup>

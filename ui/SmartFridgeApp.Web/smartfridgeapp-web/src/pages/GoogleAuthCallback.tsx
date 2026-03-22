@@ -21,7 +21,7 @@ export default function GoogleAuthCallback() {
         position: "bottom-center",
         autoClose: 2000,
       });
-      navigate("/fridges", { replace: true });
+      navigate("/Kitchens", { replace: true });
     } else {
       toast.error("Google login failed. Please try again.", {
         position: "bottom-center",

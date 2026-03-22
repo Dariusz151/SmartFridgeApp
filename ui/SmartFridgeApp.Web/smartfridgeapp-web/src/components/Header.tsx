@@ -37,10 +37,10 @@ import EggIcon from "@mui/icons-material/Egg";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
-import type { FridgeInvite } from "@/types";
+import type { KitchenInvite } from "@/types";
 
 const navLinks = [
-  { label: "Fridges", to: "/fridges", icon: <AcUnitIcon fontSize="small" /> },
+  { label: "Kitchens", to: "/Kitchens", icon: <AcUnitIcon fontSize="small" /> },
   { label: "Food Products", to: "/foodProducts", icon: <EggIcon fontSize="small" /> },
   { label: "Recipes", to: "/recipes", icon: <RestaurantMenuIcon fontSize="small" /> },
 ];
@@ -54,7 +54,7 @@ export default function Header() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [invites, setInvites] = useState<FridgeInvite[]>([]);
+  const [invites, setInvites] = useState<KitchenInvite[]>([]);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const fetchInvites = useCallback(async () => {
@@ -69,7 +69,7 @@ export default function Header() {
 
   useEffect(() => {
     fetchInvites();
-    const interval = setInterval(fetchInvites, 30_000);
+    const interval = setInterval(fetchInvites, 300_000);
     return () => clearInterval(interval);
   }, [fetchInvites]);
 
@@ -114,7 +114,7 @@ export default function Header() {
           <Typography
             variant="h6"
             component={RouterLink}
-            to="/fridges"
+            to="/Kitchens"
             sx={{
               color: "inherit",
               textDecoration: "none",
@@ -251,7 +251,7 @@ export default function Header() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Pending Fridge Invites</DialogTitle>
+        <DialogTitle>Pending Kitchen Invites</DialogTitle>
         <DialogContent dividers>
           {invites.length === 0 ? (
             <Typography color="text.secondary">No pending invites.</Typography>
@@ -270,7 +270,7 @@ export default function Header() {
                   }}
                 >
                   <Box>
-                    <Typography fontWeight={600}>{inv.fridgeName}</Typography>
+                    <Typography fontWeight={600}>{inv.kitchenName}</Typography>
                     <Typography variant="body2" color="text.secondary">
                       Invited by {inv.inviterName || inv.inviterEmail}
                     </Typography>
