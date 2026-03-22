@@ -23,7 +23,7 @@ FROM app."Kitchens";
 -- View: Member Kitchens — Kitchens accessible to a member (for GetMyKitchensAsync)
 DROP VIEW IF EXISTS app.v_member_kitchens;
 CREATE VIEW app.v_member_kitchens AS
-SELECT f."Id", f."Name", f."Address", f."Desc", f."WasteScore", f."CreatedAt",
+SELECT f."Id", f."Name", f."Address", f."Desc", f."CreatedAt",
        fm."Email"
 FROM app."Kitchens" f
 INNER JOIN app."KitchenMembers" fm ON fm."kitchenId" = f."Id"

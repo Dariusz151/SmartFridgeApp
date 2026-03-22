@@ -1,0 +1,3 @@
+-- KitchenMembers seed data
+-- Admin is NOT an explicit member of any Kitchen; they see all Kitchens via role check.
+-- Kitchen-specific memberships are seeded in 06-dev-seed.sql.

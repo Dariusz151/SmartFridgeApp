@@ -1,25 +1,34 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { api, ApiError } from "@/services/api";
 import { toast } from "react-toastify";
 
 interface UseFetchResult<T> {
   data: T | null;
   loading: boolean;
+  refreshing: boolean;
   error: string | null;
   refetch: () => void;
+  setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
 export function useFetch<T>(endpoint: string, auth = false): UseFetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [trigger, setTrigger] = useState(0);
+  const initialLoadDone = useRef(false);
 
   const refetch = useCallback(() => setTrigger((n) => n + 1), []);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+
+    if (initialLoadDone.current) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
 
     api
       .get<T>(endpoint, auth)
@@ -37,7 +46,11 @@ export function useFetch<T>(endpoint: string, auth = false): UseFetchResult<T> {
         }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setRefreshing(false);
+          initialLoadDone.current = true;
+        }
       });
 
     return () => {
@@ -45,7 +58,7 @@ export function useFetch<T>(endpoint: string, auth = false): UseFetchResult<T> {
     };
   }, [endpoint, trigger]);
 
-  return { data, loading, error, refetch };
+  return { data, loading, refreshing, error, refetch, setData };
 }
 
 export function useSubmit() {

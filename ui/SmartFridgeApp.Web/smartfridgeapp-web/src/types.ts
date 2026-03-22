@@ -31,6 +31,42 @@ export interface AmountValue {
 
 export type Unit = "Grams" | "Pieces" | "Mililiter" | "NotAssigned";
 
+export type StorageLocation = "Fridge" | "Freezer" | "Pantry" | "SpiceRack" | "Counter" | "Cellar";
+
+export type ItemTag =
+  | "Organic"
+  | "GlutenFree"
+  | "Vegan"
+  | "DairyFree"
+  | "LowSugar"
+  | "HighProtein"
+  | "Homemade"
+  | "Leftover"
+  | "ForParty"
+  | "QuickMeal";
+
+export const STORAGE_LOCATIONS: { value: StorageLocation; label: string; icon: string }[] = [
+  { value: "Fridge", label: "Fridge", icon: "\u{1F9CA}" },
+  { value: "Freezer", label: "Freezer", icon: "\u{2744}\u{FE0F}" },
+  { value: "Pantry", label: "Pantry", icon: "\u{1F3E0}" },
+  { value: "SpiceRack", label: "Spice Rack", icon: "\u{1F336}\u{FE0F}" },
+  { value: "Counter", label: "Counter", icon: "\u{1F372}" },
+  { value: "Cellar", label: "Cellar", icon: "\u{1F377}" },
+];
+
+export const ITEM_TAGS: { value: ItemTag; label: string }[] = [
+  { value: "Organic", label: "Organic" },
+  { value: "GlutenFree", label: "Gluten Free" },
+  { value: "Vegan", label: "Vegan" },
+  { value: "DairyFree", label: "Dairy Free" },
+  { value: "LowSugar", label: "Low Sugar" },
+  { value: "HighProtein", label: "High Protein" },
+  { value: "Homemade", label: "Homemade" },
+  { value: "Leftover", label: "Leftover" },
+  { value: "ForParty", label: "For Party" },
+  { value: "QuickMeal", label: "Quick Meal" },
+];
+
 export interface FridgeItem {
   stockItemId: string;
   foodProductId: number;
@@ -39,6 +75,8 @@ export interface FridgeItem {
   unit: Unit;
   expirationDate: string;
   note?: string;
+  location: StorageLocation;
+  tags: ItemTag[];
   stockedAt: string;
 }
 
