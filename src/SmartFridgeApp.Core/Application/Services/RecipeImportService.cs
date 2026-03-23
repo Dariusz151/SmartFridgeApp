@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SmartFridgeApp.Core.Application.Features.Recipes.ImportRecipes;
+using SmartFridgeApp.Core.Contracts;
 using SmartFridgeApp.Core.Contracts.ExternalRecipes;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
@@ -19,6 +20,7 @@ public class RecipeImportService(
     IFoodProductRepository foodProductRepository,
     IRecipeRepository recipeRepository,
     IUnitOfWork unitOfWork,
+    ITranslationService translationService,
     ILogger<RecipeImportService> logger) : IRecipeImportService
 {
     private static readonly Dictionary<string, int> DishTypeToCategoryId = new(StringComparer.OrdinalIgnoreCase)
@@ -68,6 +70,23 @@ public class RecipeImportService(
 
         var externalRecipes = await externalRecipeSource.FetchRecipesAsync(batchSize, ct);
         logger.LogInformation("[RecipeImport] Fetched {Count} external recipes", externalRecipes.Count);
+
+        // ── Translate recipes from English to Polish ──
+        logger.LogInformation("[RecipeImport] Translating recipes to Polish...");
+        foreach (var recipe in externalRecipes)
+        {
+            var textsToTranslate = new List<string> { recipe.Title, recipe.Description }
+                .Concat(recipe.Ingredients.Select(i => i.Name))
+                .ToList();
+
+            var translated = await translationService.TranslateBatchAsync(textsToTranslate, "en", "pl", ct);
+
+            recipe.Title = translated[0];
+            recipe.Description = translated[1];
+            for (var i = 0; i < recipe.Ingredients.Count; i++)
+                recipe.Ingredients[i].Name = translated[i + 2];
+        }
+        logger.LogInformation("[RecipeImport] Translation complete");
 
         var existingFoodProducts = (await foodProductRepository.GetAllAsync()).ToList();
         var existingRecipes = await recipeRepository.GetAllRecipesAsync();
@@ -163,7 +182,7 @@ public class RecipeImportService(
                     foodProductDetailsList,
                     external.ReadyInMinutes > 0 ? external.ReadyInMinutes : 1,
                     (int)difficulty);
-                
+
                 logger.LogInformation("[RecipeImport] Adding recipe '{Name}' (category={Cat}, difficulty={Diff}, products={Cnt})",
                     recipe.Name, recipeCategory.Name, difficulty, foodProductDetailsList.Count);
 

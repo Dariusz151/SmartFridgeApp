@@ -15,4 +15,8 @@ public interface IFoodProductService
     Task DeleteFoodProductAsync(int foodProductId, CancellationToken ct = default);
     Task<IEnumerable<Category>> GetCategoriesAsync(CancellationToken ct = default);
     Task CreateCategoryAsync(string name, CancellationToken ct = default);
+
+    // Variants
+    Task<IReadOnlyList<ProductVariantDto>> GetVariantsAsync(short foodProductId, CancellationToken ct = default);
+    Task AddVariantAsync(short foodProductId, string name, string? barcode, CancellationToken ct = default);
 }

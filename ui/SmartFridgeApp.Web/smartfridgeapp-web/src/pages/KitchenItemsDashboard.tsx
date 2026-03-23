@@ -42,7 +42,7 @@ import { useParams } from "react-router-dom";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import NewStockItemDialog from "@/components/dialogs/NewStockItemDialog";
 import RecipeCarouselDialog from "@/components/dialogs/RecipeCarouselDialog";
-import type { FridgeItem, KitchenMember, Recipe, ExpiringItem, KitchenScore, ShoppingStatus, FoodProduct, StorageLocation, ItemTag } from "@/types";
+import type { FridgeItem, KitchenMember, Kitchen, Recipe, ExpiringItem, KitchenScore, ShoppingStatus, FoodProduct, ProductVariant, StorageLocation, ItemTag } from "@/types";
 import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
@@ -150,6 +150,30 @@ export default function KitchenItemsDashboard() {
     () => new Map((foodProducts ?? []).map((fp) => [fp.foodProductId, fp])),
     [foodProducts],
   );
+
+  // Variant name lookup — fetch for product IDs that appear in items with variantId
+  const [variantMap, setVariantMap] = useState<Map<number, string>>(new Map());
+  useEffect(() => {
+    if (!items) return;
+    const productIdsWithVariants = [...new Set(items.filter((i) => i.variantId).map((i) => i.foodProductId))];
+    if (productIdsWithVariants.length === 0) return;
+    Promise.all(
+      productIdsWithVariants.map((pid) => api.get<ProductVariant[]>(`/api/foodProducts/${pid}/variants`, true)),
+    ).then((results) => {
+      const map = new Map<number, string>();
+      results.flat().forEach((v) => map.set(v.variantId, v.name));
+      setVariantMap(map);
+    }).catch(() => {});
+  }, [items]);
+
+  // Kitchen details — fetch manually so we can retry once auth token is available
+  const [kitchen, setKitchen] = useState<Kitchen | undefined>();
+  const refetchKitchens = useCallback(() => {
+    api.get<Kitchen[]>("/api/Kitchens", true)
+      .then((list) => setKitchen(list.find((k) => k.id === kitchenId)))
+      .catch(() => {});
+  }, [kitchenId]);
+  useEffect(() => { refetchKitchens(); }, [refetchKitchens]);
 
   const memberMap = useMemo(
     () => new Map(members.map((m) => [m.id, m])),
@@ -277,13 +301,15 @@ export default function KitchenItemsDashboard() {
                 <Stack justifyContent="center" sx={{ minWidth: 0, flex: 1 }}>
                   <Stack direction="row" alignItems="center" spacing={0.75}>
                     {loc && <Box component="span" sx={{ fontSize: 14, lineHeight: 1 }}>{loc.icon}</Box>}
-                    <Typography variant="body2" fontWeight={500} noWrap>{params.value}</Typography>
-                  </Stack>
-                  {params.row.categoryName && (
-                    <Typography variant="caption" color="text.secondary" noWrap>
-                      {params.row.categoryName}
+                    <Typography variant="body2" fontWeight={500} noWrap>
+                      {params.value}
+                      {params.row.variantName && (
+                        <Box component="span" sx={{ ml: 0.75, fontSize: "0.75rem", fontWeight: 400, opacity: 0.55 }}>
+                          {params.row.variantName}
+                        </Box>
+                      )}
                     </Typography>
-                  )}
+                  </Stack>
                 </Stack>
                 {itemTags.length > 0 && (
                   <Stack direction="row" spacing={0.25} alignItems="center" sx={{ flexShrink: 0, ml: 1, opacity: 0.45 }}>
@@ -436,16 +462,18 @@ export default function KitchenItemsDashboard() {
           id: item.stockItemId ?? i,
           _optimistic: (item as any)._optimistic ?? false,
           productName: fp?.foodProductName ?? `Product #${item.foodProductId}`,
+          variantName: (item.variantId && variantMap.get(item.variantId)) ?? "",
           categoryName: fp?.foodProductCategory ?? "",
           userName: member?.name || member?.email,
           userColor: member?.color,
           userEmail: member?.email,
         };
       }),
-    [items, foodProductMap, memberMap, filterLocation, filterTags],
+    [items, foodProductMap, memberMap, variantMap, filterLocation, filterTags],
   );
 
   const refetchAll = () => {
+    refetchKitchens();
     refetchMembers();
     refetchItems();
     refetchExpiring();
@@ -473,9 +501,19 @@ export default function KitchenItemsDashboard() {
           <Box sx={{ fontSize: 48, lineHeight: 1 }}>🍱</Box>
           <Box>
             <Typography variant="h4" fontWeight={700} color="primary.dark">
-              Kitchen Items
+              {kitchen?.name ?? "Kitchen Items"}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {kitchen?.address && (
+              <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.7 }}>
+                📍 {kitchen.address}
+              </Typography>
+            )}
+            {kitchen?.desc && (
+              <Typography variant="caption" color="text.secondary" sx={{ opacity: 0.55, display: "block" }}>
+                {kitchen.desc}
+              </Typography>
+            )}
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }}>
               {items?.length
                 ? `${items.length} item${items.length !== 1 ? "s" : ""} stored`
                 : "No items yet — add something!"}

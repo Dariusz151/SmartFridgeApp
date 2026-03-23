@@ -16,8 +16,9 @@ public class StockItem
     public StorageLocation Location { get; private set; }
     public List<ItemTag> Tags { get; private set; }
     public DateTimeOffset StockedAt { get; private set; }
+    public int? VariantId { get; private set; }
 
-    internal StockItem(Guid id, short foodProductId, int memberId, float amount, Unit unit, DateTimeOffset expirationDate, string note, StorageLocation location, List<ItemTag> tags, DateTimeOffset stockedAt)
+    internal StockItem(Guid id, short foodProductId, int memberId, float amount, Unit unit, DateTimeOffset expirationDate, string note, StorageLocation location, List<ItemTag> tags, DateTimeOffset stockedAt, int? variantId = null)
     {
         Id = id;
         FoodProductId = foodProductId;
@@ -29,9 +30,17 @@ public class StockItem
         Location = location;
         Tags = tags ?? [];
         StockedAt = stockedAt;
+        VariantId = variantId;
     }
 
     internal void DecreaseAmount(float consumed) => Amount -= consumed;
+
+    internal void IncreaseAmount(float added, DateTimeOffset newExpiration)
+    {
+        Amount += added;
+        if (newExpiration > ExpirationDate)
+            ExpirationDate = newExpiration;
+    }
 
     public bool IsExpired() => ExpirationDate < DateTimeOffset.UtcNow;
 }

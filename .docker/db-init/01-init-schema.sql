@@ -48,6 +48,18 @@ CREATE TABLE IF NOT EXISTS app."AppUsers" (
     "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
+-- Table: ProductVariants
+CREATE TABLE IF NOT EXISTS app."ProductVariants" (
+    "VariantId"     SERIAL       PRIMARY KEY,
+    "FoodProductId" SMALLINT     NOT NULL,
+    "Name"          VARCHAR(80)  NOT NULL,
+    "Barcode"       VARCHAR(50)  NULL,
+    CONSTRAINT "FK_ProductVariants_FoodProducts" FOREIGN KEY ("FoodProductId")
+        REFERENCES app."FoodProducts"("FoodProductId") ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX IF NOT EXISTS "UX_ProductVariants_Barcode"
+    ON app."ProductVariants"("Barcode") WHERE "Barcode" IS NOT NULL;
+
 -- Table: KitchenMembers (links AppUsers to Kitchens, handles invites)
 -- MemberRole: 'Creator' | 'Member'
 -- Status:     'Accepted' | 'Pending'

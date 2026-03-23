@@ -14,4 +14,5 @@ public record ItemStocked(
     string Note,
     StorageLocation Location,
     List<ItemTag> Tags,
-    DateTimeOffset StockedAt);
+    DateTimeOffset StockedAt,
+    int? VariantId = null);

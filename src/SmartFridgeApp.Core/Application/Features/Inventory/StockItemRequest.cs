@@ -13,4 +13,5 @@ public class StockItemRequest
     public string Note { get; set; }
     public StorageLocation Location { get; set; } = StorageLocation.Fridge;
     public List<ItemTag> Tags { get; set; } = [];
+    public int? VariantId { get; set; }
 }

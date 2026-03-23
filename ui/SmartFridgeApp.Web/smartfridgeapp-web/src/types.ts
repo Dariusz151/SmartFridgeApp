@@ -4,6 +4,14 @@ export interface FoodProduct {
   foodProductId: number;
   foodProductName: string;
   foodProductCategory?: string;
+  variantCount: number;
+}
+
+export interface ProductVariant {
+  variantId: number;
+  foodProductId: number;
+  name: string;
+  barcode?: string;
 }
 
 export interface FoodProductCategory {
@@ -78,6 +86,8 @@ export interface FridgeItem {
   location: StorageLocation;
   tags: ItemTag[];
   stockedAt: string;
+  variantId?: number;
+  variantName?: string;
 }
 
 export interface KitchenMember {

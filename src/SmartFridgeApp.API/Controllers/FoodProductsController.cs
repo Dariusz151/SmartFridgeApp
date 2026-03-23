@@ -106,5 +106,29 @@ namespace SmartFridgeApp.API.Controllers
             await foodProductService.DeleteFoodProductAsync(request.FoodProductId, ct);
             return NoContent();
         }
+
+        /// <summary>
+        /// Get variants for a food product.
+        /// </summary>
+        [Route("{foodProductId:int}/variants")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<ProductVariantDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetVariantsAsync([FromRoute] short foodProductId, CancellationToken ct)
+        {
+            return Ok(await foodProductService.GetVariantsAsync(foodProductId, ct));
+        }
+
+        /// <summary>
+        /// Add a variant to a food product.
+        /// </summary>
+        [Route("{foodProductId:int}/variants")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddVariantAsync([FromRoute] short foodProductId, [FromBody] AddVariantRequest request, CancellationToken ct)
+        {
+            await foodProductService.AddVariantAsync(foodProductId, request.Name, request.Barcode, ct);
+            return Created(string.Empty, null);
+        }
     }
 }

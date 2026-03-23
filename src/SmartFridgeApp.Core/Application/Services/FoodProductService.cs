@@ -21,7 +21,8 @@ public class FoodProductService(
         var connection = sqlConnectionFactory.GetOpenConnection();
         const string sql = """
             SELECT fp."FoodProductId", fp."Name" AS "FoodProductName",
-                   c."Name" AS "FoodProductCategory"
+                   c."Name" AS "FoodProductCategory",
+                   (SELECT COUNT(*) FROM app."ProductVariants" pv WHERE pv."FoodProductId" = fp."FoodProductId") AS "VariantCount"
             FROM app."FoodProducts" fp
             LEFT JOIN app."Categories" c ON fp."CategoryId" = c."CategoryId"
             """;
@@ -69,6 +70,26 @@ public class FoodProductService(
     {
         var category = new Category(name);
         await foodProductRepository.CreateCategoryAsync(category);
+        await unitOfWork.CommitAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<ProductVariantDto>> GetVariantsAsync(short foodProductId, CancellationToken ct = default)
+    {
+        var variants = await foodProductRepository.GetVariantsByFoodProductIdAsync(foodProductId);
+        return variants.Select(v => new ProductVariantDto
+        {
+            VariantId = v.VariantId,
+            FoodProductId = v.FoodProductId,
+            Name = v.Name,
+            Barcode = v.Barcode,
+        }).ToList();
+    }
+
+    public async Task AddVariantAsync(short foodProductId, string name, string? barcode, CancellationToken ct = default)
+    {
+        var foodProduct = await foodProductRepository.GetByIdAsync(foodProductId);
+        var variant = foodProduct.AddVariant(name, barcode);
+        await foodProductRepository.AddVariantAsync(variant);
         await unitOfWork.CommitAsync(ct);
     }
 }

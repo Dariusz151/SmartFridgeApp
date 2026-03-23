@@ -22,7 +22,8 @@ public class ActiveStockItemProjection : EventProjection
             Note = e.Note,
             Location = e.Location,
             Tags = e.Tags ?? [],
-            StockedAt = e.StockedAt
+            StockedAt = e.StockedAt,
+            VariantId = e.VariantId
         };
     }
 
@@ -51,5 +52,17 @@ public class ActiveStockItemProjection : EventProjection
     public void Project(ItemRemoved e, IDocumentOperations ops)
     {
         ops.Delete<ActiveStockItemDocument>(e.ItemId);
+    }
+
+    public async Task Project(ItemRestocked e, IDocumentOperations ops)
+    {
+        var doc = await ops.LoadAsync<ActiveStockItemDocument>(e.ItemId);
+        if (doc is not null)
+        {
+            doc.Amount += e.AddedAmount;
+            if (e.NewExpirationDate > doc.ExpirationDate)
+                doc.ExpirationDate = e.NewExpirationDate;
+            ops.Store(doc);
+        }
     }
 }

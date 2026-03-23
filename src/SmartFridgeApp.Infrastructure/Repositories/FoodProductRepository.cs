@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartFridgeApp.Core.Contracts.Repositories;
@@ -77,6 +78,28 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             {
                 throw new InvalidFoodProductCategoryException("This category does not exist.", "InvalidFoodProductCategoryId");
             }
+        }
+
+        public async Task<ProductVariant?> GetVariantByIdAsync(int variantId)
+        {
+            return await _context.ProductVariants.FirstOrDefaultAsync(v => v.VariantId == variantId);
+        }
+
+        public async Task<ProductVariant?> GetVariantByBarcodeAsync(string barcode)
+        {
+            return await _context.ProductVariants.FirstOrDefaultAsync(v => v.Barcode == barcode);
+        }
+
+        public async Task<IReadOnlyList<ProductVariant>> GetVariantsByFoodProductIdAsync(short foodProductId)
+        {
+            return await _context.ProductVariants
+                .Where(v => v.FoodProductId == foodProductId)
+                .ToListAsync();
+        }
+
+        public async Task AddVariantAsync(ProductVariant variant)
+        {
+            await _context.ProductVariants.AddAsync(variant);
         }
     }
 }

@@ -17,4 +17,6 @@ public class StockItemDto
     public string Location { get; set; }
     public List<string> Tags { get; set; } = [];
     public DateTimeOffset StockedAt { get; set; }
+    public int? VariantId { get; set; }
+    public string VariantName { get; set; }
 }

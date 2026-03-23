@@ -17,5 +17,11 @@ namespace SmartFridgeApp.Core.Contracts.Repositories
         Task CreateCategoryAsync(Category category);
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int categoryId);
+
+        // Variants
+        Task<ProductVariant?> GetVariantByIdAsync(int variantId);
+        Task<ProductVariant?> GetVariantByBarcodeAsync(string barcode);
+        Task<IReadOnlyList<ProductVariant>> GetVariantsByFoodProductIdAsync(short foodProductId);
+        Task AddVariantAsync(ProductVariant variant);
     }
 }

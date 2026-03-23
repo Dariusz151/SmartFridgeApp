@@ -17,4 +17,5 @@ public class ActiveStockItemDocument
     public StorageLocation Location { get; set; }
     public List<ItemTag> Tags { get; set; } = [];
     public DateTimeOffset StockedAt { get; set; }
+    public int? VariantId { get; set; }
 }

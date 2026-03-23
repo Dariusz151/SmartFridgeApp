@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartFridgeApp.API.Quartz;
 using SmartFridgeApp.API.Services;
 using SmartFridgeApp.Core.Application.Services;
+using SmartFridgeApp.Core.Contracts;
 using SmartFridgeApp.Core.Contracts.Auth;
 using SmartFridgeApp.Core.Contracts.DomainServices;
 using SmartFridgeApp.Core.Contracts.ExternalRecipes;
@@ -10,6 +11,7 @@ using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Infrastructure;
 using SmartFridgeApp.Infrastructure.ExternalRecipes;
 using SmartFridgeApp.Infrastructure.Database;
+using SmartFridgeApp.Infrastructure.Translation;
 using SmartFridgeApp.Infrastructure.Auth;
 using SmartFridgeApp.Infrastructure.FoodProducts;
 using SmartFridgeApp.Infrastructure.KitchenMembers;
@@ -59,6 +61,10 @@ public static class ServiceProviderExtensions
         // External recipe sources
         services.Configure<SpoonacularOptions>(configuration.GetSection("Spoonacular"));
         services.AddHttpClient<IExternalRecipeSource, SpoonacularRecipeSource>();
+
+        // Translation
+        services.Configure<TranslationOptions>(configuration.GetSection("Translation"));
+        services.AddHttpClient<ITranslationService, LibreTranslateService>();
 
         // Notification handlers
         services.AddScoped<IDomainEventNotificationHandler<KitchenAddedNotification>, KitchenAddedNotificationHandler>();

@@ -15,8 +15,9 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFetch, useSubmit } from "@/hooks/useApi";
+import { api } from "@/services/api";
 import UnitSelector from "@/components/UnitSelector";
-import type { FoodProduct, Unit, FridgeItem, StorageLocation, ItemTag } from "@/types";
+import type { FoodProduct, ProductVariant, Unit, FridgeItem, StorageLocation, ItemTag } from "@/types";
 import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 
 interface Props {
@@ -31,6 +32,8 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
   const { data: foodProducts } = useFetch<FoodProduct[]>("/api/foodProducts");
   const { submit, loading } = useSubmit();
   const [foodProductId, setFoodProductId] = useState(0);
+  const [variantId, setVariantId] = useState<number | null>(null);
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState<Unit>("NotAssigned");
   const [location, setLocation] = useState<StorageLocation>("Fridge");
@@ -44,6 +47,15 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
   };
   const [expirationDate, setExpirationDate] = useState(defaultExpiration());
 
+  useEffect(() => {
+    if (!foodProductId) {
+      setVariants([]);
+      setVariantId(null);
+      return;
+    }
+    api.get<ProductVariant[]>(`/api/foodProducts/${foodProductId}/variants`).then(setVariants).catch(() => setVariants([]));
+  }, [foodProductId]);
+
   const handleAdd = async () => {
     const result = await submit(
       `/api/Kitchens/${kitchenId}/inventory`,
@@ -56,6 +68,7 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
           unit,
           location,
           tags,
+          variantId: variantId ?? undefined,
           expirationDate: new Date(expirationDate).toISOString(),
         },
       },
@@ -74,10 +87,14 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
         unit,
         location,
         tags,
+        variantId: variantId ?? undefined,
+        variantName: variants.find((v) => v.variantId === variantId)?.name,
         expirationDate: new Date(expirationDate).toISOString(),
         stockedAt: new Date().toISOString(),
       });
       setFoodProductId(0);
+      setVariantId(null);
+      setVariants([]);
       setValue("");
       setUnit("NotAssigned");
       setLocation("Fridge");
@@ -100,6 +117,16 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
               <TextField {...params} label="Select food product" />
             )}
           />
+          {variants.length > 0 && (
+            <Autocomplete
+              options={variants}
+              getOptionLabel={(option) => option.name + (option.barcode ? ` (${option.barcode})` : "")}
+              onChange={(_, val) => setVariantId(val?.variantId ?? null)}
+              renderInput={(params) => (
+                <TextField {...params} label="Variant (optional)" />
+              )}
+            />
+          )}
           <TextField
             label="Amount"
             type="number"

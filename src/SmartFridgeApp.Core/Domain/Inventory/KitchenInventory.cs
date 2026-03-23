@@ -31,7 +31,7 @@ public class KitchenInventory
 
     // ── Command methods (rich domain model — validate + return events) ──
 
-    public ItemStocked StockItem(short foodProductId, int memberId, float amount, Unit unit, DateTimeOffset expirationDate, string note, StorageLocation location = StorageLocation.Fridge, List<ItemTag> tags = null)
+    public ItemStocked StockItem(short foodProductId, int memberId, float amount, Unit unit, DateTimeOffset expirationDate, string note, StorageLocation location = StorageLocation.Fridge, List<ItemTag> tags = null, int? variantId = null)
     {
         if (amount <= 0)
             throw new DomainException("Amount must be greater than 0.", "InvalidAmount");
@@ -39,7 +39,24 @@ public class KitchenInventory
         if (expirationDate < DateTimeOffset.UtcNow.AddDays(-1))
             throw new DomainException("Cannot set past expiration date.", "InvalidExpirationDate");
 
-        var evt = new ItemStocked(Guid.NewGuid(), foodProductId, memberId, amount, unit, expirationDate, note, location, tags ?? [], DateTimeOffset.UtcNow);
+        var evt = new ItemStocked(Guid.NewGuid(), foodProductId, memberId, amount, unit, expirationDate, note, location, tags ?? [], DateTimeOffset.UtcNow, variantId);
+        Apply(evt);
+        return evt;
+    }
+
+    public ItemRestocked TryRestockExisting(short foodProductId, int memberId, float amount, Unit unit,
+        DateTimeOffset expirationDate, StorageLocation location, int? variantId = null)
+    {
+        var existing = _activeItems.Values.FirstOrDefault(i =>
+            i.FoodProductId == foodProductId
+            && i.MemberId == memberId
+            && i.Unit == unit
+            && i.Location == location
+            && i.VariantId == variantId);
+
+        if (existing is null) return null;
+
+        var evt = new ItemRestocked(existing.Id, amount, expirationDate, DateTimeOffset.UtcNow);
         Apply(evt);
         return evt;
     }
@@ -129,7 +146,7 @@ public class KitchenInventory
     public void Apply(ItemStocked e)
     {
         _activeItems[e.ItemId] = new StockItem(
-            e.ItemId, e.FoodProductId, e.MemberId, e.Amount, e.Unit, e.ExpirationDate, e.Note, e.Location, e.Tags, e.StockedAt);
+            e.ItemId, e.FoodProductId, e.MemberId, e.Amount, e.Unit, e.ExpirationDate, e.Note, e.Location, e.Tags, e.StockedAt, e.VariantId);
         ActiveItemCount++;
         UpdateAverage();
     }
@@ -170,6 +187,14 @@ public class KitchenInventory
     public void Apply(ItemExpired e)
     {
         WasteScore += ExpiredPenalty;
+    }
+
+    public void Apply(ItemRestocked e)
+    {
+        if (_activeItems.TryGetValue(e.ItemId, out var item))
+        {
+            item.IncreaseAmount(e.AddedAmount, e.NewExpirationDate);
+        }
     }
 
     // ── Private helpers ──

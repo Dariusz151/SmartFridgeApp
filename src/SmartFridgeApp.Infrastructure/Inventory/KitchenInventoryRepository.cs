@@ -126,6 +126,7 @@ public class KitchenInventoryRepository(IDocumentSession session) : IKitchenInve
         Note = d.Note,
         Location = d.Location.ToString(),
         Tags = d.Tags?.Select(t => t.ToString()).ToList() ?? [],
-        StockedAt = d.StockedAt
+        StockedAt = d.StockedAt,
+        VariantId = d.VariantId
     };
 }

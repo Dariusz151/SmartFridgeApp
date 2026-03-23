@@ -27,6 +27,22 @@ public class InventoryService(IKitchenInventoryRepository inventoryRepository) :
     {
         var (inventory, version) = await inventoryRepository.LoadAsync(kitchenId, ct);
 
+        // Try to merge with an existing matching item first
+        var restockEvt = inventory.TryRestockExisting(
+            request.FoodProductId,
+            memberId,
+            request.Amount,
+            request.Unit,
+            request.ExpirationDate,
+            request.Location,
+            request.VariantId);
+
+        if (restockEvt is not null)
+        {
+            await inventoryRepository.AppendEventsAsync(kitchenId, version, [restockEvt], ct);
+            return;
+        }
+
         var evt = inventory.StockItem(
             request.FoodProductId,
             memberId,
@@ -35,7 +51,8 @@ public class InventoryService(IKitchenInventoryRepository inventoryRepository) :
             request.ExpirationDate,
             request.Note,
             request.Location,
-            request.Tags);
+            request.Tags,
+            request.VariantId);
 
         await inventoryRepository.AppendEventsAsync(kitchenId, version, [evt], ct);
     }
