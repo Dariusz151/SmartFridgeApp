@@ -40,10 +40,10 @@ public class KitchenInventoryRepository(IDocumentSession session) : IKitchenInve
         return docs.Select(ToStockItemDto).ToList();
     }
 
-    public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(int memberId, CancellationToken ct = default)
+    public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(Guid kitchenId, int memberId, CancellationToken ct = default)
     {
         var docs = await session.Query<ActiveStockItemDocument>()
-            .Where(d => d.MemberId == memberId)
+            .Where(d => d.KitchenId == kitchenId && d.MemberId == memberId)
             .ToListAsync(ct);
 
         return docs.Select(ToStockItemDto).ToList();

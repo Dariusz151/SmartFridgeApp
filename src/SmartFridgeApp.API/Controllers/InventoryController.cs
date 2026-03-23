@@ -57,7 +57,7 @@ public class InventoryController(IInventoryService inventoryService) : Controlle
         [FromRoute] int memberId,
         CancellationToken ct)
     {
-        return Ok(await inventoryService.GetActiveItemsByMemberAsync(memberId, ct));
+        return Ok(await inventoryService.GetActiveItemsByMemberAsync(kitchenId, memberId, ct));
     }
 
     [HttpPost]

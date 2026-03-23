@@ -55,10 +55,27 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((exp.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-function expiryColor(days: number): "error" | "warning" | "success" | "default" {
-  if (days <= 0) return "error";
-  if (days <= 3) return "warning";
-  return "success";
+function expiryDots(days: number): { count: number; color: string } {
+  if (days <= 0) return { count: 1, color: "#d32f2f" };       // expired — 1 red
+  if (days === 1) return { count: 1, color: "#ff9800" };      // tomorrow — 1 orange
+  if (days <= 3) return { count: 2, color: "#ff9800" };       // 2-3 days — 2 orange
+  if (days <= 7) return { count: 3, color: "#4caf50" };       // 4-7 days — 3 green
+  return { count: 4, color: "#2e7d32" };                      // 8+ days — 4 dark green
+}
+
+function formatAmount(amount: number, unit: string): string {
+  if (unit === "NotAssigned") return String(amount);
+  if (unit === "Grams") return amount >= 1000 ? `${(amount / 1000).toFixed(1)} kg` : `${amount} g`;
+  if (unit === "Mililiter") return amount >= 1000 ? `${(amount / 1000).toFixed(1)} L` : `${amount} ml`;
+  if (unit === "Pieces") return `${amount} pcs`;
+  return `${amount} ${unit}`;
+}
+
+function scoreColor(score: number): string {
+  if (score >= 1500) return "#f9a825";
+  if (score >= 1000) return "#4caf50";
+  if (score >= 500) return "#ff9800";
+  return "#d32f2f";
 }
 
 function expiryLabel(days: number): string {
@@ -68,13 +85,7 @@ function expiryLabel(days: number): string {
   return `${days}d left`;
 }
 
-function scoreEmoji(score: number): string {
-  if (score >= 2000) return "\u{1F3C6}"; // trophy
-  if (score >= 1500) return "\u{2B50}";  // star
-  if (score >= 1000) return "\u{1F44D}"; // thumbs up
-  if (score >= 500) return "\u{26A0}\u{FE0F}";  // warning
-  return "\u{1F4A9}"; // poop
-}
+
 
 export default function KitchenItemsDashboard() {
   const { kitchenId } = useParams<{ kitchenId: string }>();
@@ -259,48 +270,37 @@ export default function KitchenItemsDashboard() {
           flex: 1,
           minWidth: 180,
           renderCell: (params) => {
-            const days = daysUntil(params.row.expirationDate);
-            const dot =
-              days <= 0  ? { color: "#d32f2f", title: "Expired!" } :
-              days <= 1  ? { color: "#f44336", title: "Expires tomorrow" } :
-              days <= 3  ? { color: "#ff9800", title: `${days} days left` } :
-              null;
             const loc = STORAGE_LOCATIONS.find((l) => l.value === params.row.location);
+            const itemTags: string[] = params.row.tags ?? [];
             return (
-              <Stack justifyContent="center" sx={{ height: "100%", py: 0.5 }}>
-                <Stack direction="row" alignItems="center" spacing={0.75}>
-                  {dot && (
-                    <Tooltip title={dot.title}>
-                      <Box
-                        sx={{
-                          width: 8, height: 8,
-                          borderRadius: "50%",
-                          bgcolor: dot.color,
-                          flexShrink: 0,
-                          boxShadow: `0 0 4px ${dot.color}`,
-                        }}
-                      />
-                    </Tooltip>
-                  )}
-                  <Typography variant="body2" fontWeight={500} noWrap>{params.value}</Typography>
-                  {loc && (
-                    <Tooltip title={loc.label}>
-                      <Box component="span" sx={{ fontSize: 14, lineHeight: 1 }}>{loc.icon}</Box>
-                    </Tooltip>
-                  )}
-                </Stack>
-                <Stack direction="row" spacing={0.5} alignItems="center">
+              <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ height: "100%", width: "100%" }}>
+                <Stack justifyContent="center" sx={{ minWidth: 0, flex: 1 }}>
+                  <Stack direction="row" alignItems="center" spacing={0.75}>
+                    {loc && <Box component="span" sx={{ fontSize: 14, lineHeight: 1 }}>{loc.icon}</Box>}
+                    <Typography variant="body2" fontWeight={500} noWrap>{params.value}</Typography>
+                  </Stack>
                   {params.row.categoryName && (
                     <Typography variant="caption" color="text.secondary" noWrap>
                       {params.row.categoryName}
                     </Typography>
                   )}
-                  {(params.row.tags?.length ?? 0) > 0 && (
-                    <Tooltip title={(params.row.tags as string[]).map((t: string) => ITEM_TAGS.find((it) => it.value === t)?.label ?? t).join(", ")}>
-                      <Chip label={`${params.row.tags.length} tag${params.row.tags.length > 1 ? "s" : ""}`} size="small" color="secondary" variant="outlined" sx={{ height: 18, fontSize: 10, borderRadius: 1 }} />
-                    </Tooltip>
-                  )}
                 </Stack>
+                {itemTags.length > 0 && (
+                  <Stack direction="row" spacing={0.25} alignItems="center" sx={{ flexShrink: 0, ml: 1, opacity: 0.45 }}>
+                    {itemTags.map((t) => {
+                      const tagDef = ITEM_TAGS.find((it) => it.value === t);
+                      return (
+                        <Chip
+                          key={t}
+                          label={tagDef?.label ?? t}
+                          size="small"
+                          variant="outlined"
+                          sx={{ height: 18, fontSize: 10, borderRadius: 1 }}
+                        />
+                      );
+                    })}
+                  </Stack>
+                )}
               </Stack>
             );
           },
@@ -328,32 +328,36 @@ export default function KitchenItemsDashboard() {
       cols.push(
         {
           field: "amount",
-          headerName: "Amount",
-          width: 90,
+          headerName: "Qty",
+          width: 80,
           renderCell: (params) => (
-            <Chip
-              label={`${params.row.amount} ${params.row.unit === "NotAssigned" ? "" : params.row.unit}`}
-              size="small"
-              color="primary"
-              variant="outlined"
-            />
+            <Typography variant="body2" fontWeight={500}>
+              {formatAmount(params.row.amount, params.row.unit)}
+            </Typography>
           ),
         },
         {
           field: "expirationDate",
           headerName: "Expires",
-          width: 120,
+          width: 70,
           renderCell: (params) => {
             const days = daysUntil(params.value);
+            const { count, color } = expiryDots(days);
             return (
-              <Tooltip title={new Date(params.value).toLocaleDateString()}>
-                <Chip
-                  label={expiryLabel(days)}
-                  size="small"
-                  color={expiryColor(days)}
-                  variant={days <= 0 ? "filled" : "outlined"}
-                  icon={days <= 1 ? <WarningAmberIcon /> : undefined}
-                />
+              <Tooltip title={`${expiryLabel(days)} — ${new Date(params.value).toLocaleDateString()}`}>
+                <Stack direction="row" spacing={0.4} alignItems="center" sx={{ height: "100%" }}>
+                  {Array.from({ length: count }, (_, i) => (
+                    <Box
+                      key={i}
+                      sx={{
+                        width: 8, height: 8,
+                        borderRadius: "50%",
+                        bgcolor: color,
+                        boxShadow: `0 0 4px ${color}80`,
+                      }}
+                    />
+                  ))}
+                </Stack>
               </Tooltip>
             );
           },
@@ -361,7 +365,7 @@ export default function KitchenItemsDashboard() {
         {
           field: "consume",
           headerName: "",
-          width: 240,
+          width: 220,
           sortable: false,
           filterable: false,
           renderCell: (params) => (
@@ -486,17 +490,13 @@ export default function KitchenItemsDashboard() {
               elevation={2}
               sx={{
                 px: 2, py: 1, borderRadius: 3,
-                background: KitchenScore.wasteScore >= 1500 ? "linear-gradient(135deg, #fff9c4, #ffe082)" :
-                            KitchenScore.wasteScore >= 1000 ? "linear-gradient(135deg, #e8f5e9, #c8e6c9)" :
-                            "linear-gradient(135deg, #ffebee, #ffcdd2)",
-                display: "flex", alignItems: "center", gap: 1,
+                display: "flex", alignItems: "center", gap: 0.5,
               }}
             >
-              <Box sx={{ fontSize: 28 }}>{scoreEmoji(KitchenScore.wasteScore)}</Box>
-              <Box>
-                <Typography variant="h6" fontWeight={700} lineHeight={1}>{KitchenScore.wasteScore}</Typography>
-                <Typography variant="caption" color="text.secondary">{KitchenScore.rank}</Typography>
-              </Box>
+              <Typography variant="h5" fontWeight={700} lineHeight={1} sx={{ color: scoreColor(KitchenScore.wasteScore) }}>
+                {KitchenScore.wasteScore}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">{KitchenScore.rank}</Typography>
             </Paper>
           </Tooltip>
         )}
@@ -707,7 +707,6 @@ export default function KitchenItemsDashboard() {
             rows={rows}
             columns={columns}
             autoHeight
-            rowHeight={52}
             pageSizeOptions={[10, 20, 50]}
             initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
             checkboxSelection={!isReadOnly}

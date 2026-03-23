@@ -31,17 +31,15 @@ import LoginIcon from "@mui/icons-material/Login";
 import MailIcon from "@mui/icons-material/Mail";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import EggIcon from "@mui/icons-material/Egg";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import type { KitchenInvite } from "@/types";
 
 const navLinks = [
-  { label: "Kitchens", to: "/Kitchens", icon: <AcUnitIcon fontSize="small" /> },
-  { label: "Food Products", to: "/foodProducts", icon: <EggIcon fontSize="small" /> },
+  { label: "Kitchens", to: "/Kitchens" },
+  { label: "Products", to: "/foodProducts" },
   { label: "Recipes", to: "/recipes", icon: <RestaurantMenuIcon fontSize="small" /> },
 ];
 
@@ -110,7 +108,7 @@ export default function Header() {
     <AppBar position="sticky" color="primary" elevation={0}>
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ gap: 1 }}>
-          <Box sx={{ fontSize: 28, lineHeight: 1, mr: 0.5 }}>🧊</Box>
+          <Box sx={{ fontSize: 28, lineHeight: 1, mr: 0.5 }}>🍳</Box>
           <Typography
             variant="h6"
             component={RouterLink}
@@ -145,7 +143,7 @@ export default function Header() {
               >
                 <Box sx={{ width: 260, pt: 2 }}>
                   <Box sx={{ textAlign: "center", mb: 2 }}>
-                    <Box sx={{ fontSize: 40, lineHeight: 1 }}>🧊</Box>
+                    <Box sx={{ fontSize: 40, lineHeight: 1 }}>🍳</Box>
                     <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.5 }}>SmartFridgeApp</Typography>
                   </Box>
                   <List>

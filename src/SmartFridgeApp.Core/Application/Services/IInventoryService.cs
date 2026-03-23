@@ -10,7 +10,7 @@ namespace SmartFridgeApp.Core.Application.Services;
 public interface IInventoryService
 {
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByKitchenAsync(Guid kitchenId, CancellationToken ct = default);
-    Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(int memberId, CancellationToken ct = default);
+    Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(Guid kitchenId, int memberId, CancellationToken ct = default);
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByLocationAsync(Guid kitchenId, StorageLocation location, CancellationToken ct = default);
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByTagAsync(Guid kitchenId, ItemTag tag, CancellationToken ct = default);
     Task StockItemAsync(Guid kitchenId, int memberId, StockItemRequest request, CancellationToken ct = default);

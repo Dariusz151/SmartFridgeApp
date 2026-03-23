@@ -17,7 +17,7 @@ public class SpoonacularRecipeSource(HttpClient httpClient, IOptions<Spoonacular
     {
         var config = options.Value;
         var url = $"{config.BaseUrl}/recipes/complexSearch" +
-                  $"?addRecipeInformation=true&number={batchSize}&apiKey={config.ApiKey}";
+                  $"?addRecipeInformation=true&fillIngredients=true&number={batchSize}&apiKey={config.ApiKey}";
 
         var response = await httpClient.GetFromJsonAsync<SpoonacularSearchResponse>(url, ct);
 

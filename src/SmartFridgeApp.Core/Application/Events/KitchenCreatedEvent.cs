@@ -6,9 +6,9 @@ namespace SmartFridgeApp.Core.Application.Events
     public class KitchenCreatedEvent : DomainEventBase
     {
         public Kitchen Kitchen { get; }
-        public KitchenCreatedEvent(Kitchen Kitchen)
+        public KitchenCreatedEvent(Kitchen kitchen)
         {
-            Kitchen = Kitchen;
+            Kitchen = kitchen;
         }
     }
 }

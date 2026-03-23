@@ -14,7 +14,7 @@ public interface IKitchenInventoryRepository
     Task AppendEventsAsync(Guid kitchenId, long expectedVersion, IReadOnlyList<object> events, CancellationToken ct = default);
 
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByKitchenAsync(Guid kitchenId, CancellationToken ct = default);
-    Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(int memberId, CancellationToken ct = default);
+    Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(Guid kitchenId, int memberId, CancellationToken ct = default);
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByLocationAsync(Guid kitchenId, StorageLocation location, CancellationToken ct = default);
     Task<IReadOnlyList<StockItemDto>> GetActiveItemsByTagAsync(Guid kitchenId, ItemTag tag, CancellationToken ct = default);
     Task<IReadOnlyList<ExpiringItemDto>> GetExpiringItemsAsync(Guid kitchenId, int daysThreshold, CancellationToken ct = default);

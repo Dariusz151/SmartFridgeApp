@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SmartFridgeApp.Core.Application.Features.Recipes.ImportRecipes;
 using SmartFridgeApp.Core.Contracts.ExternalRecipes;
 using SmartFridgeApp.Core.Contracts.Repositories;
@@ -17,7 +18,8 @@ public class RecipeImportService(
     IExternalRecipeSource externalRecipeSource,
     IFoodProductRepository foodProductRepository,
     IRecipeRepository recipeRepository,
-    IUnitOfWork unitOfWork) : IRecipeImportService
+    IUnitOfWork unitOfWork,
+    ILogger<RecipeImportService> logger) : IRecipeImportService
 {
     private static readonly Dictionary<string, int> DishTypeToCategoryId = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -62,17 +64,23 @@ public class RecipeImportService(
     {
         var result = new RecipeImportResult();
 
+        logger.LogInformation("[RecipeImport] Starting import, batchSize={BatchSize}", batchSize);
+
         var externalRecipes = await externalRecipeSource.FetchRecipesAsync(batchSize, ct);
-        
-        Console.WriteLine(externalRecipes.Count);
+        logger.LogInformation("[RecipeImport] Fetched {Count} external recipes", externalRecipes.Count);
 
         var existingFoodProducts = (await foodProductRepository.GetAllAsync()).ToList();
         var existingRecipes = await recipeRepository.GetAllRecipesAsync();
         var existingRecipeNames = new HashSet<string>(
             existingRecipes.Select(r => r.Name), StringComparer.OrdinalIgnoreCase);
+        logger.LogInformation("[RecipeImport] Existing recipes: {Count}, existing food products: {FpCount}",
+            existingRecipes.Count, existingFoodProducts.Count);
 
         var inneCategory = await foodProductRepository.GetCategoryByIdAsync(DefaultFoodProductCategoryId);
+        logger.LogInformation("[RecipeImport] Default FoodProduct category ({Id}): {Found}",
+            DefaultFoodProductCategoryId, inneCategory is not null ? inneCategory.Name : "NOT FOUND");
         var recipeCategories = (await recipeRepository.GetAllRecipeCategoriesAsync()).ToList();
+        logger.LogInformation("[RecipeImport] Recipe categories loaded: {Count}", recipeCategories.Count);
 
         var newFoodProducts = new List<FoodProduct>();
 
@@ -80,15 +88,19 @@ public class RecipeImportService(
         {
             try
             {
-                Console.WriteLine(external.Title);
+                logger.LogInformation("[RecipeImport] Processing: '{Title}' with {IngCount} ingredients",
+                    external.Title, external.Ingredients.Count);
+
                 if (existingRecipeNames.Contains(external.Title))
                 {
+                    logger.LogInformation("[RecipeImport] SKIP duplicate: '{Title}'", external.Title);
                     result.SkippedCount++;
                     continue;
                 }
 
                 if (string.IsNullOrWhiteSpace(external.Title) || external.Ingredients.Count == 0)
                 {
+                    logger.LogInformation("[RecipeImport] SKIP empty title or no ingredients: '{Title}'", external.Title);
                     result.SkippedCount++;
                     continue;
                 }
@@ -101,7 +113,8 @@ public class RecipeImportService(
 
                     if (isNew)
                     {
-                        Console.WriteLine("Adding new ingredient");
+                        logger.LogInformation("[RecipeImport]   New FoodProduct: '{Name}' (id={Id})",
+                            foodProduct.Name, foodProduct.FoodProductId);
                         await foodProductRepository.AddAsync(foodProduct);
                         newFoodProducts.Add(foodProduct);
                         result.NewFoodProducts.Add(foodProduct.Name);
@@ -115,16 +128,22 @@ public class RecipeImportService(
 
                 if (foodProductDetailsList.Count == 0)
                 {
+                    logger.LogInformation("[RecipeImport] SKIP no matched ingredients for '{Title}'", external.Title);
                     result.SkippedCount++;
                     continue;
                 }
 
+                logger.LogInformation("[RecipeImport] Matched {Count} ingredients for '{Title}'",
+                    foodProductDetailsList.Count, external.Title);
+
                 // Commit new FoodProducts so auto-generated IDs are assigned
                 if (newFoodProducts.Count > 0)
                 {
+                    logger.LogInformation("[RecipeImport] Committing {Count} new FoodProducts before creating recipe", newFoodProducts.Count);
                     await unitOfWork.CommitAsync(ct);
                     foodProductDetailsList = RebuildDetailsWithIds(
                         foodProductDetailsList, existingFoodProducts, newFoodProducts);
+                    logger.LogInformation("[RecipeImport] Rebuilt details with assigned IDs");
                 }
 
                 var recipeCategoryId = MapRecipeCategory(external.DishTypes);
@@ -145,21 +164,36 @@ public class RecipeImportService(
                     external.ReadyInMinutes > 0 ? external.ReadyInMinutes : 1,
                     (int)difficulty);
                 
-                Console.WriteLine($"Adding new recipe: {recipe.Name} ");
+                logger.LogInformation("[RecipeImport] Adding recipe '{Name}' (category={Cat}, difficulty={Diff}, products={Cnt})",
+                    recipe.Name, recipeCategory.Name, difficulty, foodProductDetailsList.Count);
 
                 await recipeRepository.AddRecipeAsync(recipe);
                 existingRecipeNames.Add(recipeName);
                 result.ImportedRecipeNames.Add(recipeName);
                 result.ImportedCount++;
+                logger.LogInformation("[RecipeImport] Recipe '{Name}' added to repository (pending commit)", recipeName);
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "[RecipeImport] FAILED to import '{Title}'", external.Title);
                 result.Errors.Add($"Failed to import '{external.Title}': {ex.Message}");
                 result.SkippedCount++;
             }
         }
 
-        await unitOfWork.CommitAsync(ct);
+        logger.LogInformation("[RecipeImport] Final commit — imported={Imported}, skipped={Skipped}, errors={Errors}",
+            result.ImportedCount, result.SkippedCount, result.Errors.Count);
+
+        try
+        {
+            var saved = await unitOfWork.CommitAsync(ct);
+            logger.LogInformation("[RecipeImport] Commit returned {SavedCount} changes", saved);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "[RecipeImport] Final commit FAILED");
+            throw;
+        }
 
         return result;
     }

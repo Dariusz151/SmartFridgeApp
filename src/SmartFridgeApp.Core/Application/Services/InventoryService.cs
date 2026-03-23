@@ -14,8 +14,8 @@ public class InventoryService(IKitchenInventoryRepository inventoryRepository) :
     public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByKitchenAsync(Guid kitchenId, CancellationToken ct = default)
         => await inventoryRepository.GetActiveItemsByKitchenAsync(kitchenId, ct);
 
-    public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(int memberId, CancellationToken ct = default)
-        => await inventoryRepository.GetActiveItemsByMemberAsync(memberId, ct);
+    public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByMemberAsync(Guid kitchenId, int memberId, CancellationToken ct = default)
+        => await inventoryRepository.GetActiveItemsByMemberAsync(kitchenId, memberId, ct);
 
     public async Task<IReadOnlyList<StockItemDto>> GetActiveItemsByLocationAsync(Guid kitchenId, StorageLocation location, CancellationToken ct = default)
         => await inventoryRepository.GetActiveItemsByLocationAsync(kitchenId, location, ct);
