@@ -26,13 +26,13 @@ public class KitchenMemberRepository(SmartFridgeAppContext context) : IKitchenMe
     public async Task<string> GetMemberRoleAsync(Guid kitchenId, string email)
     {
         var member = await context.KitchenMembers
-            .FirstOrDefaultAsync(fm => fm.kitchenId == kitchenId && fm.Email == email && fm.Status == "Accepted");
+            .FirstOrDefaultAsync(fm => fm.KitchenId == kitchenId && fm.Email == email && fm.Status == "Accepted");
 
         return member?.MemberRole;
     }
 
     public async Task<int> CountMembersAsync(Guid kitchenId) =>
-        await context.KitchenMembers.CountAsync(fm => fm.kitchenId == kitchenId);
+        await context.KitchenMembers.CountAsync(fm => fm.KitchenId == kitchenId);
 
     public void Remove(KitchenMember member) =>
         context.KitchenMembers.Remove(member);

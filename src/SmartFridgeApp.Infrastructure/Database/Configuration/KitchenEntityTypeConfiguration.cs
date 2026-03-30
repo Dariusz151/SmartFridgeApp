@@ -28,7 +28,7 @@ namespace SmartFridgeApp.Infrastructure.Kitchens
 
             builder.HasMany(b => b.Members)
                 .WithOne()
-                .HasForeignKey(fm => fm.kitchenId)
+                .HasForeignKey(fm => fm.KitchenId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Metadata.FindNavigation(nameof(Kitchen.Members))!

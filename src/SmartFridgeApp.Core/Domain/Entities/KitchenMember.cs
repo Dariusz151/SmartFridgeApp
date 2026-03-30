@@ -6,7 +6,7 @@ namespace SmartFridgeApp.Core.Domain.Entities;
 public class KitchenMember
 {
     public int Id { get; private set; }
-    public Guid kitchenId { get; private set; }
+    public Guid KitchenId { get; private set; }
     public string Email { get; private set; }
     public string MemberRole { get; private set; }
     public string Status { get; private set; }
@@ -19,7 +19,7 @@ public class KitchenMember
     public static KitchenMember CreateCreator(Guid kitchenId, string email, string color) =>
         new()
         {
-            kitchenId = kitchenId,
+            KitchenId = kitchenId,
             Email = email,
             MemberRole = "Creator",
             Status = "Accepted",
@@ -30,7 +30,7 @@ public class KitchenMember
     public static KitchenMember CreateInvited(Guid kitchenId, string email, string color) =>
         new()
         {
-            kitchenId = kitchenId,
+            KitchenId = kitchenId,
             Email = email,
             MemberRole = "Member",
             Status = "Pending",
