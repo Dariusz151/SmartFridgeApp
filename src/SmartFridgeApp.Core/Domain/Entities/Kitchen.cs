@@ -13,6 +13,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public string Address { get; private set; }
         public string Desc { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         private readonly List<KitchenMember> _members = [];
         public IReadOnlyCollection<KitchenMember> Members => _members.AsReadOnly();
@@ -39,6 +40,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
             if (string.IsNullOrEmpty(name))
                 throw new InvalidInputException("Kitchen should have a name.", "InvalidKitchenName");
             Name = name;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void ChangeKitchenDesc(string desc)
@@ -46,6 +48,7 @@ namespace SmartFridgeApp.Core.Domain.Entities
             if (string.IsNullOrEmpty(desc))
                 throw new InvalidInputException("Kitchen should have a description.", "InvalidKitchenDesc");
             Desc = desc;
+            UpdatedAt = DateTime.UtcNow;
         }
     }
 }

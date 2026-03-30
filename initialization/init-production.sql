@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS app."FoodProducts" (
     "FoodProductId" SMALLSERIAL PRIMARY KEY,
     "Name" VARCHAR(40) NOT NULL,
     "CategoryId" SMALLINT NOT NULL,
+    "InsertedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "UpdatedAt"  TIMESTAMP,
     CONSTRAINT "FK_FoodProducts_Categories" FOREIGN KEY ("CategoryId")
         REFERENCES app."Categories"("CategoryId") ON DELETE CASCADE
 );
@@ -55,7 +57,8 @@ CREATE TABLE IF NOT EXISTS app."Kitchens" (
     "Name"      VARCHAR(50)  NOT NULL,
     "Address"   VARCHAR(100),
     "Desc"      VARCHAR(250),
-    "CreatedAt" TIMESTAMP    NOT NULL DEFAULT NOW()
+    "CreatedAt" TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt" TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS app."AppUsers" (
@@ -63,7 +66,8 @@ CREATE TABLE IF NOT EXISTS app."AppUsers" (
     "PasswordHash" VARCHAR(500) NULL,
     "Name"         VARCHAR(100) NULL,
     "Role"         VARCHAR(50)  NOT NULL DEFAULT 'User',
-    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW()
+    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"    TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS app."ProductVariants" (
@@ -87,6 +91,7 @@ CREATE TABLE IF NOT EXISTS app."KitchenMembers" (
     "Status"     VARCHAR(50)  NOT NULL DEFAULT 'Pending',
     "Color"      VARCHAR(7)   NOT NULL DEFAULT '#000000',
     "InvitedAt"  TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"  TIMESTAMP,
     CONSTRAINT "FK_KitchenMembers_kitchens"  FOREIGN KEY ("kitchenId") REFERENCES app."Kitchens"("Id")    ON DELETE CASCADE,
     CONSTRAINT "FK_KitchenMembers_AppUsers"  FOREIGN KEY ("Email")     REFERENCES app."AppUsers"("Email") ON DELETE CASCADE,
     CONSTRAINT "UQ_KitchenMembers"           UNIQUE ("kitchenId", "Email")
@@ -100,6 +105,8 @@ CREATE TABLE IF NOT EXISTS app."Recipes" (
     "LevelOfDifficulty" SMALLINT     NOT NULL DEFAULT 0,
     "RecipeCategoryId"  SMALLINT,
     "FoodProducts"      TEXT         NOT NULL,
+    "InsertedAt"        TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"         TIMESTAMP,
     CONSTRAINT "FK_Recipes_RecipeCategories" FOREIGN KEY ("RecipeCategoryId")
         REFERENCES app."RecipeCategories"("RecipeCategoryId") ON DELETE SET NULL
 );
@@ -150,7 +157,7 @@ WHERE fm."Status" = 'Accepted';
 
 DROP VIEW IF EXISTS app.v_KitchenMembers;
 CREATE VIEW app.v_KitchenMembers AS
-SELECT fm."Id", fm."kitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt"
+SELECT fm."Id", fm."kitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt", fm."UpdatedAt"
 FROM app."KitchenMembers" fm
 LEFT JOIN app."AppUsers" au ON au."Email" = fm."Email"
 WHERE fm."Status" = 'Accepted';
