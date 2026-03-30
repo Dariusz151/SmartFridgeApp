@@ -18,6 +18,14 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
                 .IsRequired()
                 .HasMaxLength(40);
 
+            builder.Property(fp => fp.InsertedAt)
+                .HasColumnName("InsertedAt")
+                .IsRequired()
+                .HasDefaultValueSql("NOW()");
+
+            builder.Property(fp => fp.UpdatedAt)
+                .HasColumnName("UpdatedAt");
+
             builder.HasOne(fp => fp.Category)
                 .WithMany()
                 .HasForeignKey("CategoryId");

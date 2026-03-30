@@ -17,6 +17,8 @@ public class Recipe : Entity, IAggregateRoot
     public LevelOfDifficulty LevelOfDifficulty { get; set; }
     public RecipeCategory RecipeCategory { get; set; }
     public List<FoodProductDetails> FoodProducts { get; set; }
+    public DateTime InsertedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
 
     private Recipe()
     {
@@ -49,6 +51,7 @@ public class Recipe : Entity, IAggregateRoot
         RequiredTime = requiredTime;
         LevelOfDifficulty = (LevelOfDifficulty)levelOfDifficulty;
         FoodProducts = products;
+        InsertedAt = DateTime.UtcNow;
 
         this.AddDomainEvent(new RecipeAddedEvent(this));
     }
@@ -65,6 +68,7 @@ public class Recipe : Entity, IAggregateRoot
         Name = name;
         RequiredTime = requiredTime;
         LevelOfDifficulty = (LevelOfDifficulty)levelOfDifficulty;
+        UpdatedAt = DateTime.UtcNow;
 
         this.UpdateRecipeCategory(recipeCategory);
     }
@@ -74,6 +78,7 @@ public class Recipe : Entity, IAggregateRoot
         if (string.IsNullOrEmpty(recipeCategory.Name))
             throw new DomainException("Cant update recipe with no name category!", "InvalidRecipeCategory");
         RecipeCategory = recipeCategory;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     private void ValidateRequiredTime(int val)

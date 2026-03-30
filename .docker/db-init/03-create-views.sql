@@ -10,7 +10,9 @@ SELECT
     fp."FoodProductId", 
     fp."Name", 
     c."CategoryId",
-    c."Name" as "Category"
+    c."Name" as "Category",
+    fp."InsertedAt",
+    fp."UpdatedAt"
 FROM app."FoodProducts" as fp
 INNER JOIN app."Categories" c ON c."CategoryId" = fp."CategoryId";
 
@@ -23,7 +25,7 @@ FROM app."Kitchens";
 -- View: Member Kitchens — Kitchens accessible to a member (for GetMyKitchensAsync)
 DROP VIEW IF EXISTS app.v_member_kitchens;
 CREATE VIEW app.v_member_kitchens AS
-SELECT f."Id", f."Name", f."Address", f."Desc", f."CreatedAt",
+SELECT f."Id", f."Name", f."Address", f."Desc", f."CreatedAt", "UpdatedAt"
        fm."Email"
 FROM app."Kitchens" f
 INNER JOIN app."KitchenMembers" fm ON fm."kitchenId" = f."Id"
@@ -32,7 +34,7 @@ WHERE fm."Status" = 'Accepted';
 -- View: Kitchen Members (accepted only — for backwards compat / reporting)
 DROP VIEW IF EXISTS app.v_KitchenMembers;
 CREATE VIEW app.v_KitchenMembers AS
-SELECT fm."Id", fm."kitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt"
+SELECT fm."Id", fm."kitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt", fm."UpdatedAt"
 FROM app."KitchenMembers" fm
 LEFT JOIN app."AppUsers" au ON au."Email" = fm."Email"
 WHERE fm."Status" = 'Accepted';
@@ -71,7 +73,9 @@ SELECT
     r."Description", 
     r."FoodProducts", 
     r."RequiredTime", 
-    r."LevelOfDifficulty"
+    r."LevelOfDifficulty",
+    r."InsertedAt",
+    r."UpdatedAt"
 FROM app."Recipes" as r
 LEFT JOIN app."RecipeCategories" as rc ON rc."RecipeCategoryId" = r."RecipeCategoryId";
 

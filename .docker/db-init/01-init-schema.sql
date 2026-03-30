@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS app."FoodProducts" (
     "FoodProductId" SMALLSERIAL PRIMARY KEY,
     "Name" VARCHAR(40) NOT NULL,
     "CategoryId" SMALLINT NOT NULL,
+    "InsertedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "UpdatedAt"  TIMESTAMP,
     CONSTRAINT "FK_FoodProducts_Categories" FOREIGN KEY ("CategoryId")
         REFERENCES app."Categories"("CategoryId") ON DELETE CASCADE
 );
@@ -36,7 +38,12 @@ CREATE TABLE IF NOT EXISTS app."Kitchens" (
     "Name"                 VARCHAR(50)  NOT NULL,
     "Address"              VARCHAR(100),
     "Desc"                 VARCHAR(250),
-    "CreatedAt"            TIMESTAMP    NOT NULL DEFAULT NOW()
+    "WasteScore"           INTEGER      NOT NULL DEFAULT 1000,
+    "ActiveItemCount"      INTEGER      NOT NULL DEFAULT 0,
+    "AverageItemCount"     FLOAT        NOT NULL DEFAULT 0,
+    "InventorySampleCount" INTEGER      NOT NULL DEFAULT 0,
+    "CreatedAt"            TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"            TIMESTAMP
 );
 
 -- Table: AppUsers (authentication accounts — email/password and Google OAuth)
@@ -45,7 +52,8 @@ CREATE TABLE IF NOT EXISTS app."AppUsers" (
     "PasswordHash" VARCHAR(500) NULL,
     "Name"         VARCHAR(100) NULL,
     "Role"         VARCHAR(50)  NOT NULL DEFAULT 'User',
-    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW()
+    "CreatedAt"    TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"    TIMESTAMP
 );
 
 -- Table: ProductVariants
@@ -65,15 +73,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS "UX_ProductVariants_Barcode"
 -- Status:     'Accepted' | 'Pending'
 CREATE TABLE IF NOT EXISTS app."KitchenMembers" (
     "Id"         SERIAL       PRIMARY KEY,
-    "kitchenId"   UUID         NOT NULL,
+    "KitchenId"  UUID         NOT NULL,
     "Email"      VARCHAR(250) NOT NULL,
     "MemberRole" VARCHAR(50)  NOT NULL DEFAULT 'Member',
     "Status"     VARCHAR(50)  NOT NULL DEFAULT 'Pending',
     "Color"      VARCHAR(7)   NOT NULL DEFAULT '#000000',
     "InvitedAt"  TIMESTAMP    NOT NULL DEFAULT NOW(),
-    CONSTRAINT "FK_KitchenMembers_kitchens"   FOREIGN KEY ("kitchenId") REFERENCES app."Kitchens"("Id")    ON DELETE CASCADE,
+    "UpdatedAt"  TIMESTAMP,
+    CONSTRAINT "FK_KitchenMembers_Kitchens"   FOREIGN KEY ("KitchenId") REFERENCES app."Kitchens"("Id")    ON DELETE CASCADE,
     CONSTRAINT "FK_KitchenMembers_AppUsers"  FOREIGN KEY ("Email")    REFERENCES app."AppUsers"("Email") ON DELETE CASCADE,
-    CONSTRAINT "UQ_KitchenMembers"           UNIQUE ("kitchenId", "Email")
+    CONSTRAINT "UQ_KitchenMembers"           UNIQUE ("KitchenId", "Email")
 );
 
 -- Table: Recipes
@@ -85,6 +94,8 @@ CREATE TABLE IF NOT EXISTS app."Recipes" (
     "LevelOfDifficulty" SMALLINT     NOT NULL DEFAULT 0,
     "RecipeCategoryId"  SMALLINT,
     "FoodProducts"      TEXT         NOT NULL,
+    "InsertedAt"        TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"         TIMESTAMP,
     CONSTRAINT "FK_Recipes_RecipeCategories" FOREIGN KEY ("RecipeCategoryId")
         REFERENCES app."RecipeCategories"("RecipeCategoryId") ON DELETE SET NULL
 );
@@ -107,7 +118,7 @@ CREATE TABLE IF NOT EXISTS internal."OutboxMessages" (
 -- ============================================
 
 CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_Email"       ON app."KitchenMembers"("Email");
-CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_kitchenId"    ON app."KitchenMembers"("kitchenId");
+CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_kitchenId"    ON app."KitchenMembers"("KitchenId");
 CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_Status"      ON app."KitchenMembers"("Status");
 CREATE INDEX IF NOT EXISTS "IX_FoodProducts_CategoryId"   ON app."FoodProducts"("CategoryId");
 CREATE INDEX IF NOT EXISTS "IX_Recipes_RecipeCategoryId"  ON app."Recipes"("RecipeCategoryId");

@@ -16,8 +16,8 @@ internal class KitchenMemberEntityTypeConfiguration : IEntityTypeConfiguration<K
             .HasColumnName("Id")
             .ValueGeneratedOnAdd();
 
-        builder.Property(fm => fm.kitchenId)
-            .HasColumnName("kitchenId")
+        builder.Property(fm => fm.KitchenId)
+            .HasColumnName("KitchenId")
             .IsRequired();
 
         builder.Property(fm => fm.Email)
@@ -44,6 +44,9 @@ internal class KitchenMemberEntityTypeConfiguration : IEntityTypeConfiguration<K
             .HasColumnName("InvitedAt")
             .IsRequired();
 
-        builder.HasIndex(fm => new { fm.kitchenId, fm.Email }).IsUnique();
+        builder.Property(fm => fm.UpdatedAt)
+            .HasColumnName("UpdatedAt");
+
+        builder.HasIndex(fm => new { fm.KitchenId, fm.Email }).IsUnique();
     }
 }
