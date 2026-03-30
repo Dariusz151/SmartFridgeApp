@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ namespace SmartFridgeApp.API.Quartz
 
             foreach (var message in messages)
             {
-                Type type = Assembly.GetAssembly(typeof(FridgeAddedNotification))!.GetType(message.Type)!;
+                Type type = Assembly.GetAssembly(typeof(KitchenAddedNotification))!.GetType(message.Type)!;
                 var notification = JsonConvert.DeserializeObject(message.Data, type, JsonSettings);
 
                 Console.WriteLine(notification);

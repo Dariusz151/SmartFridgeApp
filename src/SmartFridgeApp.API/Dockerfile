@@ -13,4 +13,4 @@ RUN useradd --no-create-home --shell /bin/false appuser \
     && chown -R appuser:appuser /app
 USER appuser
 
-ENTRYPOINT ["./SmartFridgeApp.API"]
+ENTRYPOINT ["sh", "-c", "sleep 10 && ./SmartFridgeApp.API"]

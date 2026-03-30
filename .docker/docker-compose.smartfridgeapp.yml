@@ -14,6 +14,7 @@ services:
         - SOURCE=./obj/docker/publish
     depends_on:
       - smartfridgeapp.db
+      - smartfridgeapp.translate
     networks:
       - smartfridgeapp-network
 

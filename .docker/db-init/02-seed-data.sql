@@ -213,6 +213,84 @@ ON CONFLICT ("FoodProductId") DO NOTHING;
 -- Update sequence for FoodProducts
 SELECT setval('app."FoodProducts_FoodProductId_seq"', (SELECT MAX("FoodProductId") FROM app."FoodProducts"));
 
+-- Seed Product Variants (explicit IDs so the C# DevInventorySeeder can reference them)
+INSERT INTO app."ProductVariants" ("VariantId", "FoodProductId", "Name", "Barcode") VALUES
+-- Mleko (22)
+(1,  22, 'Łaciate 3,2% 1L',         '5900820000001'),
+(2,  22, 'Łaciate 2% 1L',           '5900820000002'),
+(3,  22, 'Łaciate UHT 3,2% 1L',     '5900820000003'),
+(4,  22, 'Piątnica Pełne 3,8% 1L',  '5900199000001'),
+-- Jogurt naturalny (31)
+(5,  31, 'Danone Naturalny 400g',    '3033490004001'),
+(6,  31, 'Piątnica Naturalny 400g',  '5900199010001'),
+-- Masło (149)
+(7,  149, 'Łaciate 200g',            '5900820010001'),
+(8,  149, 'Piątnica 200g',           '5900199020001'),
+(9,  149, 'Kerrygold 200g',          '5099387000001'),
+-- Czekolada (86)
+(10, 86, 'Milka Mleczna 100g',       '4025700000001'),
+(11, 86, 'Wedel Gorzka 100g',        '5900124000001'),
+(12, 86, 'Lindt 70% 100g',           '3046920022017'),
+-- Ser żółty (27)
+(13, 27, 'Gouda Holenderska 200g',   '9000000000001'),
+(14, 27, 'Edam 200g',                '9000000000002'),
+-- Wędlina (2)
+(15, 2,  'Szynka Konserwowa 200g',   '5900000010001'),
+(16, 2,  'Polędwica Sopocka 150g',   '5900000010002'),
+-- Kiełbasa (14)
+(17, 14, 'Kiełbasa Śląska 1kg',      '5900000020001'),
+(18, 14, 'Kabanosy 200g',            '5900000020002'),
+-- Jaja (19)
+(19, 19, 'Jaja M 10szt.',            '5900000030001'),
+(20, 19, 'Jaja L 10szt.',            '5900000030002'),
+(21, 19, 'Jaja XL wolny wybieg 6szt.','5900000030003'),
+-- Pierś z kurczaka (15)
+(22, 15, 'Pierś z kurczaka Cedrob 500g','5900000040001'),
+(23, 15, 'Filet z kurczaka Indykpol 600g','5900000040002'),
+-- Chleb razowy (108)
+(24, 108, 'Chleb razowy żytni 500g',  '5900000050001'),
+(25, 108, 'Chleb razowy orkiszowy 400g','5900000050002'),
+-- Biały chleb (109)
+(26, 109, 'Chleb pszenny krojony 500g','5900000050003'),
+-- Piwo (98)
+(27, 98, 'Żywiec Jasne 500ml',        '5900000060001'),
+(28, 98, 'Tyskie Gronie 500ml',       '5900000060002'),
+(29, 98, 'Lech Premium 500ml',        '5900000060003'),
+(30, 98, 'Książęce Złote 500ml',      '5900000060004'),
+-- Kawa (90)
+(31, 90, 'Lavazza Qualità Rossa 250g','8000070036529'),
+(32, 90, 'Jacobs Krönung 500g',       '8711000530092'),
+(33, 90, 'Illy Classico 250g',        '8003753900667'),
+-- Sok (95)
+(34, 95, 'Cappy Pomarańczowy 1L',     '5449000000001'),
+(35, 95, 'Tymbark Jabłkowy 1L',       '5900000070001'),
+(36, 95, 'Hortex Multiwitamina 1L',   '5900000070002'),
+-- Ryż basmati (119)
+(37, 119, 'Basmati Britta 1kg',        '5900000080001'),
+(38, 119, 'Basmati Tesco 500g',        '5900000080002'),
+-- Makaron spaghetti (121)
+(39, 121, 'Lubella Spaghetti 500g',    '5900000090001'),
+(40, 121, 'Barilla Spaghetti No.5 500g','8076800195057'),
+-- Łosoś (134)
+(41, 134, 'Łosoś atlantycki filet 400g','5900000100001'),
+(42, 134, 'Łosoś wędzony plastry 200g','5900000100002'),
+-- Śmietana 30% (29)
+(43, 29, 'Łaciata 30% 200ml',          '5900820030001'),
+(44, 29, 'Piątnica 30% 200ml',         '5900199030001'),
+-- Mozzarella (20)
+(45, 20, 'Galbani Mozzarella 125g',    '8000430130003'),
+(46, 20, 'Zott Mozzarella 125g',       '4014500513010'),
+-- Parmezan (26)
+(47, 26, 'Parmezan tarty 100g',        '5900000110001'),
+(48, 26, 'Parmigiano Reggiano 200g',   '5900000110002'),
+-- Stek wołowy (1)
+(49, 1,  'Ribeye 300g',                '5900000120001'),
+(50, 1,  'New York Strip 250g',        '5900000120002')
+ON CONFLICT ("VariantId") DO NOTHING;
+
+-- Reset ProductVariants sequence
+SELECT setval('app."ProductVariants_VariantId_seq"', (SELECT MAX("VariantId") FROM app."ProductVariants"));
+
 -- Seed Recipe Categories
 INSERT INTO app."RecipeCategories" ("RecipeCategoryId", "Name") VALUES
 (1, 'Śniadanie'),

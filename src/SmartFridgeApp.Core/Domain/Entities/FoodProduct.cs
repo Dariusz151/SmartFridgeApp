@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using SmartFridgeApp.Core.Application.Events;
 using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
@@ -14,9 +15,12 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public DateTime InsertedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
+        private readonly List<ProductVariant> _variants = [];
+        public IReadOnlyList<ProductVariant> Variants => _variants.AsReadOnly();
+
         private FoodProduct()
         {
-            
+
         }
 
         public FoodProduct(string name, Category category)
@@ -42,9 +46,16 @@ namespace SmartFridgeApp.Core.Domain.Entities
 
         public void UpdateProductCategory(Category category)
         {
-             ValidateFoodProductCategory(category);
-             Category = category;
-             UpdatedAt = DateTime.UtcNow;
+            ValidateFoodProductCategory(category);
+            Category = category;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public ProductVariant AddVariant(string name, string? barcode = null)
+        {
+            var variant = new ProductVariant(this, name, barcode);
+            _variants.Add(variant);
+            return variant;
         }
 
         private void ValidateFoodProductName(string name)

@@ -1,4 +1,15 @@
 services:
+  smartfridgeapp.translate:
+    container_name: smartfridgeapp.translate
+    image: libretranslate/libretranslate:latest
+    environment:
+      LT_LOAD_ONLY: "en,pl"
+      LT_UPDATE_MODELS: "false"
+    ports:
+      - "127.0.0.1:5000:5000"
+    networks:
+      - smartfridgeapp-network
+
   smartfridgeapp.db:
     container_name: smartfridgeapp.db
     image: postgres:17-alpine

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,7 +8,6 @@ using SmartFridgeApp.Infrastructure.SeedWork;
 using SmartFridgeApp.Shared.Domain;
 using SmartFridgeApp.Shared.Outbox;
 using SmartFridgeApp.Core.Application.Events;
-using SmartFridgeApp.Core.Domain.Events;
 
 namespace SmartFridgeApp.Infrastructure
 {
@@ -51,9 +50,8 @@ namespace SmartFridgeApp.Infrastructure
 
         private static object? CreateNotification(IDomainEvent domainEvent) => domainEvent switch
         {
-            FridgeCreatedEvent e => new FridgeAddedNotification(e),
+            KitchenCreatedEvent e => new KitchenAddedNotification(e),
             RecipeAddedEvent e => new RecipeAddedNotification(e),
-            ShoppingNeededDomainEvent e => new ShoppingNeededNotification(e),
             _ => null
         };
     }

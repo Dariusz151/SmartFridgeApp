@@ -5,6 +5,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Marten" Version="$(MartenVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkVersion)" />

@@ -4,6 +4,14 @@ export interface FoodProduct {
   foodProductId: number;
   foodProductName: string;
   foodProductCategory?: string;
+  variantCount: number;
+}
+
+export interface ProductVariant {
+  variantId: number;
+  foodProductId: number;
+  name: string;
+  barcode?: string;
 }
 
 export interface FoodProductCategory {
@@ -11,7 +19,7 @@ export interface FoodProductCategory {
   name: string;
 }
 
-export interface Fridge {
+export interface Kitchen {
   id: string;
   name: string;
   address: string;
@@ -31,22 +39,60 @@ export interface AmountValue {
 
 export type Unit = "Grams" | "Pieces" | "Mililiter" | "NotAssigned";
 
+export type StorageLocation = "Fridge" | "Freezer" | "Pantry" | "SpiceRack" | "Counter" | "Cellar";
+
+export type ItemTag =
+  | "Organic"
+  | "GlutenFree"
+  | "Vegan"
+  | "DairyFree"
+  | "LowSugar"
+  | "HighProtein"
+  | "Homemade"
+  | "Leftover"
+  | "ForParty"
+  | "QuickMeal";
+
+export const STORAGE_LOCATIONS: { value: StorageLocation; label: string; icon: string }[] = [
+  { value: "Fridge", label: "Fridge", icon: "\u{1F9CA}" },
+  { value: "Freezer", label: "Freezer", icon: "\u{2744}\u{FE0F}" },
+  { value: "Pantry", label: "Pantry", icon: "\u{1F3E0}" },
+  { value: "SpiceRack", label: "Spice Rack", icon: "\u{1F336}\u{FE0F}" },
+  { value: "Counter", label: "Counter", icon: "\u{1F372}" },
+  { value: "Cellar", label: "Cellar", icon: "\u{1F377}" },
+];
+
+export const ITEM_TAGS: { value: ItemTag; label: string }[] = [
+  { value: "Organic", label: "Organic" },
+  { value: "GlutenFree", label: "Gluten Free" },
+  { value: "Vegan", label: "Vegan" },
+  { value: "DairyFree", label: "Dairy Free" },
+  { value: "LowSugar", label: "Low Sugar" },
+  { value: "HighProtein", label: "High Protein" },
+  { value: "Homemade", label: "Homemade" },
+  { value: "Leftover", label: "Leftover" },
+  { value: "ForParty", label: "For Party" },
+  { value: "QuickMeal", label: "Quick Meal" },
+];
+
 export interface FridgeItem {
-  fridgeItemId: string;
+  stockItemId: string;
   foodProductId: number;
-  productName: string;
-  categoryName: string;
-  value: number;
+  memberId: number;
+  amount: number;
   unit: Unit;
   expirationDate: string;
-  userName?: string;
-  userEmail?: string;
-  userColor?: string;
+  note?: string;
+  location: StorageLocation;
+  tags: ItemTag[];
+  stockedAt: string;
+  variantId?: number;
+  variantName?: string;
 }
 
-export interface FridgeMember {
+export interface KitchenMember {
   id: number;
-  fridgeId: string;
+  kitchenId: string;
   email: string;
   name: string;
   memberRole: string;
@@ -54,35 +100,33 @@ export interface FridgeMember {
   color: string;
 }
 
-export interface FridgeInvite {
+export interface KitchenInvite {
   id: number;
-  fridgeId: string;
-  fridgeName: string;
+  kitchenId: string;
+  kitchenName: string;
   inviterEmail: string;
   inviterName: string;
   invitedAt: string;
 }
 
 export interface ExpiringItem {
-  fridgeItemId: number;
-  productName: string;
-  categoryName: string;
-  value: number;
+  stockItemId: string;
+  foodProductId: number;
+  amount: number;
   unit: string;
   expirationDate: string;
   daysUntilExpiry: number;
-  userName: string;
-  userEmail: string;
+  memberId: number;
 }
 
-export interface FridgeScore {
-  fridgeId: string;
+export interface KitchenScore {
+  kitchenId: string;
   wasteScore: number;
   rank: string;
 }
 
 export interface ShoppingStatus {
-  fridgeId: string;
+  kitchenId: string;
   activeItemCount: number;
   averageItemCount: number;
   isShoppingNeeded: boolean;

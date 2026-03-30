@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Container,
   Button,
@@ -7,73 +7,127 @@ import {
   Box,
   CircularProgress,
   Stack,
-  Chip,
+  IconButton,
+  Collapse,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAuth } from "@/context/AuthContext";
-import { useFetch } from "@/hooks/useApi";
+import { useFetch, useSubmit } from "@/hooks/useApi";
+import { api } from "@/services/api";
 import NewFoodProductDialog from "@/components/dialogs/NewFoodProductDialog";
-import type { FoodProduct, FoodProductCategory } from "@/types";
-
-const categoryEmoji: Record<string, string> = {
-  Dairy: "🧀",
-  Meat: "🥩",
-  Vegetables: "🥦",
-  Fruits: "🍎",
-  Beverages: "🥤",
-  Bakery: "🍞",
-  Seafood: "🐟",
-  Frozen: "🧊",
-  Snacks: "🍿",
-  Condiments: "🧂",
-};
+import type { FoodProduct, FoodProductCategory, ProductVariant } from "@/types";
 
 export default function FoodProducts() {
   const { state } = useAuth();
   const { data: products, loading, refetch } = useFetch<FoodProduct[]>("/api/foodProducts");
   const { data: categories } = useFetch<FoodProductCategory[]>("/api/foodProducts/categories");
+  const { submit } = useSubmit();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filterCategory, setFilterCategory] = useState<string>("");
+
+  // Variant management
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
+  const [variantsLoading, setVariantsLoading] = useState(false);
+  const [newVariantName, setNewVariantName] = useState("");
+  const [newVariantBarcode, setNewVariantBarcode] = useState("");
+
+  const toggleVariants = async (foodProductId: number) => {
+    if (expandedId === foodProductId) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(foodProductId);
+    setVariantsLoading(true);
+    try {
+      const data = await api.get<ProductVariant[]>(`/api/foodProducts/${foodProductId}/variants`);
+      setVariants(data);
+    } catch {
+      setVariants([]);
+    } finally {
+      setVariantsLoading(false);
+    }
+  };
+
+  const handleAddVariant = async () => {
+    if (!expandedId || !newVariantName.trim()) return;
+    await submit(
+      `/api/foodProducts/${expandedId}/variants`,
+      { name: newVariantName.trim(), barcode: newVariantBarcode.trim() || null },
+      { auth: true, successMessage: "Variant added!", errorMessage: "Can't add variant" },
+    );
+    setNewVariantName("");
+    setNewVariantBarcode("");
+    // Refresh variants
+    const data = await api.get<ProductVariant[]>(`/api/foodProducts/${expandedId}/variants`);
+    setVariants(data);
+  };
+
+  const uniqueCategories = useMemo(
+    () => [...new Set((products ?? []).map((p) => p.foodProductCategory).filter(Boolean))] as string[],
+    [products],
+  );
 
   const columns: GridColDef[] = [
-    { field: "idx", headerName: "#", width: 70 },
+    { field: "idx", headerName: "#", width: 60 },
     {
       field: "foodProductName",
-      headerName: "Name",
+      headerName: "Product",
       flex: 1,
-      minWidth: 180,
+      minWidth: 220,
       renderCell: (params) => (
-        <Typography variant="body2" fontWeight={600}>
-          {categoryEmoji[params.row.foodProductCategory] ?? "🥚"} {params.value}
-        </Typography>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ height: "100%", width: "100%" }}>
+          <Typography variant="body2" fontWeight={500} noWrap>
+            {params.value}
+            {params.row.foodProductCategory && (
+              <Box component="span" sx={{ ml: 0.75, fontSize: "0.75rem", fontWeight: 400, opacity: 0.5 }}>
+                {params.row.foodProductCategory}
+              </Box>
+            )}
+          </Typography>
+          {params.row.variantCount > 0 && (
+            <Typography variant="caption" sx={{ opacity: 0.4, fontSize: "0.7rem", whiteSpace: "nowrap", ml: 1 }}>
+              {params.row.variantCount} variant{params.row.variantCount !== 1 ? "s" : ""}
+            </Typography>
+          )}
+        </Stack>
       ),
     },
     {
-      field: "foodProductCategory",
-      headerName: "Category",
-      flex: 1,
-      minWidth: 140,
+      field: "variants",
+      headerName: "Variants",
+      width: 80,
+      sortable: false,
+      filterable: false,
       renderCell: (params) => (
-        <Chip
-          label={`${categoryEmoji[params.value] ?? "📦"} ${params.value || "—"}`}
-          size="small"
-          variant="outlined"
-          sx={{ borderRadius: 2, fontWeight: 500 }}
-        />
+        <IconButton size="small" onClick={() => toggleVariants(params.row.id)}>
+          {expandedId === params.row.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
       ),
     },
   ];
 
   const rows = useMemo(
     () =>
-      (products ?? []).map((p, i) => ({
-        id: p.foodProductId,
-        idx: i + 1,
-        foodProductName: p.foodProductName,
-        foodProductCategory: p.foodProductCategory ?? "",
-      })),
-    [products],
+      (products ?? [])
+        .filter((p) => !filterCategory || p.foodProductCategory === filterCategory)
+        .map((p, i) => ({
+          id: p.foodProductId,
+          idx: i + 1,
+          foodProductName: p.foodProductName,
+          foodProductCategory: p.foodProductCategory ?? "",
+          variantCount: p.variantCount ?? 0,
+        })),
+    [products, filterCategory],
   );
 
   return (
@@ -104,7 +158,20 @@ export default function FoodProducts() {
         </Box>
       </Paper>
 
-      <Box sx={{ mb: 3, display: "flex", alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap", gap: 1 }}>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }} alignItems="center" justifyContent="space-between" flexWrap="wrap" useFlexGap>
+        <TextField
+          label="Category"
+          select
+          size="small"
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          sx={{ minWidth: 180 }}
+        >
+          <MenuItem value="">All categories</MenuItem>
+          {uniqueCategories.map((cat) => (
+            <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+          ))}
+        </TextField>
         <Stack direction="row" spacing={1}>
           <Button
             variant="contained"
@@ -118,7 +185,7 @@ export default function FoodProducts() {
             Refresh
           </Button>
         </Stack>
-      </Box>
+      </Stack>
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
@@ -155,6 +222,58 @@ export default function FoodProducts() {
           />
         </Paper>
       )}
+
+      {/* Variant panel */}
+      <Collapse in={expandedId !== null} unmountOnExit>
+        <Paper sx={{ mt: 2, p: 2, borderRadius: 3 }}>
+          <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+            Variants for: {products?.find((p) => p.foodProductId === expandedId)?.foodProductName ?? "..."}
+          </Typography>
+          {variantsLoading ? (
+            <CircularProgress size={24} />
+          ) : variants.length === 0 ? (
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              No variants yet
+            </Typography>
+          ) : (
+            <List dense disablePadding>
+              {variants.map((v) => (
+                <ListItem key={v.variantId} sx={{ pl: 0 }}>
+                  <ListItemText
+                    primary={v.name}
+                    secondary={v.barcode ? `Barcode: ${v.barcode}` : undefined}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          )}
+          <Stack direction="row" spacing={1} sx={{ mt: 1 }} alignItems="center">
+            <TextField
+              size="small"
+              label="Variant name"
+              value={newVariantName}
+              onChange={(e) => setNewVariantName(e.target.value)}
+              sx={{ flex: 1 }}
+            />
+            <TextField
+              size="small"
+              label="Barcode (optional)"
+              value={newVariantBarcode}
+              onChange={(e) => setNewVariantBarcode(e.target.value)}
+              sx={{ width: 200 }}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<AddIcon />}
+              disabled={!newVariantName.trim()}
+              onClick={handleAddVariant}
+            >
+              Add
+            </Button>
+          </Stack>
+        </Paper>
+      </Collapse>
 
       <NewFoodProductDialog
         categories={categories ?? []}

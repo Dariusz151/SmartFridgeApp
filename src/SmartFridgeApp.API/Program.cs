@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using SmartFridgeApp.API.Configuration;
 using SmartFridgeApp.API.Middleware;
 using SmartFridgeApp.API.Quartz;
+using SmartFridgeApp.API.Services;
 using SmartFridgeApp.Infrastructure;
 
 namespace SmartFridgeApp.API;
@@ -22,6 +23,10 @@ public class Program
 
     public static void Main(string[] args)
     {
+        // Npgsql 6+ rejects DateTime with Kind=UTC for 'timestamp without time zone'.
+        // Legacy mode restores the old behaviour of writing UTC datetimes as-is.
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration
@@ -78,6 +83,12 @@ public class Program
         });
 
         builder.Services.AddHostedService<QuartzHostedService>();
+
+        if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Docker"))
+        {
+            builder.Services.AddHostedService<DevInventorySeeder>();
+        }
+
         builder.Services.AddDbContext<SmartFridgeAppContext>(options =>
         {
             options.UseNpgsql(builder.Configuration[SmartFridgeAppConnectionString]);
