@@ -56,15 +56,15 @@ public static class ServiceProviderExtensions
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IKitchenMemberService, KitchenMemberService>();
-        services.AddScoped<IRecipeImportService, RecipeImportService>();
+        // services.AddScoped<IRecipeImportService, RecipeImportService>(); // disabled: recipe import feature
 
         // External recipe sources
         services.Configure<SpoonacularOptions>(configuration.GetSection("Spoonacular"));
         services.AddHttpClient<IExternalRecipeSource, SpoonacularRecipeSource>();
 
-        // Translation
-        services.Configure<TranslationOptions>(configuration.GetSection("Translation"));
-        services.AddHttpClient<ITranslationService, LibreTranslateService>();
+        // Translation (disabled: only used by recipe import)
+        // services.Configure<TranslationOptions>(configuration.GetSection("Translation"));
+        // services.AddHttpClient<ITranslationService, LibreTranslateService>();
 
         // Notification handlers
         services.AddScoped<IDomainEventNotificationHandler<KitchenAddedNotification>, KitchenAddedNotificationHandler>();
