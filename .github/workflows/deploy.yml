@@ -154,20 +154,11 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
 
-      # Get backend URL so Vite can bake it into the JS bundle at build time
-      - name: Get backend Cloud Run URL
-        id: backend_url
-        run: |
-          URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ secrets.GCP_REGION }} \
-            --format='value(status.url)')
-          echo "url=$URL" >> $GITHUB_OUTPUT
-
       - name: Build Docker image
         run: |
           docker build \
             -f ui/SmartFridgeApp.Web/smartfridgeapp-web/Dockerfile \
-            --build-arg VITE_SERVER_URL=${{ steps.backend_url.outputs.url }} \
+            --build-arg VITE_SERVER_URL=https://api.smartfridgeapp.eu \
             -t ${{ env.IMAGE_WEB }}:${{ github.sha }} \
             -t ${{ env.IMAGE_WEB }}:latest \
             ui/SmartFridgeApp.Web/smartfridgeapp-web

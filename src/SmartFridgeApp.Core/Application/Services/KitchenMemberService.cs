@@ -41,7 +41,7 @@ public class KitchenMemberService(
     {
         var connection = sqlConnectionFactory.GetOpenConnection();
         const string sql = """
-            SELECT "Id", "kitchenId", "kitchenName", "InviterEmail", "InviterName", "InvitedAt"
+            SELECT "Id", "KitchenId", "kitchenName", "InviterEmail", "InviterName", "InvitedAt"
             FROM app.v_pending_invites
             WHERE "Email" = @Email
             ORDER BY "InvitedAt" DESC
@@ -53,9 +53,9 @@ public class KitchenMemberService(
     {
         var connection = sqlConnectionFactory.GetOpenConnection();
         const string sql = """
-            SELECT "Id", "kitchenId", "Email", "Name", "MemberRole", "Status", "Color"
+            SELECT "Id", "KitchenId", "Email", "Name", "MemberRole", "Status", "Color"
             FROM app.v_kitchen_members_detail
-            WHERE "kitchenId" = @kitchenId
+            WHERE "KitchenId" = @kitchenId
             ORDER BY "MemberRole" DESC, "Status" ASC
             """;
         return await connection.QueryAsync<KitchenMemberDto>(sql, new { kitchenId = kitchenId });
