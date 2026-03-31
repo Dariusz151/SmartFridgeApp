@@ -23,9 +23,9 @@ INSERT INTO app."Kitchens" ("Id", "Name", "Address", "Desc")
 VALUES ('a1b2c3d4-0000-0000-0000-000000000001', 'Lodówka Jana', 'ul. Testowa 1', 'Prywatna lodówka Jana')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO app."KitchenMembers" ("kitchenId", "Email", "MemberRole", "Status", "Color")
+INSERT INTO app."KitchenMembers" ("KitchenId", "Email", "MemberRole", "Status", "Color")
 VALUES ('a1b2c3d4-0000-0000-0000-000000000001', 'jan@test.com', 'Creator', 'Accepted', '#1565c0')
-ON CONFLICT ("kitchenId", "Email") DO NOTHING;
+ON CONFLICT ("KitchenId", "Email") DO NOTHING;
 
 -- ============================================
 -- 3. Kitchen 2: "Lodówka Anny" — Creator: Anna, Member: Dariusz
@@ -34,11 +34,11 @@ INSERT INTO app."Kitchens" ("Id", "Name", "Address", "Desc")
 VALUES ('b2c3d4e5-0000-0000-0000-000000000002', 'Lodówka Anny', 'ul. Wspólna 10', 'Lodówka Anny i Dariusza')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO app."KitchenMembers" ("kitchenId", "Email", "MemberRole", "Status", "Color")
+INSERT INTO app."KitchenMembers" ("KitchenId", "Email", "MemberRole", "Status", "Color")
 VALUES
     ('b2c3d4e5-0000-0000-0000-000000000002', 'anna@test.com',    'Creator', 'Accepted', '#ad1457'),
     ('b2c3d4e5-0000-0000-0000-000000000002', 'dariusz@test.com', 'Member',  'Accepted', '#e65100')
-ON CONFLICT ("kitchenId", "Email") DO NOTHING;
+ON CONFLICT ("KitchenId", "Email") DO NOTHING;
 
 -- ============================================
 -- 4. Kitchen 3: "Lodówka Dariusza" — Creator: Dariusz (sole member)
@@ -47,6 +47,6 @@ INSERT INTO app."Kitchens" ("Id", "Name", "Address", "Desc")
 VALUES ('c3d4e5f6-0000-0000-0000-000000000003', 'Lodówka Dariusza', 'ul. Polna 5', 'Prywatna lodówka Dariusza')
 ON CONFLICT ("Id") DO NOTHING;
 
-INSERT INTO app."KitchenMembers" ("kitchenId", "Email", "MemberRole", "Status", "Color")
+INSERT INTO app."KitchenMembers" ("KitchenId", "Email", "MemberRole", "Status", "Color")
 VALUES ('c3d4e5f6-0000-0000-0000-000000000003', 'dariusz@test.com', 'Creator', 'Accepted', '#4527a0')
-ON CONFLICT ("kitchenId", "Email") DO NOTHING;
+ON CONFLICT ("KitchenId", "Email") DO NOTHING;

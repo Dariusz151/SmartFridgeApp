@@ -53,12 +53,16 @@ CREATE TABLE IF NOT EXISTS app."RecipeCategories" (
 );
 
 CREATE TABLE IF NOT EXISTS app."Kitchens" (
-    "Id"        UUID         PRIMARY KEY,
-    "Name"      VARCHAR(50)  NOT NULL,
-    "Address"   VARCHAR(100),
-    "Desc"      VARCHAR(250),
-    "CreatedAt" TIMESTAMP    NOT NULL DEFAULT NOW(),
-    "UpdatedAt" TIMESTAMP
+    "Id"                   UUID         PRIMARY KEY,
+    "Name"                 VARCHAR(50)  NOT NULL,
+    "Address"              VARCHAR(100),
+    "Desc"                 VARCHAR(250),
+    "WasteScore"           INTEGER      NOT NULL DEFAULT 1000,
+    "ActiveItemCount"      INTEGER      NOT NULL DEFAULT 0,
+    "AverageItemCount"     FLOAT        NOT NULL DEFAULT 0,
+    "InventorySampleCount" INTEGER      NOT NULL DEFAULT 0,
+    "CreatedAt"            TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "UpdatedAt"            TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS app."AppUsers" (
@@ -85,16 +89,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS "UX_ProductVariants_Barcode"
 -- Status:     'Accepted' | 'Pending'
 CREATE TABLE IF NOT EXISTS app."KitchenMembers" (
     "Id"         SERIAL       PRIMARY KEY,
-    "kitchenId"  UUID         NOT NULL,
+    "KitchenId"  UUID         NOT NULL,
     "Email"      VARCHAR(250) NOT NULL,
     "MemberRole" VARCHAR(50)  NOT NULL DEFAULT 'Member',
     "Status"     VARCHAR(50)  NOT NULL DEFAULT 'Pending',
     "Color"      VARCHAR(7)   NOT NULL DEFAULT '#000000',
     "InvitedAt"  TIMESTAMP    NOT NULL DEFAULT NOW(),
     "UpdatedAt"  TIMESTAMP,
-    CONSTRAINT "FK_KitchenMembers_kitchens"  FOREIGN KEY ("kitchenId") REFERENCES app."Kitchens"("Id")    ON DELETE CASCADE,
+    CONSTRAINT "FK_KitchenMembers_Kitchens"  FOREIGN KEY ("KitchenId") REFERENCES app."Kitchens"("Id")    ON DELETE CASCADE,
     CONSTRAINT "FK_KitchenMembers_AppUsers"  FOREIGN KEY ("Email")     REFERENCES app."AppUsers"("Email") ON DELETE CASCADE,
-    CONSTRAINT "UQ_KitchenMembers"           UNIQUE ("kitchenId", "Email")
+    CONSTRAINT "UQ_KitchenMembers"           UNIQUE ("KitchenId", "Email")
 );
 
 CREATE TABLE IF NOT EXISTS app."Recipes" (
@@ -125,7 +129,7 @@ CREATE TABLE IF NOT EXISTS internal."OutboxMessages" (
 -- ============================================================
 
 CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_Email"         ON app."KitchenMembers"("Email");
-CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_kitchenId"     ON app."KitchenMembers"("kitchenId");
+CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_KitchenId"     ON app."KitchenMembers"("KitchenId");
 CREATE INDEX IF NOT EXISTS "IX_KitchenMembers_Status"        ON app."KitchenMembers"("Status");
 CREATE INDEX IF NOT EXISTS "IX_FoodProducts_CategoryId"      ON app."FoodProducts"("CategoryId");
 CREATE INDEX IF NOT EXISTS "IX_Recipes_RecipeCategoryId"     ON app."Recipes"("RecipeCategoryId");
@@ -139,7 +143,8 @@ CREATE INDEX IF NOT EXISTS "IX_OutboxMessages_ProcessedDate" ON internal."Outbox
 
 DROP VIEW IF EXISTS app.v_foodproducts;
 CREATE VIEW app.v_foodproducts AS
-SELECT fp."FoodProductId", fp."Name", c."CategoryId", c."Name" AS "Category"
+SELECT fp."FoodProductId", fp."Name", c."CategoryId", c."Name" AS "Category",
+       fp."InsertedAt", fp."UpdatedAt"
 FROM app."FoodProducts" AS fp
 INNER JOIN app."Categories" c ON c."CategoryId" = fp."CategoryId";
 
@@ -150,21 +155,22 @@ FROM app."Kitchens";
 
 DROP VIEW IF EXISTS app.v_member_kitchens;
 CREATE VIEW app.v_member_kitchens AS
-SELECT f."Id", f."Name", f."Address", f."Desc", f."CreatedAt", fm."Email"
+SELECT f."Id", f."Name", f."Address", f."Desc", f."CreatedAt", f."UpdatedAt",
+       fm."Email"
 FROM app."Kitchens" f
-INNER JOIN app."KitchenMembers" fm ON fm."kitchenId" = f."Id"
+INNER JOIN app."KitchenMembers" fm ON fm."KitchenId" = f."Id"
 WHERE fm."Status" = 'Accepted';
 
 DROP VIEW IF EXISTS app.v_KitchenMembers;
 CREATE VIEW app.v_KitchenMembers AS
-SELECT fm."Id", fm."kitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt", fm."UpdatedAt"
+SELECT fm."Id", fm."KitchenId", fm."Email", au."Name", fm."MemberRole", fm."Color", fm."InvitedAt", fm."UpdatedAt"
 FROM app."KitchenMembers" fm
 LEFT JOIN app."AppUsers" au ON au."Email" = fm."Email"
 WHERE fm."Status" = 'Accepted';
 
 DROP VIEW IF EXISTS app.v_kitchen_members_detail;
 CREATE VIEW app.v_kitchen_members_detail AS
-SELECT fm."Id", fm."kitchenId", fm."Email",
+SELECT fm."Id", fm."KitchenId", fm."Email",
        COALESCE(au."Name", fm."Email") AS "Name",
        fm."MemberRole", fm."Status", fm."Color"
 FROM app."KitchenMembers" fm
@@ -172,22 +178,23 @@ LEFT JOIN app."AppUsers" au ON au."Email" = fm."Email";
 
 DROP VIEW IF EXISTS app.v_pending_invites;
 CREATE VIEW app.v_pending_invites AS
-SELECT fm."Id", fm."kitchenId", fm."Email",
+SELECT fm."Id", fm."KitchenId", fm."Email",
        f."Name" AS "kitchenName",
        creator."Email" AS "InviterEmail",
        COALESCE(au."Name", creator."Email") AS "InviterName",
        fm."InvitedAt"
 FROM app."KitchenMembers" fm
-INNER JOIN app."Kitchens" f ON f."Id" = fm."kitchenId"
+INNER JOIN app."Kitchens" f ON f."Id" = fm."KitchenId"
 INNER JOIN app."KitchenMembers" creator
-    ON creator."kitchenId" = fm."kitchenId" AND creator."MemberRole" = 'Creator'
+    ON creator."KitchenId" = fm."KitchenId" AND creator."MemberRole" = 'Creator'
 LEFT JOIN app."AppUsers" au ON au."Email" = creator."Email"
 WHERE fm."Status" = 'Pending';
 
 DROP VIEW IF EXISTS app.v_recipes;
 CREATE VIEW app.v_recipes AS
 SELECT r."RecipeId", r."Name", rc."Name" AS "RecipeCategory",
-       r."Description", r."FoodProducts", r."RequiredTime", r."LevelOfDifficulty"
+       r."Description", r."FoodProducts", r."RequiredTime", r."LevelOfDifficulty",
+       r."InsertedAt", r."UpdatedAt"
 FROM app."Recipes" AS r
 LEFT JOIN app."RecipeCategories" AS rc ON rc."RecipeCategoryId" = r."RecipeCategoryId";
 
