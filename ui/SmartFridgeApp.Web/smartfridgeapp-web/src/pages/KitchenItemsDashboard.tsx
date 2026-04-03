@@ -245,10 +245,11 @@ export default function KitchenItemsDashboard() {
         );
       }
       refetchItems();
+      refetchExpiring();
       refetchScore();
       refetchShopping();
     },
-    [consumeAmounts, kitchenId, selectedUserId, submit, setItems, refetchItems, refetchScore, refetchShopping],
+    [consumeAmounts, kitchenId, selectedUserId, submit, setItems, refetchItems, refetchExpiring, refetchScore, refetchShopping],
   );
 
   const handleWaste = useCallback(async () => {
@@ -266,9 +267,10 @@ export default function KitchenItemsDashboard() {
     setWasteItemId("");
     setWasteReason("");
     refetchItems();
+    refetchExpiring();
     refetchScore();
     refetchShopping();
-  }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchScore, refetchShopping]);
+  }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchExpiring, refetchScore, refetchShopping]);
 
   const handleFindRecipes = async () => {
     if (selectedItems.length === 0) {
@@ -783,7 +785,7 @@ export default function KitchenItemsDashboard() {
             columns={columns}
             autoHeight
             pageSizeOptions={[10, 20, 50]}
-            initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
+            initialState={{ pagination: { paginationModel: { pageSize: 20 } }, sorting: { sortModel: [{ field: "expirationDate", sort: "asc" }] } }}
             checkboxSelection={!isReadOnly}
             onRowSelectionModelChange={(ids) => {
               const foodProductIds = rows
@@ -818,6 +820,7 @@ export default function KitchenItemsDashboard() {
         onItemAdded={(newItem) => {
           setItems((prev) => [...(prev ?? []), { ...newItem, _optimistic: true }]);
           refetchItems();
+          refetchExpiring();
           refetchShopping();
         }}
       />
@@ -827,6 +830,7 @@ export default function KitchenItemsDashboard() {
           onClose={() => {
             setCarouselOpen(false);
             refetchItems();
+            refetchExpiring();
           }}
           recipes={recipes}
           memberId={Number(selectedUserId)}
