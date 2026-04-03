@@ -38,6 +38,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { useParams } from "react-router-dom";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import NewStockItemDialog from "@/components/dialogs/NewStockItemDialog";
@@ -47,6 +49,7 @@ import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
+import ShoppingListPanel from "@/components/ShoppingListPanel";
 
 /* ── Helpers ── */
 function daysUntil(dateStr: string): number {
@@ -98,6 +101,8 @@ export default function KitchenItemsDashboard() {
   const [filterTags, setFilterTags] = useState<ItemTag[]>([]);
 
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
+  const [shoppingListOpen, setShoppingListOpen] = useState(false);
+  const [shoppingListRefreshKey, setShoppingListRefreshKey] = useState(0);
   const [carouselOpen, setCarouselOpen] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [wasteDialogOpen, setWasteDialogOpen] = useState(false);
@@ -240,10 +245,11 @@ export default function KitchenItemsDashboard() {
         );
       }
       refetchItems();
+      refetchExpiring();
       refetchScore();
       refetchShopping();
     },
-    [consumeAmounts, kitchenId, selectedUserId, submit, setItems, refetchItems, refetchScore, refetchShopping],
+    [consumeAmounts, kitchenId, selectedUserId, submit, setItems, refetchItems, refetchExpiring, refetchScore, refetchShopping],
   );
 
   const handleWaste = useCallback(async () => {
@@ -261,9 +267,10 @@ export default function KitchenItemsDashboard() {
     setWasteItemId("");
     setWasteReason("");
     refetchItems();
+    refetchExpiring();
     refetchScore();
     refetchShopping();
-  }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchScore, refetchShopping]);
+  }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchExpiring, refetchScore, refetchShopping]);
 
   const handleFindRecipes = async () => {
     if (selectedItems.length === 0) {
@@ -284,6 +291,16 @@ export default function KitchenItemsDashboard() {
       toast.error("Can't find recipe!", { position: "bottom-center", autoClose: 1500 });
     }
   };
+
+  const handleAddToShoppingList = useCallback(async (productName: string) => {
+    try {
+      await api.post(`/api/kitchens/${kitchenId}/shopping-list`, { name: productName }, true);
+      setShoppingListRefreshKey((k) => k + 1);
+      toast.success(`"${productName}" added to shopping list`, { position: "bottom-center", autoClose: 1500 });
+    } catch {
+      toast.error("Failed to add to shopping list", { position: "bottom-center", autoClose: 1500 });
+    }
+  }, [kitchenId]);
 
   const columns: GridColDef[] = useMemo(
     () => {
@@ -391,7 +408,7 @@ export default function KitchenItemsDashboard() {
         {
           field: "consume",
           headerName: "",
-          width: 220,
+          width: 260,
           sortable: false,
           filterable: false,
           renderCell: (params) => (
@@ -436,6 +453,19 @@ export default function KitchenItemsDashboard() {
                   </Button>
                 </span>
               </Tooltip>
+              <Tooltip title="Add to shopping list">
+                <span>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleAddToShoppingList(params.row.productName)}
+                    sx={{ minWidth: 36, px: 0.5 }}
+                  >
+                    <PlaylistAddIcon fontSize="small" />
+                  </Button>
+                </span>
+              </Tooltip>
             </Stack>
           ),
         },
@@ -443,7 +473,7 @@ export default function KitchenItemsDashboard() {
 
       return cols;
     },
-    [isReadOnly, showAll, consumeAmounts, handleConsume],
+    [isReadOnly, showAll, consumeAmounts, handleConsume, handleAddToShoppingList],
   );
 
   const rows = useMemo(
@@ -482,7 +512,8 @@ export default function KitchenItemsDashboard() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
+    <Container maxWidth={shoppingListOpen ? "lg" : false} sx={{ flex: 1, minWidth: 0, transition: "max-width 0.3s ease" }}>
       {/* Hero header */}
       <Paper
         elevation={0}
@@ -687,6 +718,14 @@ export default function KitchenItemsDashboard() {
         <Button variant="outlined" startIcon={<RefreshIcon />} onClick={refetchAll}>
           Refresh
         </Button>
+        <Button
+          variant={shoppingListOpen ? "contained" : "outlined"}
+          color="secondary"
+          startIcon={<ShoppingCartIcon />}
+          onClick={() => setShoppingListOpen((v) => !v)}
+        >
+          Shopping List
+        </Button>
       </Stack>
 
       {/* Data grid */}
@@ -746,7 +785,7 @@ export default function KitchenItemsDashboard() {
             columns={columns}
             autoHeight
             pageSizeOptions={[10, 20, 50]}
-            initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
+            initialState={{ pagination: { paginationModel: { pageSize: 20 } }, sorting: { sortModel: [{ field: "expirationDate", sort: "asc" }] } }}
             checkboxSelection={!isReadOnly}
             onRowSelectionModelChange={(ids) => {
               const foodProductIds = rows
@@ -781,6 +820,7 @@ export default function KitchenItemsDashboard() {
         onItemAdded={(newItem) => {
           setItems((prev) => [...(prev ?? []), { ...newItem, _optimistic: true }]);
           refetchItems();
+          refetchExpiring();
           refetchShopping();
         }}
       />
@@ -790,6 +830,7 @@ export default function KitchenItemsDashboard() {
           onClose={() => {
             setCarouselOpen(false);
             refetchItems();
+            refetchExpiring();
           }}
           recipes={recipes}
           memberId={Number(selectedUserId)}
@@ -916,5 +957,13 @@ export default function KitchenItemsDashboard() {
       </Dialog>
 
     </Container>
+
+    <ShoppingListPanel
+      kitchenId={kitchenId!}
+      open={shoppingListOpen}
+      onClose={() => setShoppingListOpen(false)}
+      refreshKey={shoppingListRefreshKey}
+    />
+    </Stack>
   );
 }

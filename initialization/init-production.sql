@@ -203,7 +203,6 @@ CREATE VIEW app.v_recipecategories AS
 SELECT "RecipeCategoryId", "Name"
 FROM app."RecipeCategories";
 
-
 -- ============================================================
 -- 5. Reference / seed data
 -- ============================================================
