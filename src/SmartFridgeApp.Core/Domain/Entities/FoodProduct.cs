@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SmartFridgeApp.Core.Application.Events;
+using SmartFridgeApp.Core.Domain.Shared;
 using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Core.Exceptions;
 using SmartFridgeApp.Shared.Domain;
@@ -12,6 +13,8 @@ namespace SmartFridgeApp.Core.Domain.Entities
         public short FoodProductId { get; set; }
         public string Name { get; set; }
         public Category Category { get; set; }
+        public StorageLocation? DefaultStorageLocation { get; private set; }
+        public Unit? DefaultUnit { get; private set; }
         public DateTime InsertedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
@@ -23,11 +26,13 @@ namespace SmartFridgeApp.Core.Domain.Entities
 
         }
 
-        public FoodProduct(string name, Category category)
+        public FoodProduct(string name, Category category, StorageLocation? defaultStorageLocation = null, Unit? defaultUnit = null)
         {
             ValidateFoodProductName(name);
             Name = UppercaseFirst(name.ToLower());
             Category = category;
+            DefaultStorageLocation = defaultStorageLocation;
+            DefaultUnit = defaultUnit;
             InsertedAt = DateTime.UtcNow;
         }
 
@@ -35,6 +40,13 @@ namespace SmartFridgeApp.Core.Domain.Entities
         {
             this.UpdateProductName(newName);
             this.UpdateProductCategory(category);
+        }
+
+        public void UpdateDefaults(StorageLocation? defaultStorageLocation, Unit? defaultUnit)
+        {
+            DefaultStorageLocation = defaultStorageLocation;
+            DefaultUnit = defaultUnit;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void UpdateProductName(string newName)

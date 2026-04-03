@@ -5,6 +5,8 @@ export interface FoodProduct {
   foodProductName: string;
   foodProductCategory?: string;
   variantCount: number;
+  defaultStorageLocation?: StorageLocation;
+  defaultUnit?: Unit;
 }
 
 export interface ProductVariant {

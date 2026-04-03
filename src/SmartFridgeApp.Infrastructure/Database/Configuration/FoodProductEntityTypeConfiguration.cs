@@ -26,6 +26,14 @@ namespace SmartFridgeApp.Infrastructure.FoodProducts
             builder.Property(fp => fp.UpdatedAt)
                 .HasColumnName("UpdatedAt");
 
+            builder.Property(fp => fp.DefaultStorageLocation)
+                .HasColumnName("DefaultStorageLocation")
+                .IsRequired(false);
+
+            builder.Property(fp => fp.DefaultUnit)
+                .HasColumnName("DefaultUnit")
+                .IsRequired(false);
+
             builder.HasOne(fp => fp.Category)
                 .WithMany()
                 .HasForeignKey("CategoryId");

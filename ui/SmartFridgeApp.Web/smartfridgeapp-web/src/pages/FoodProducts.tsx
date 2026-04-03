@@ -14,17 +14,21 @@ import {
   ListItem,
   ListItemText,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import EditIcon from "@mui/icons-material/Edit";
 import { useAuth } from "@/context/AuthContext";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import { api } from "@/services/api";
 import NewFoodProductDialog from "@/components/dialogs/NewFoodProductDialog";
-import type { FoodProduct, FoodProductCategory, ProductVariant } from "@/types";
+import type { FoodProduct, FoodProductCategory, ProductVariant, StorageLocation, Unit } from "@/types";
+import { STORAGE_LOCATIONS } from "@/types";
+import { toast } from "react-toastify";
 
 export default function FoodProducts() {
   const { state } = useAuth();
@@ -40,6 +44,44 @@ export default function FoodProducts() {
   const [variantsLoading, setVariantsLoading] = useState(false);
   const [newVariantName, setNewVariantName] = useState("");
   const [newVariantBarcode, setNewVariantBarcode] = useState("");
+
+  // Defaults editing
+  const [defaultsEditId, setDefaultsEditId] = useState<number | null>(null);
+  const [editDefaultLocation, setEditDefaultLocation] = useState<StorageLocation | "">("");
+  const [editDefaultUnit, setEditDefaultUnit] = useState<Unit | "">("");
+
+  const toggleDefaults = (p: FoodProduct) => {
+    if (defaultsEditId === p.foodProductId) {
+      setDefaultsEditId(null);
+      return;
+    }
+    setDefaultsEditId(p.foodProductId);
+    setEditDefaultLocation(p.defaultStorageLocation ?? "");
+    setEditDefaultUnit(p.defaultUnit ?? "");
+  };
+
+  const handleSaveDefaults = async () => {
+    if (!defaultsEditId) return;
+    const product = products?.find((p) => p.foodProductId === defaultsEditId);
+    if (!product) return;
+    try {
+      await api.put(
+        "/api/foodProducts",
+        {
+          foodProductId: defaultsEditId,
+          foodProductName: product.foodProductName,
+          defaultStorageLocation: editDefaultLocation || null,
+          defaultUnit: editDefaultUnit || null,
+        },
+        true,
+      );
+      toast.success("Defaults saved!", { position: "bottom-center", autoClose: 1500 });
+      setDefaultsEditId(null);
+      refetch();
+    } catch {
+      toast.error("Can't save defaults", { position: "bottom-center", autoClose: 2000 });
+    }
+  };
 
   const toggleVariants = async (foodProductId: number) => {
     if (expandedId === foodProductId) {
@@ -103,6 +145,52 @@ export default function FoodProducts() {
       ),
     },
     {
+      field: "defaults",
+      headerName: "Defaults",
+      width: 200,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => {
+        const loc = STORAGE_LOCATIONS.find((l) => l.value === params.row.defaultStorageLocation);
+        return (
+          <Stack direction="row" alignItems="center" spacing={0.5} sx={{ height: "100%" }}>
+            {loc ? (
+              <Chip
+                label={<>{loc.icon} {loc.label}</>}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: "0.72rem" }}
+              />
+            ) : (
+              <Typography variant="caption" color="text.disabled">—</Typography>
+            )}
+            {params.row.defaultUnit && params.row.defaultUnit !== "NotAssigned" && (
+              <Chip label={params.row.defaultUnit} size="small" sx={{ fontSize: "0.72rem" }} />
+            )}
+          </Stack>
+        );
+      },
+    },
+    {
+      field: "editDefaults",
+      headerName: "",
+      width: 50,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <IconButton
+          size="small"
+          disabled={!state.isAdmin}
+          onClick={() => {
+            const p = products?.find((pr) => pr.foodProductId === params.row.id);
+            if (p) toggleDefaults(p);
+          }}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+      ),
+    },
+    {
       field: "variants",
       headerName: "Variants",
       width: 80,
@@ -126,6 +214,8 @@ export default function FoodProducts() {
           foodProductName: p.foodProductName,
           foodProductCategory: p.foodProductCategory ?? "",
           variantCount: p.variantCount ?? 0,
+          defaultStorageLocation: p.defaultStorageLocation,
+          defaultUnit: p.defaultUnit,
         })),
     [products, filterCategory],
   );
@@ -283,6 +373,47 @@ export default function FoodProducts() {
           refetch();
         }}
       />
+
+      {/* Defaults edit panel */}
+      <Collapse in={defaultsEditId !== null} unmountOnExit>
+        <Paper sx={{ mt: 2, p: 2, borderRadius: 3 }}>
+          <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+            Edit defaults for: {products?.find((p) => p.foodProductId === defaultsEditId)?.foodProductName ?? "..."}
+          </Typography>
+          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+            <TextField
+              label="Default Storage Location"
+              select
+              size="small"
+              value={editDefaultLocation}
+              onChange={(e) => setEditDefaultLocation(e.target.value as StorageLocation | "")}
+              sx={{ minWidth: 200 }}
+            >
+              <MenuItem value="">— None —</MenuItem>
+              {STORAGE_LOCATIONS.map((loc) => (
+                <MenuItem key={loc.value} value={loc.value}>
+                  <Box component="span" sx={{ mr: 1 }}>{loc.icon}</Box>{loc.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="Default Unit"
+              select
+              size="small"
+              value={editDefaultUnit}
+              onChange={(e) => setEditDefaultUnit(e.target.value as Unit | "")}
+              sx={{ minWidth: 150 }}
+            >
+              <MenuItem value="">— None —</MenuItem>
+              <MenuItem value="Pieces">Pieces</MenuItem>
+              <MenuItem value="Grams">Grams</MenuItem>
+              <MenuItem value="Mililiter">Millilitres</MenuItem>
+            </TextField>
+            <Button variant="contained" size="small" onClick={handleSaveDefaults}>Save</Button>
+            <Button size="small" onClick={() => setDefaultsEditId(null)}>Cancel</Button>
+          </Stack>
+        </Paper>
+      </Collapse>
     </Container>
   );
 }

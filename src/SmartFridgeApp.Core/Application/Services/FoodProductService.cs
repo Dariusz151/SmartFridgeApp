@@ -6,6 +6,7 @@ using Dapper;
 using SmartFridgeApp.Core.Application.Features;
 using SmartFridgeApp.Core.Contracts.Repositories;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.Shared;
 using SmartFridgeApp.Core.Domain.ValueObjects;
 using SmartFridgeApp.Shared.SeedWork;
 
@@ -22,7 +23,9 @@ public class FoodProductService(
         const string sql = """
             SELECT fp."FoodProductId", fp."Name" AS "FoodProductName",
                    c."Name" AS "FoodProductCategory",
-                   (SELECT COUNT(*) FROM app."ProductVariants" pv WHERE pv."FoodProductId" = fp."FoodProductId") AS "VariantCount"
+                   (SELECT COUNT(*) FROM app."ProductVariants" pv WHERE pv."FoodProductId" = fp."FoodProductId") AS "VariantCount",
+                   fp."DefaultStorageLocation",
+                   fp."DefaultUnit"
             FROM app."FoodProducts" fp
             LEFT JOIN app."Categories" c ON fp."CategoryId" = c."CategoryId"
             """;
@@ -31,19 +34,20 @@ public class FoodProductService(
         return foodProducts.AsEnumerable();
     }
 
-    public async Task AddFoodProductAsync(string name, int categoryId, CancellationToken ct = default)
+    public async Task AddFoodProductAsync(string name, int categoryId, StorageLocation? defaultStorageLocation = null, Unit? defaultUnit = null, CancellationToken ct = default)
     {
         var category = await foodProductRepository.GetCategoryByIdAsync(categoryId);
-        var foodProduct = new FoodProduct(name, category);
+        var foodProduct = new FoodProduct(name, category, defaultStorageLocation, defaultUnit);
 
         await foodProductRepository.AddAsync(foodProduct);
         await unitOfWork.CommitAsync(ct);
     }
 
-    public async Task UpdateFoodProductAsync(int foodProductId, string foodProductName, CancellationToken ct = default)
+    public async Task UpdateFoodProductAsync(int foodProductId, string foodProductName, StorageLocation? defaultStorageLocation = null, Unit? defaultUnit = null, CancellationToken ct = default)
     {
         var foodProduct = await foodProductRepository.GetByIdAsync(foodProductId);
         foodProduct.UpdateProductName(foodProductName);
+        foodProduct.UpdateDefaults(defaultStorageLocation, defaultUnit);
 
         await unitOfWork.CommitAsync(ct);
     }

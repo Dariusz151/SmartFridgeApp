@@ -8,15 +8,14 @@ import {
   Button,
   Autocomplete,
   Stack,
-  MenuItem,
   Chip,
   Box,
+  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import { api } from "@/services/api";
-import UnitSelector from "@/components/UnitSelector";
 import type { FoodProduct, ProductVariant, Unit, FridgeItem, StorageLocation, ItemTag } from "@/types";
 import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 
@@ -31,6 +30,7 @@ interface Props {
 export default function NewStockItemDialog({ kitchenId, memberId, open, onClose, onItemAdded }: Props) {
   const { data: foodProducts } = useFetch<FoodProduct[]>("/api/foodProducts");
   const { submit, loading } = useSubmit();
+  const [selectedProduct, setSelectedProduct] = useState<FoodProduct | null>(null);
   const [foodProductId, setFoodProductId] = useState(0);
   const [variantId, setVariantId] = useState<number | null>(null);
   const [variants, setVariants] = useState<ProductVariant[]>([]);
@@ -47,14 +47,21 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
   };
   const [expirationDate, setExpirationDate] = useState(defaultExpiration());
 
+  // When a product is selected, apply its defaults for location and unit
   useEffect(() => {
-    if (!foodProductId) {
+    if (!selectedProduct) {
       setVariants([]);
       setVariantId(null);
       return;
     }
-    api.get<ProductVariant[]>(`/api/foodProducts/${foodProductId}/variants`).then(setVariants).catch(() => setVariants([]));
-  }, [foodProductId]);
+    setLocation(selectedProduct.defaultStorageLocation ?? "Fridge");
+    setUnit(selectedProduct.defaultUnit ?? "NotAssigned");
+    api.get<ProductVariant[]>(`/api/foodProducts/${selectedProduct.foodProductId}/variants`)
+      .then(setVariants)
+      .catch(() => setVariants([]));
+  }, [selectedProduct]);
+
+  const locationDef = STORAGE_LOCATIONS.find((l) => l.value === location);
 
   const handleAdd = async () => {
     const result = await submit(
@@ -92,6 +99,7 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
         expirationDate: new Date(expirationDate).toISOString(),
         stockedAt: new Date().toISOString(),
       });
+      setSelectedProduct(null);
       setFoodProductId(0);
       setVariantId(null);
       setVariants([]);
@@ -112,7 +120,11 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
           <Autocomplete
             options={foodProducts ?? []}
             getOptionLabel={(option) => option.foodProductName}
-            onChange={(_, val) => val && setFoodProductId(val.foodProductId)}
+            value={selectedProduct}
+            onChange={(_, val) => {
+              setSelectedProduct(val);
+              setFoodProductId(val?.foodProductId ?? 0);
+            }}
             renderInput={(params) => (
               <TextField {...params} label="Select food product" />
             )}
@@ -136,22 +148,29 @@ export default function NewStockItemDialog({ kitchenId, memberId, open, onClose,
               const v = e.target.value;
               if (/^\d*$/.test(v)) setValue(v);
             }}
+            slotProps={{
+              input: {
+                endAdornment: unit !== "NotAssigned" ? (
+                  <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "nowrap", pl: 1 }}>
+                    {unit === "Grams" ? "g" : unit === "Mililiter" ? "ml" : "pcs"}
+                  </Typography>
+                ) : undefined,
+              },
+            }}
           />
-          <UnitSelector value={unit} onChange={setUnit} size="medium" />
-          <TextField
-            label="Storage Location"
-            select
-            fullWidth
-            value={location}
-            onChange={(e) => setLocation(e.target.value as StorageLocation)}
-          >
-            {STORAGE_LOCATIONS.map((loc) => (
-              <MenuItem key={loc.value} value={loc.value}>
-                <Box component="span" sx={{ mr: 1 }}>{loc.icon}</Box>
-                {loc.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          {/* Storage info derived from product defaults */}
+          {selectedProduct && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1 }}>
+              <Box component="span" sx={{ fontSize: 18 }}>{locationDef?.icon}</Box>
+              <Typography variant="body2" color="text.secondary">
+                <strong>{locationDef?.label ?? location}</strong>
+                {unit !== "NotAssigned" && <> · {unit}</>}
+                <Box component="span" sx={{ ml: 1, opacity: 0.6, fontSize: "0.75rem" }}>
+                  (from product defaults)
+                </Box>
+              </Typography>
+            </Box>
+          )}
           <Autocomplete
             multiple
             options={ITEM_TAGS}

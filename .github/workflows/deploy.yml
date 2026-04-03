@@ -104,8 +104,8 @@ jobs:
             --add-cloudsql-instances=${{ secrets.CLOUD_SQL_INSTANCE }}
             --allow-unauthenticated
             --port=8080
-            --memory=512Mi
-            --min-instances=0
+            --memory=1024Mi
+            --min-instances=1
             --max-instances=2
             --service-account=${{ secrets.CLOUD_RUN_SA_EMAIL }}
           env_vars: |

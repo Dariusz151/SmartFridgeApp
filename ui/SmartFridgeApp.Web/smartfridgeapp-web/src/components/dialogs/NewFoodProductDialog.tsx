@@ -8,11 +8,14 @@ import {
   Button,
   Autocomplete,
   Stack,
+  MenuItem,
+  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSubmit } from "@/hooks/useApi";
-import type { FoodProductCategory } from "@/types";
+import type { FoodProductCategory, StorageLocation, Unit } from "@/types";
+import { STORAGE_LOCATIONS } from "@/types";
 
 interface Props {
   categories: FoodProductCategory[];
@@ -24,11 +27,18 @@ export default function NewFoodProductDialog({ categories, open, onClose }: Prop
   const { submit, loading } = useSubmit();
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState<number>(0);
+  const [defaultLocation, setDefaultLocation] = useState<StorageLocation | "">("");
+  const [defaultUnit, setDefaultUnit] = useState<Unit | "">("");
 
   const handleAdd = async () => {
     const result = await submit(
       "/api/foodProducts",
-      { name, category: categoryId },
+      {
+        name,
+        category: categoryId,
+        defaultStorageLocation: defaultLocation || null,
+        defaultUnit: defaultUnit || null,
+      },
       {
         auth: true,
         successMessage: "Food product added!",
@@ -38,6 +48,8 @@ export default function NewFoodProductDialog({ categories, open, onClose }: Prop
     if (result !== null) {
       setName("");
       setCategoryId(0);
+      setDefaultLocation("");
+      setDefaultUnit("");
       onClose();
     }
   };
@@ -62,6 +74,33 @@ export default function NewFoodProductDialog({ categories, open, onClose }: Prop
               <TextField {...params} label="Select category" />
             )}
           />
+          <TextField
+            label="Default Storage Location"
+            select
+            fullWidth
+            value={defaultLocation}
+            onChange={(e) => setDefaultLocation(e.target.value as StorageLocation | "")}
+          >
+            <MenuItem value="">— None —</MenuItem>
+            {STORAGE_LOCATIONS.map((loc) => (
+              <MenuItem key={loc.value} value={loc.value}>
+                <Box component="span" sx={{ mr: 1 }}>{loc.icon}</Box>
+                {loc.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Default Unit"
+            select
+            fullWidth
+            value={defaultUnit}
+            onChange={(e) => setDefaultUnit(e.target.value as Unit | "")}
+          >
+            <MenuItem value="">— None —</MenuItem>
+            <MenuItem value="Pieces">Pieces</MenuItem>
+            <MenuItem value="Grams">Grams</MenuItem>
+            <MenuItem value="Mililiter">Millilitres</MenuItem>
+          </TextField>
         </Stack>
       </DialogContent>
       <DialogActions>

@@ -71,7 +71,7 @@ namespace SmartFridgeApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddFoodProductAsync([FromBody] AddFoodProductRequest request, CancellationToken ct)
         {
-            await foodProductService.AddFoodProductAsync(request.Name, request.Category, ct);
+            await foodProductService.AddFoodProductAsync(request.Name, request.Category, request.DefaultStorageLocation, request.DefaultUnit, ct);
             return Created(string.Empty, null);
         }
 
@@ -87,7 +87,7 @@ namespace SmartFridgeApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateFoodProductAsync([FromBody] UpdateFoodProductRequest request, CancellationToken ct)
         {
-            await foodProductService.UpdateFoodProductAsync(request.FoodProductId, request.FoodProductName, ct);
+            await foodProductService.UpdateFoodProductAsync(request.FoodProductId, request.FoodProductName, request.DefaultStorageLocation, request.DefaultUnit, ct);
             return Ok();
         }
 

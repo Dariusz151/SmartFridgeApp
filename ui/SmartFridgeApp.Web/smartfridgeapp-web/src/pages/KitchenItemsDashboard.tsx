@@ -27,8 +27,17 @@ import {
   AlertTitle,
   MenuItem,
   Autocomplete,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
@@ -97,7 +106,6 @@ export default function KitchenItemsDashboard() {
   const [showAll, setShowAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [consumeAmounts, setConsumeAmounts] = useState<Record<string, number>>({});
-  const [filterLocation, setFilterLocation] = useState<StorageLocation | "">("");
   const [filterTags, setFilterTags] = useState<ItemTag[]>([]);
 
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
@@ -310,188 +318,13 @@ export default function KitchenItemsDashboard() {
     }
   }, [kitchenId]);
 
-  const columns: GridColDef[] = useMemo(
-    () => {
-      const cols: GridColDef[] = [
-        {
-          field: "productName",
-          headerName: "Product",
-          flex: 1,
-          minWidth: 180,
-          renderCell: (params) => {
-            const loc = STORAGE_LOCATIONS.find((l) => l.value === params.row.location);
-            const itemTags: string[] = params.row.tags ?? [];
-            return (
-              <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ height: "100%", width: "100%" }}>
-                <Stack justifyContent="center" sx={{ minWidth: 0, flex: 1 }}>
-                  <Stack direction="row" alignItems="center" spacing={0.75}>
-                    {loc && <Box component="span" sx={{ fontSize: 14, lineHeight: 1 }}>{loc.icon}</Box>}
-                    <Typography variant="body2" fontWeight={500} noWrap>
-                      {params.value}
-                      {params.row.variantName && (
-                        <Box component="span" sx={{ ml: 0.75, fontSize: "0.75rem", fontWeight: 400, opacity: 0.55 }}>
-                          {params.row.variantName}
-                        </Box>
-                      )}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                {itemTags.length > 0 && (
-                  <Stack direction="row" spacing={0.25} alignItems="center" sx={{ flexShrink: 0, ml: 1, opacity: 0.45 }}>
-                    {itemTags.map((t) => {
-                      const tagDef = ITEM_TAGS.find((it) => it.value === t);
-                      return (
-                        <Chip
-                          key={t}
-                          label={tagDef?.label ?? t}
-                          size="small"
-                          variant="outlined"
-                          sx={{ height: 18, fontSize: 10, borderRadius: 1 }}
-                        />
-                      );
-                    })}
-                  </Stack>
-                )}
-              </Stack>
-            );
-          },
-        },
-      ];
-
-      if (showAll) {
-        cols.push({
-          field: "userName",
-          headerName: "User",
-          width: 130,
-          renderCell: (params) => {
-            const color = params.row.userColor ?? "#000";
-            const name = params.row.userName ?? params.row.userEmail ?? "—";
-            return (
-              <Stack direction="row" spacing={0.75} alignItems="center" sx={{ height: "100%" }}>
-                <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: color, flexShrink: 0 }} />
-                <Typography variant="body2" noWrap>{name}</Typography>
-              </Stack>
-            );
-          },
-        });
-      }
-
-      cols.push(
-        {
-          field: "amount",
-          headerName: "Qty",
-          width: 80,
-          renderCell: (params) => (
-            <Typography variant="body2" fontWeight={500}>
-              {formatAmount(params.row.amount, params.row.unit)}
-            </Typography>
-          ),
-        },
-        {
-          field: "expirationDate",
-          headerName: "Expires",
-          width: 70,
-          renderCell: (params) => {
-            const days = daysUntil(params.value);
-            const { count, color } = expiryDots(days);
-            return (
-              <Tooltip title={`${expiryLabel(days)} — ${new Date(params.value).toLocaleDateString()}`}>
-                <Stack direction="row" spacing={0.4} alignItems="center" sx={{ height: "100%" }}>
-                  {Array.from({ length: count }, (_, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        width: 8, height: 8,
-                        borderRadius: "50%",
-                        bgcolor: color,
-                        boxShadow: `0 0 4px ${color}80`,
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </Tooltip>
-            );
-          },
-        },
-        {
-          field: "consume",
-          headerName: "",
-          width: 260,
-          sortable: false,
-          filterable: false,
-          renderCell: (params) => (
-            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ height: "100%" }}>
-              <TextField
-                type="number"
-                size="small"
-                disabled={isReadOnly || params.row._optimistic}
-                value={consumeAmounts[params.row.stockItemId] ?? ""}
-                onChange={(e) =>
-                  setConsumeAmounts((prev) => ({
-                    ...prev,
-                    [params.row.stockItemId]: Math.max(0, parseInt(e.target.value) || 0),
-                  }))
-                }
-                slotProps={{ htmlInput: { min: 0, max: 10000, style: { width: 56 } } }}
-              />
-              <Tooltip title="Consume">
-                <span>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    disabled={isReadOnly || params.row._optimistic}
-                    onClick={() => handleConsume(params.row.stockItemId, params.row.unit)}
-                    sx={{ minWidth: 36, px: 1 }}
-                  >
-                    <FastfoodIcon fontSize="small" />
-                  </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title={params.row._optimistic ? "Syncing..." : "Waste (−25 pts)"}>
-                <span>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="error"
-                    disabled={isReadOnly || params.row._optimistic}
-                    onClick={() => { setWasteItemId(params.row.stockItemId); setWasteDialogOpen(true); }}
-                    sx={{ minWidth: 36, px: 0.5 }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title="Add to shopping list">
-                <span>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleAddToShoppingList(params.row.productName)}
-                    sx={{ minWidth: 36, px: 0.5 }}
-                  >
-                    <PlaylistAddIcon fontSize="small" />
-                  </Button>
-                </span>
-              </Tooltip>
-            </Stack>
-          ),
-        },
-      );
-
-      return cols;
-    },
-    [isReadOnly, showAll, consumeAmounts, handleConsume, handleAddToShoppingList],
-  );
-
   const rows = useMemo(
     () => [...(items ?? [])]
       .filter((item) => {
-        if (filterLocation && item.location !== filterLocation) return false;
         if (filterTags.length > 0 && !filterTags.every((t) => item.tags?.includes(t))) return false;
         return true;
       })
-      .sort((a, b) => a.stockItemId.localeCompare(b.stockItemId))
+      .sort((a, b) => new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime())
       .map((item, i) => {
         const fp = foodProductMap.get(item.foodProductId);
         const member = memberMap.get(item.memberId);
@@ -507,8 +340,21 @@ export default function KitchenItemsDashboard() {
           userEmail: member?.email,
         };
       }),
-    [items, foodProductMap, memberMap, variantMap, filterLocation, filterTags],
+    [items, foodProductMap, memberMap, variantMap, filterTags],
   );
+
+  const groupedRows = useMemo(() => {
+    const locationOrder = STORAGE_LOCATIONS.map((l) => l.value);
+    const map = new Map<string, typeof rows>();
+    for (const row of rows) {
+      const loc = row.location ?? "Fridge";
+      if (!map.has(loc)) map.set(loc, []);
+      map.get(loc)!.push(row);
+    }
+    return [...map.entries()].sort(
+      ([a], [b]) => locationOrder.indexOf(a as StorageLocation) - locationOrder.indexOf(b as StorageLocation),
+    );
+  }, [rows]);
 
   const refetchAll = () => {
     refetchKitchens();
@@ -622,22 +468,6 @@ export default function KitchenItemsDashboard() {
           <Typography variant="subtitle2" color="text.secondary" sx={{ mr: 1 }}>
             Filters
           </Typography>
-          <TextField
-            label="Location"
-            select
-            size="small"
-            value={filterLocation}
-            onChange={(e) => setFilterLocation(e.target.value as StorageLocation | "")}
-            sx={{ minWidth: 150 }}
-          >
-            <MenuItem value="">All locations</MenuItem>
-            {STORAGE_LOCATIONS.map((loc) => (
-              <MenuItem key={loc.value} value={loc.value}>
-                <Box component="span" sx={{ mr: 1 }}>{loc.icon}</Box>
-                {loc.label}
-              </MenuItem>
-            ))}
-          </TextField>
           <Autocomplete
             multiple
             size="small"
@@ -656,10 +486,10 @@ export default function KitchenItemsDashboard() {
             )}
             sx={{ minWidth: 250 }}
           />
-          {(filterLocation || filterTags.length > 0) && (
+          {filterTags.length > 0 && (
             <Button
               size="small"
-              onClick={() => { setFilterLocation(""); setFilterTags([]); }}
+              onClick={() => setFilterTags([])}
             >
               Clear filters
             </Button>
@@ -701,7 +531,7 @@ export default function KitchenItemsDashboard() {
         </Button>
       </Stack>
 
-      {/* Data grid */}
+      {/* Grouped inventory */}
       {itemsLoading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
           <CircularProgress />
@@ -725,24 +555,15 @@ export default function KitchenItemsDashboard() {
           </Button>
         </Paper>
       ) : (
-        <Paper sx={{ borderRadius: 3, overflow: "hidden", position: "relative" }}>
+        <Box sx={{ position: "relative" }}>
           {itemsRefreshing && (
             <Box
               sx={{
                 position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 2,
-                zIndex: 1,
-                overflow: "hidden",
+                top: 0, left: 0, right: 0, height: 2, zIndex: 10, overflow: "hidden",
                 "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "100%",
+                  content: '""', position: "absolute",
+                  top: 0, left: 0, right: 0, height: "100%",
                   bgcolor: "primary.main",
                   animation: "indeterminate 1.5s infinite ease-in-out",
                   "@keyframes indeterminate": {
@@ -753,34 +574,152 @@ export default function KitchenItemsDashboard() {
               }}
             />
           )}
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            autoHeight
-            pageSizeOptions={[10, 20, 50]}
-            initialState={{ pagination: { paginationModel: { pageSize: 20 } }, sorting: { sortModel: [{ field: "expirationDate", sort: "asc" }] } }}
-            checkboxSelection={!isReadOnly}
-            onRowSelectionModelChange={(ids) => {
-              const foodProductIds = rows
-                .filter((r) => ids.includes(r.id))
-                .map((r) => r.foodProductId);
-              setSelectedItems(foodProductIds);
-            }}
-            disableRowSelectionOnClick
-            getRowClassName={(params) => (params.row.userColor ? `row-color-${params.row.id}` : "")}
-            sx={{
-              border: "none",
-              transition: "opacity 0.15s ease",
-              opacity: itemsRefreshing ? 0.7 : 1,
-              ...Object.fromEntries(
-                rows.filter((r) => r.userColor).map((r) => [
-                  `& .row-color-${r.id}`,
-                  { backgroundColor: `${r.userColor}14` },
-                ]),
-              ),
-            }}
-          />
-        </Paper>
+          {groupedRows.map(([location, locRows]) => {
+            const locDef = STORAGE_LOCATIONS.find((l) => l.value === location);
+            return (
+              <Accordion key={location} defaultExpanded sx={{ mb: 1, borderRadius: 2, "&:before": { display: "none" }, "&.Mui-expanded": { mt: 0 } }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ borderRadius: 2 }}>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Box component="span" sx={{ fontSize: 20, lineHeight: 1 }}>{locDef?.icon}</Box>
+                    <Typography variant="subtitle1" fontWeight={600}>{locDef?.label ?? location}</Typography>
+                    <Chip label={locRows.length} size="small" sx={{ ml: 0.5, height: 20, fontSize: "0.72rem" }} />
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow sx={{ "& th": { fontWeight: 600, fontSize: "0.78rem", color: "text.secondary" } }}>
+                          <TableCell>Product</TableCell>
+                          {showAll && <TableCell width={120}>User</TableCell>}
+                          <TableCell width={90}>Qty</TableCell>
+                          <TableCell width={70}>Expires</TableCell>
+                          <TableCell width={270} align="right" />
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {locRows.map((row) => {
+                          const itemTags: string[] = row.tags ?? [];
+                          const days = daysUntil(row.expirationDate);
+                          const { count, color: dotColor } = expiryDots(days);
+                          return (
+                            <TableRow
+                              key={row.stockItemId}
+                              sx={{
+                                opacity: row._optimistic ? 0.6 : 1,
+                                bgcolor: row.userColor ? `${row.userColor}14` : undefined,
+                              }}
+                            >
+                              {/* Product */}
+                              <TableCell>
+                                <Stack direction="row" alignItems="center" spacing={0.75}>
+                                  <Typography variant="body2" fontWeight={500}>
+                                    {row.productName}
+                                    {row.variantName && (
+                                      <Box component="span" sx={{ ml: 0.75, fontSize: "0.75rem", fontWeight: 400, opacity: 0.55 }}>
+                                        {row.variantName}
+                                      </Box>
+                                    )}
+                                  </Typography>
+                                  {itemTags.length > 0 && (
+                                    <Stack direction="row" spacing={0.25} alignItems="center" sx={{ opacity: 0.5 }}>
+                                      {itemTags.map((t) => {
+                                        const tagDef = ITEM_TAGS.find((it) => it.value === t);
+                                        return (
+                                          <Chip key={t} label={tagDef?.label ?? t} size="small" variant="outlined"
+                                            sx={{ height: 16, fontSize: 9, borderRadius: 1 }} />
+                                        );
+                                      })}
+                                    </Stack>
+                                  )}
+                                </Stack>
+                              </TableCell>
+                              {/* User (show all mode) */}
+                              {showAll && (
+                                <TableCell>
+                                  <Stack direction="row" spacing={0.75} alignItems="center">
+                                    <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: row.userColor ?? "#000", flexShrink: 0 }} />
+                                    <Typography variant="body2" noWrap>{row.userName ?? row.userEmail ?? "—"}</Typography>
+                                  </Stack>
+                                </TableCell>
+                              )}
+                              {/* Qty */}
+                              <TableCell>
+                                <Typography variant="body2" fontWeight={500}>
+                                  {formatAmount(row.amount, row.unit)}
+                                </Typography>
+                              </TableCell>
+                              {/* Expires */}
+                              <TableCell>
+                                <Tooltip title={`${expiryLabel(days)} — ${new Date(row.expirationDate).toLocaleDateString()}`}>
+                                  <Stack direction="row" spacing={0.4} alignItems="center">
+                                    {Array.from({ length: count }, (_, i) => (
+                                      <Box key={i} sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: dotColor, boxShadow: `0 0 4px ${dotColor}80` }} />
+                                    ))}
+                                  </Stack>
+                                </Tooltip>
+                              </TableCell>
+                              {/* Actions */}
+                              <TableCell align="right">
+                                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end">
+                                  <TextField
+                                    type="number"
+                                    size="small"
+                                    disabled={isReadOnly || row._optimistic}
+                                    value={consumeAmounts[row.stockItemId] ?? ""}
+                                    onChange={(e) =>
+                                      setConsumeAmounts((prev) => ({
+                                        ...prev,
+                                        [row.stockItemId]: Math.max(0, parseInt(e.target.value) || 0),
+                                      }))
+                                    }
+                                    slotProps={{ htmlInput: { min: 0, max: 10000, style: { width: 52 } } }}
+                                  />
+                                  <Tooltip title="Consume">
+                                    <span>
+                                      <Button size="small" variant="contained"
+                                        disabled={isReadOnly || row._optimistic}
+                                        onClick={() => handleConsume(row.stockItemId, row.unit)}
+                                        sx={{ minWidth: 34, px: 0.75 }}
+                                      >
+                                        <FastfoodIcon fontSize="small" />
+                                      </Button>
+                                    </span>
+                                  </Tooltip>
+                                  <Tooltip title={row._optimistic ? "Syncing..." : "Waste (−25 pts)"}>
+                                    <span>
+                                      <Button size="small" variant="outlined" color="error"
+                                        disabled={isReadOnly || row._optimistic}
+                                        onClick={() => { setWasteItemId(row.stockItemId); setWasteDialogOpen(true); }}
+                                        sx={{ minWidth: 34, px: 0.5 }}
+                                      >
+                                        <DeleteIcon fontSize="small" />
+                                      </Button>
+                                    </span>
+                                  </Tooltip>
+                                  <Tooltip title="Add to shopping list">
+                                    <span>
+                                      <Button size="small" variant="outlined" color="secondary"
+                                        onClick={() => handleAddToShoppingList(row.productName)}
+                                        sx={{ minWidth: 34, px: 0.5 }}
+                                      >
+                                        <PlaylistAddIcon fontSize="small" />
+                                      </Button>
+                                    </span>
+                                  </Tooltip>
+                                </Stack>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        </Box>
       )}
 
       <NewStockItemDialog
