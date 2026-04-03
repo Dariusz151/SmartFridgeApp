@@ -56,6 +56,7 @@ public static class ServiceProviderExtensions
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IKitchenMemberService, KitchenMemberService>();
+        services.AddScoped<IShoppingListService, ShoppingListService>();
         // services.AddScoped<IRecipeImportService, RecipeImportService>(); // disabled: recipe import feature
 
         // External recipe sources

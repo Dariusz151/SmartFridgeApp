@@ -38,6 +38,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { useParams } from "react-router-dom";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import NewStockItemDialog from "@/components/dialogs/NewStockItemDialog";
@@ -47,6 +49,7 @@ import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
+import ShoppingListPanel from "@/components/ShoppingListPanel";
 
 /* ── Helpers ── */
 function daysUntil(dateStr: string): number {
@@ -98,6 +101,7 @@ export default function KitchenItemsDashboard() {
   const [filterTags, setFilterTags] = useState<ItemTag[]>([]);
 
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
+  const [shoppingListOpen, setShoppingListOpen] = useState(false);
   const [carouselOpen, setCarouselOpen] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [wasteDialogOpen, setWasteDialogOpen] = useState(false);
@@ -285,6 +289,15 @@ export default function KitchenItemsDashboard() {
     }
   };
 
+  const handleAddToShoppingList = useCallback(async (productName: string) => {
+    try {
+      await api.post(`/api/kitchens/${kitchenId}/shopping-list`, { name: productName }, true);
+      toast.success(`"${productName}" added to shopping list`, { position: "bottom-center", autoClose: 1500 });
+    } catch {
+      toast.error("Failed to add to shopping list", { position: "bottom-center", autoClose: 1500 });
+    }
+  }, [kitchenId]);
+
   const columns: GridColDef[] = useMemo(
     () => {
       const cols: GridColDef[] = [
@@ -391,7 +404,7 @@ export default function KitchenItemsDashboard() {
         {
           field: "consume",
           headerName: "",
-          width: 220,
+          width: 260,
           sortable: false,
           filterable: false,
           renderCell: (params) => (
@@ -436,6 +449,19 @@ export default function KitchenItemsDashboard() {
                   </Button>
                 </span>
               </Tooltip>
+              <Tooltip title="Add to shopping list">
+                <span>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleAddToShoppingList(params.row.productName)}
+                    sx={{ minWidth: 36, px: 0.5 }}
+                  >
+                    <PlaylistAddIcon fontSize="small" />
+                  </Button>
+                </span>
+              </Tooltip>
             </Stack>
           ),
         },
@@ -443,7 +469,7 @@ export default function KitchenItemsDashboard() {
 
       return cols;
     },
-    [isReadOnly, showAll, consumeAmounts, handleConsume],
+    [isReadOnly, showAll, consumeAmounts, handleConsume, handleAddToShoppingList],
   );
 
   const rows = useMemo(
@@ -482,7 +508,8 @@ export default function KitchenItemsDashboard() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Stack direction="row" spacing={2} sx={{ maxWidth: shoppingListOpen ? "100%" : undefined }}>
+    <Container maxWidth="lg" sx={{ flex: 1, minWidth: 0 }}>
       {/* Hero header */}
       <Paper
         elevation={0}
@@ -686,6 +713,14 @@ export default function KitchenItemsDashboard() {
         )}
         <Button variant="outlined" startIcon={<RefreshIcon />} onClick={refetchAll}>
           Refresh
+        </Button>
+        <Button
+          variant={shoppingListOpen ? "contained" : "outlined"}
+          color="secondary"
+          startIcon={<ShoppingCartIcon />}
+          onClick={() => setShoppingListOpen((v) => !v)}
+        >
+          Shopping List
         </Button>
       </Stack>
 
@@ -916,5 +951,12 @@ export default function KitchenItemsDashboard() {
       </Dialog>
 
     </Container>
+
+    <ShoppingListPanel
+      kitchenId={kitchenId!}
+      open={shoppingListOpen}
+      onClose={() => setShoppingListOpen(false)}
+    />
+    </Stack>
   );
 }

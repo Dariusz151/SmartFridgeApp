@@ -176,3 +176,13 @@ export interface AuthState {
 export type AuthAction =
   | { type: "LOGIN_ADMIN"; payload: { token: string; role: string; name?: string; email?: string } }
   | { type: "LOGOUT_ADMIN" };
+
+/* ── Shopping List ── */
+
+export interface ShoppingListItem {
+  id: string;
+  kitchenId: string;
+  name: string;
+  addedByEmail: string;
+  addedAt: string;
+}

@@ -84,3 +84,5 @@ DROP VIEW IF EXISTS app.v_recipecategories;
 CREATE VIEW app.v_recipecategories AS
 SELECT "RecipeCategoryId", "Name"
 FROM app."RecipeCategories";
+
+
