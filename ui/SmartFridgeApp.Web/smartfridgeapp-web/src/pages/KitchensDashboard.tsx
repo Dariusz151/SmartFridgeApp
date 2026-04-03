@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Button,
@@ -19,6 +19,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 import { useAuth } from "@/context/AuthContext";
 import { useFetch, useSubmit } from "@/hooks/useApi";
+import { useMainKitchen, setMainKitchen } from "@/hooks/useMainKitchen";
 import NewKitchenDialog from "@/components/dialogs/NewKitchenDialog";
 import type { Kitchen } from "@/types";
 
@@ -28,12 +29,21 @@ export default function KitchensDashboard() {
   const { submit } = useSubmit();
   const [dialogOpen, setDialogOpen] = useState(false);
   const autoNavigated = useRef(false);
+  const mainKitchen = useMainKitchen();
+
+  // Default main kitchen to first one when no main kitchen is set
+  useEffect(() => {
+    if (!loading && data && data.length > 0 && !mainKitchen) {
+      setMainKitchen(data[0]!.id, data[0]!.name);
+    }
+  }, [loading, data, mainKitchen]);
 
   // Auto-navigate to Kitchen details when user belongs to exactly one Kitchen (first load only)
   useEffect(() => {
     if (!loading && data && data.length === 1 && !autoNavigated.current && !sessionStorage.getItem("fridges_visited")) {
       autoNavigated.current = true;
       sessionStorage.setItem("fridges_visited", "1");
+      setMainKitchen(data[0]!.id, data[0]!.name);
       navigate(`/KitchenItems/${data[0]!.id}`, { replace: true });
     }
   }, [loading, data, navigate]);
@@ -59,6 +69,9 @@ export default function KitchensDashboard() {
           <Stack direction="row" spacing={1.5} alignItems="center" sx={{ height: "100%" }}>
               <KitchenIcon sx={{ fontSize: 22, color: "primary.main" }} />
             <Typography fontWeight={600}>{params.value}</Typography>
+            {mainKitchen?.id === params.row.id && (
+              <Chip label="⭐ Main" size="small" color="warning" variant="outlined" sx={{ borderRadius: 2, ml: 0.5 }} />
+            )}
           </Stack>
         ),
       },
@@ -83,11 +96,14 @@ export default function KitchensDashboard() {
         renderCell: (params) => (
           <Stack direction="row" spacing={1} alignItems="center" sx={{ height: "100%" }}>
             <Button
-              component={RouterLink}
-              to={`/KitchenItems/${params.row.id}`}
               size="small"
               variant="contained"
               startIcon={<OpenInNewIcon />}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMainKitchen(params.row.id, params.row.name);
+                navigate(`/KitchenItems/${params.row.id}`);
+              }}
             >
               Details
             </Button>
@@ -105,7 +121,7 @@ export default function KitchensDashboard() {
         ),
       },
     ],
-    [state.isAdmin],
+    [state.isAdmin, mainKitchen],
   );
 
   const rows = useMemo(
@@ -180,7 +196,10 @@ export default function KitchensDashboard() {
             pageSizeOptions={[5, 10, 25]}
             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
             disableRowSelectionOnClick
-            onRowClick={(params: GridRowParams) => navigate(`/KitchenItems/${params.row.id}`)}
+            onRowClick={(params: GridRowParams) => {
+              setMainKitchen(params.row.id, params.row.name);
+              navigate(`/KitchenItems/${params.row.id}`);
+            }}
             sx={{ border: "none", cursor: "pointer" }}
           />
         </Paper>

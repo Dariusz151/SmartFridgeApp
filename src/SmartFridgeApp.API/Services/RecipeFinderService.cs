@@ -1,37 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartFridgeApp.Core.Domain.Entities;
 using SmartFridgeApp.Core.Contracts.DomainServices;
 using SmartFridgeApp.Core.Contracts.Repositories;
+using SmartFridgeApp.Core.Domain.DomainServices;
+using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.Shared;
 
-namespace SmartFridgeApp.API.Services
+namespace SmartFridgeApp.API.Services;
+
+public class RecipeFinderService(
+    IRecipeRepository recipeRepository,
+    IKitchenInventoryRepository inventoryRepository) : IRecipeFinderService
 {
-    public class RecipeFinderService : IRecipeFinderService
+    public async Task<List<Recipe>> FindAvailableRecipes(Guid kitchenId, List<short> selectedFoodProductIds)
     {
-        private readonly IRecipeRepository _recipeRepository;
+        var activeItems = await inventoryRepository.GetActiveItemsByKitchenAsync(kitchenId);
+        var availableProductIds = new HashSet<short>(activeItems.Select(x => x.FoodProductId));
+        var recipes = await recipeRepository.GetAllRecipesAsync();
 
-        public RecipeFinderService(IRecipeRepository recipeRepository)
-        {
-            _recipeRepository = recipeRepository;
-        }
+        return RecipeMatcher.FindAvailable(recipes, availableProductIds, selectedFoodProductIds);
+    }
 
-        public async Task<List<Recipe>> FindMatchingRecipes(List<short> foodProducts)
-        {
-            var recipes = await _recipeRepository.GetAllRecipesAsync();
+    public async Task<List<FoodProductDetails>> GetMissingProducts(Guid kitchenId, Guid recipeId)
+    {
+        var recipe = await recipeRepository.GetRecipeByIdAsync(recipeId);
+        var activeItems = await inventoryRepository.GetActiveItemsByKitchenAsync(kitchenId);
+        var availableProductIds = new HashSet<short>(activeItems.Select(x => x.FoodProductId));
 
-            var recipesAvailable = new List<Recipe>();
-            foreach (var recipe in recipes)
-            {
-                // TODO: test this change? Added Where condition
-                var listOfIds = recipe.FoodProducts.Where(x=>x.IsOptional == false).Select(x => x.FoodProductId).ToList();
-                if (!listOfIds.Except(foodProducts).Any())
-                {
-                    recipesAvailable.Add(recipe);
-                }
-            }
-
-            return recipesAvailable;
-        }
+        return RecipeMatcher.FindMissing(recipe, availableProductIds);
     }
 }

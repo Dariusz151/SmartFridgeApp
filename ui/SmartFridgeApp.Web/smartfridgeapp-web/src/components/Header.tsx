@@ -33,6 +33,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import { useAuth } from "@/context/AuthContext";
+import { useMainKitchen, clearMainKitchen } from "@/hooks/useMainKitchen";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import type { KitchenInvite } from "@/types";
@@ -54,6 +55,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [invites, setInvites] = useState<KitchenInvite[]>([]);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const mainKitchen = useMainKitchen();
 
   const fetchInvites = useCallback(async () => {
     if (!state.token) return;
@@ -97,6 +99,7 @@ export default function Header() {
     } catch {
       // Server-side logout is best-effort; always clear local state
     }
+    clearMainKitchen();
     dispatch({ type: "LOGOUT_ADMIN" });
     setAnchorEl(null);
     navigate("/login");
@@ -199,6 +202,23 @@ export default function Header() {
                   </Button>
                 ))}
               </Box>
+
+              {state.token && mainKitchen && (
+                <Chip
+                  label={`🏠 ${mainKitchen.name}`}
+                  size="small"
+                  component={RouterLink}
+                  to={`/KitchenItems/${mainKitchen.id}`}
+                  clickable
+                  sx={{
+                    color: "inherit",
+                    borderColor: "rgba(255,255,255,0.4)",
+                    mr: 1,
+                    "&:hover": { backgroundColor: "rgba(255,255,255,0.12)" },
+                  }}
+                  variant="outlined"
+                />
+              )}
 
               {state.token ? (
                 <>

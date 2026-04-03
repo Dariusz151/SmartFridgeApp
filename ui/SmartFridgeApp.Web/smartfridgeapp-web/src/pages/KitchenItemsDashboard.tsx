@@ -49,6 +49,7 @@ import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
+import { setMainKitchen } from "@/hooks/useMainKitchen";
 import ShoppingListPanel from "@/components/ShoppingListPanel";
 
 /* ── Helpers ── */
@@ -116,6 +117,17 @@ export default function KitchenItemsDashboard() {
   const [inviting, setInviting] = useState(false);
 
   const { submit } = useSubmit();
+
+  // Fetch kitchens to resolve kitchen name for "main kitchen" feature
+  const kitchensEndpoint = authState.isAdmin ? "/api/Kitchens/all" : "/api/Kitchens";
+  const { data: kitchensData } = useFetch<Kitchen[]>(kitchensEndpoint, true);
+
+  // Set this kitchen as the main kitchen when entering
+  useEffect(() => {
+    if (!kitchenId || !kitchensData) return;
+    const kitchen = kitchensData.find((k) => k.id === kitchenId);
+    if (kitchen) setMainKitchen(kitchen.id, kitchen.name);
+  }, [kitchenId, kitchensData]);
 
   // Fetch members from the correct endpoint
   const { data: membersData, loading: membersLoading, refetch: refetchMembers } =
@@ -273,14 +285,10 @@ export default function KitchenItemsDashboard() {
   }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchExpiring, refetchScore, refetchShopping]);
 
   const handleFindRecipes = async () => {
-    if (selectedItems.length === 0) {
-      toast.error("Select items first!", { position: "bottom-center", autoClose: 1500 });
-      return;
-    }
     try {
-      const found = await api.post<Recipe[]>("/api/recipes/find", {
-        foodProducts: selectedItems,
-      });
+      const found = await api.post<Recipe[]>(`/api/recipes/kitchens/${kitchenId}/find`, {
+        selectedFoodProductIds: selectedItems,
+      }, true);
       if (found.length > 0) {
         setRecipes(found);
         setCarouselOpen(true);

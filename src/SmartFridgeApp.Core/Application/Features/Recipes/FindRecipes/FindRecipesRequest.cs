@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SmartFridgeApp.Core.Application.Features
+namespace SmartFridgeApp.Core.Application.Features;
+
+public class FindRecipesRequest
 {
-    public class FindRecipesRequest
-    {
-        public List<short> FoodProducts { get; set; }
-    }
+    public List<short> SelectedFoodProductIds { get; set; } = [];
 }
+
+public record MissingProductDto(short FoodProductId, string FoodProductName);
+
+public record AddMissingToShoppingListRequest(Guid RecipeId);

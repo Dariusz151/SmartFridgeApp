@@ -28,6 +28,20 @@ public class ShoppingListService(IShoppingListRepository shoppingListRepository)
         };
     }
 
+    public async Task AddItemsAsync(Guid kitchenId, List<string> names, string addedByEmail, CancellationToken ct = default)
+    {
+        var (aggregate, version) = await shoppingListRepository.LoadAsync(kitchenId, ct);
+        var events = new List<object>();
+
+        foreach (var name in names)
+        {
+            var evt = aggregate.AddItem(name, addedByEmail);
+            events.Add(evt);
+        }
+
+        await shoppingListRepository.AppendEventsAsync(kitchenId, version, events, ct);
+    }
+
     public async Task BuyItemAsync(Guid kitchenId, Guid itemId, string boughtByEmail, CancellationToken ct = default)
     {
         var (aggregate, version) = await shoppingListRepository.LoadAsync(kitchenId, ct);

@@ -14,14 +14,20 @@ import {
   Chip,
   Stack,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useSubmit } from "@/hooks/useApi";
-import type { Recipe, RecipeFoodProduct } from "@/types";
+import { api } from "@/services/api";
+import { toast } from "react-toastify";
+import type { Recipe, RecipeFoodProduct, MissingProduct } from "@/types";
 
 interface Props {
   open: boolean;
@@ -34,12 +40,16 @@ interface Props {
 export default function RecipeCarouselDialog({ open, onClose, recipes, memberId, kitchenId }: Props) {
   const [index, setIndex] = useState(0);
   const { submit } = useSubmit();
+  const [missingProducts, setMissingProducts] = useState<MissingProduct[]>([]);
+  const [missingOpen, setMissingOpen] = useState(false);
+  const [missingLoading, setMissingLoading] = useState(false);
+  const [addingToList, setAddingToList] = useState(false);
 
   const recipe = recipes[index]!;
   const numSlides = recipes.length;
 
-  const prev = () => setIndex((i) => (i - 1 + numSlides) % numSlides);
-  const next = () => setIndex((i) => (i + 1) % numSlides);
+  const prev = () => { setIndex((i) => (i - 1 + numSlides) % numSlides); setMissingOpen(false); };
+  const next = () => { setIndex((i) => (i + 1) % numSlides); setMissingOpen(false); };
 
   const foodProducts: RecipeFoodProduct[] = Array.isArray(recipe.foodProducts)
     ? recipe.foodProducts
@@ -57,6 +67,41 @@ export default function RecipeCarouselDialog({ open, onClose, recipes, memberId,
     );
     if (result !== null) {
       onClose();
+    }
+  };
+
+  const handleShowMissing = async () => {
+    if (!recipe.recipeId) return;
+    setMissingLoading(true);
+    try {
+      const missing = await api.get<MissingProduct[]>(
+        `/api/recipes/kitchens/${kitchenId}/${recipe.recipeId}/missing-products`,
+        true,
+      );
+      setMissingProducts(missing);
+      setMissingOpen(true);
+    } catch {
+      toast.error("Failed to check missing products", { position: "bottom-center", autoClose: 1500 });
+    } finally {
+      setMissingLoading(false);
+    }
+  };
+
+  const handleAddMissingToShoppingList = async () => {
+    if (!recipe.recipeId) return;
+    setAddingToList(true);
+    try {
+      await api.post(
+        `/api/recipes/kitchens/${kitchenId}/${recipe.recipeId}/add-missing-to-shopping-list`,
+        null,
+        true,
+      );
+      toast.success("Missing products added to shopping list!", { position: "bottom-center", autoClose: 1500 });
+      setMissingOpen(false);
+    } catch {
+      toast.error("Failed to add to shopping list", { position: "bottom-center", autoClose: 1500 });
+    } finally {
+      setAddingToList(false);
     }
   };
 
@@ -114,12 +159,60 @@ export default function RecipeCarouselDialog({ open, onClose, recipes, memberId,
             </Typography>
           </>
         )}
+
+        {missingOpen && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+              Missing Products
+            </Typography>
+            {missingProducts.length === 0 ? (
+              <Typography variant="body2" color="success.main">
+                You have all the ingredients!
+              </Typography>
+            ) : (
+              <>
+                <List dense>
+                  {missingProducts.map((mp) => (
+                    <ListItem key={mp.foodProductId} disablePadding sx={{ py: 0.25 }}>
+                      <ListItemIcon sx={{ minWidth: 32 }}>
+                        <CancelIcon fontSize="small" color="error" />
+                      </ListItemIcon>
+                      <ListItemText primary={mp.foodProductName} />
+                    </ListItem>
+                  ))}
+                </List>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  startIcon={addingToList ? <CircularProgress size={16} /> : <PlaylistAddIcon />}
+                  disabled={addingToList}
+                  onClick={handleAddMissingToShoppingList}
+                  sx={{ mt: 1 }}
+                >
+                  Add all to Shopping List
+                </Button>
+              </>
+            )}
+          </>
+        )}
       </DialogContent>
 
       <DialogActions>
         <Button onClick={onClose} startIcon={<CloseIcon />}>
           Cancel
         </Button>
+        {recipe.recipeId && (
+          <Button
+            variant="outlined"
+            startIcon={missingLoading ? <CircularProgress size={16} /> : <HelpOutlineIcon />}
+            disabled={missingLoading}
+            onClick={handleShowMissing}
+          >
+            What's Missing?
+          </Button>
+        )}
         <Button
           variant="contained"
           startIcon={<RestaurantIcon />}
