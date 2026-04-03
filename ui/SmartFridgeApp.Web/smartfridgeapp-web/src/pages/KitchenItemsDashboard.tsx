@@ -102,6 +102,7 @@ export default function KitchenItemsDashboard() {
 
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
   const [shoppingListOpen, setShoppingListOpen] = useState(false);
+  const [shoppingListRefreshKey, setShoppingListRefreshKey] = useState(0);
   const [carouselOpen, setCarouselOpen] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [wasteDialogOpen, setWasteDialogOpen] = useState(false);
@@ -292,6 +293,7 @@ export default function KitchenItemsDashboard() {
   const handleAddToShoppingList = useCallback(async (productName: string) => {
     try {
       await api.post(`/api/kitchens/${kitchenId}/shopping-list`, { name: productName }, true);
+      setShoppingListRefreshKey((k) => k + 1);
       toast.success(`"${productName}" added to shopping list`, { position: "bottom-center", autoClose: 1500 });
     } catch {
       toast.error("Failed to add to shopping list", { position: "bottom-center", autoClose: 1500 });
@@ -508,8 +510,8 @@ export default function KitchenItemsDashboard() {
   };
 
   return (
-    <Stack direction="row" spacing={2} sx={{ maxWidth: shoppingListOpen ? "100%" : undefined }}>
-    <Container maxWidth="lg" sx={{ flex: 1, minWidth: 0 }}>
+    <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
+    <Container maxWidth={shoppingListOpen ? "lg" : false} sx={{ flex: 1, minWidth: 0, transition: "max-width 0.3s ease" }}>
       {/* Hero header */}
       <Paper
         elevation={0}
@@ -956,6 +958,7 @@ export default function KitchenItemsDashboard() {
       kitchenId={kitchenId!}
       open={shoppingListOpen}
       onClose={() => setShoppingListOpen(false)}
+      refreshKey={shoppingListRefreshKey}
     />
     </Stack>
   );
