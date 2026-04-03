@@ -41,6 +41,7 @@ public static class ServiceProviderExtensions
         // Infrastructure
         services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddScoped<IAppUserService, AppUserService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IKitchenRepository, KitchenRepository>();
         services.AddScoped<IKitchenMemberRepository, KitchenMemberRepository>();
         services.AddScoped<IFoodProductRepository, FoodProductRepository>();

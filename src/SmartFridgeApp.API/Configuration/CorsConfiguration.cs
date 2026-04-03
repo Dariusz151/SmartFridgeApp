@@ -13,13 +13,18 @@ namespace SmartFridgeApp.API.Configuration
             services.AddCors(options =>
             {
                 options.AddPolicy("Development_Policy", builder =>
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                    builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
 
                 options.AddPolicy("Production_Policy", builder =>
                     builder
                         .WithOrigins(frontendUrl)
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             });
         }
     }

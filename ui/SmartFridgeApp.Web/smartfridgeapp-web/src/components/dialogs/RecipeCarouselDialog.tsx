@@ -75,7 +75,7 @@ export default function RecipeCarouselDialog({ open, onClose, recipes, memberId,
     setMissingLoading(true);
     try {
       const missing = await api.get<MissingProduct[]>(
-        `/api/recipes/kitchens/${kitchenId}/${recipe.recipeId}/missing-products`,
+        `/api/recipes/kitchens/${kitchenId}/${recipe.recipeId}/missing-products?memberId=${memberId}`,
         true,
       );
       setMissingProducts(missing);

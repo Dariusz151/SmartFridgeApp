@@ -107,15 +107,15 @@ public class RecipeService(
         await unitOfWork.CommitAsync(ct);
     }
 
-    public async Task<IEnumerable<Recipe>> FindRecipesForKitchenAsync(Guid kitchenId, List<short> selectedFoodProductIds, CancellationToken ct = default)
+    public async Task<IEnumerable<Recipe>> FindRecipesForKitchenAsync(Guid kitchenId, List<short> selectedFoodProductIds, int? memberId = null, CancellationToken ct = default)
     {
-        var recipes = await recipeFinderService.FindAvailableRecipes(kitchenId, selectedFoodProductIds);
+        var recipes = await recipeFinderService.FindAvailableRecipes(kitchenId, selectedFoodProductIds, memberId);
         return recipes.AsEnumerable();
     }
 
-    public async Task<List<FoodProductDetails>> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, CancellationToken ct = default)
+    public async Task<List<FoodProductDetails>> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, int? memberId = null, CancellationToken ct = default)
     {
-        return await recipeFinderService.GetMissingProducts(kitchenId, recipeId);
+        return await recipeFinderService.GetMissingProducts(kitchenId, recipeId, memberId);
     }
 
     public async Task AddMissingProductsToShoppingListAsync(Guid kitchenId, Guid recipeId, string userEmail, CancellationToken ct = default)

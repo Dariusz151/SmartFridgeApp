@@ -123,6 +123,19 @@ CREATE TABLE IF NOT EXISTS internal."OutboxMessages" (
     "ProcessedDate" TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS app."RefreshTokens" (
+    "Id"         SERIAL       PRIMARY KEY,
+    "Email"      VARCHAR(250) NOT NULL,
+    "TokenHash"  VARCHAR(500) NOT NULL,
+    "ExpiresAt"  TIMESTAMP    NOT NULL,
+    "CreatedAt"  TIMESTAMP    NOT NULL DEFAULT NOW(),
+    "RevokedAt"  TIMESTAMP,
+    CONSTRAINT "FK_RefreshTokens_AppUsers" FOREIGN KEY ("Email")
+        REFERENCES app."AppUsers"("Email") ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS "IX_RefreshTokens_Email" ON app."RefreshTokens"("Email");
+CREATE INDEX IF NOT EXISTS "IX_RefreshTokens_TokenHash" ON app."RefreshTokens"("TokenHash");
+
 
 -- ============================================================
 -- 3. Indexes

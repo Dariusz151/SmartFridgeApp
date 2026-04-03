@@ -60,16 +60,16 @@ namespace SmartFridgeApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> FindRecipesAsync(Guid kitchenId, [FromBody] FindRecipesRequest request, CancellationToken ct)
         {
-            return Ok(await recipeService.FindRecipesForKitchenAsync(kitchenId, request.SelectedFoodProductIds, ct));
+            return Ok(await recipeService.FindRecipesForKitchenAsync(kitchenId, request.SelectedFoodProductIds, request.MemberId, ct));
         }
 
         [Route("kitchens/{kitchenId}/{recipeId:guid}/missing-products")]
         [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(List<MissingProductDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, CancellationToken ct)
+        public async Task<IActionResult> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, [FromQuery] int? memberId, CancellationToken ct)
         {
-            var missing = await recipeService.GetMissingProductsAsync(kitchenId, recipeId, ct);
+            var missing = await recipeService.GetMissingProductsAsync(kitchenId, recipeId, memberId, ct);
             return Ok(missing.Select(p => new MissingProductDto(p.FoodProductId, p.FoodProductName)).ToList());
         }
 

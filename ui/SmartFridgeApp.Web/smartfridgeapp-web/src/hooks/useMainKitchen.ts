@@ -1,4 +1,4 @@
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "mainKitchen";
 const EVENT_NAME = "mainKitchenChanged";
@@ -8,13 +8,20 @@ export interface MainKitchen {
   name: string;
 }
 
+let cachedRaw: string | null = null;
+let cachedValue: MainKitchen | null = null;
+
 function getSnapshot(): MainKitchen | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw !== cachedRaw) {
+    cachedRaw = raw;
+    try {
+      cachedValue = raw ? JSON.parse(raw) : null;
+    } catch {
+      cachedValue = null;
+    }
   }
+  return cachedValue;
 }
 
 function subscribe(callback: () => void): () => void {

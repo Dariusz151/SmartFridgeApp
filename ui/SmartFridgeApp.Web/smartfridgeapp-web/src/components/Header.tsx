@@ -208,7 +208,7 @@ export default function Header() {
                   label={`🏠 ${mainKitchen.name}`}
                   size="small"
                   component={RouterLink}
-                  to={`/KitchenItems/${mainKitchen.id}`}
+                  to="/Kitchens"
                   clickable
                   sx={{
                     color: "inherit",

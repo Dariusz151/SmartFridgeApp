@@ -15,7 +15,6 @@ import { DataGrid, type GridColDef, type GridRowParams } from "@mui/x-data-grid"
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import DeleteIcon from "@mui/icons-material/Delete";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 import { useAuth } from "@/context/AuthContext";
 import { useFetch, useSubmit } from "@/hooks/useApi";
@@ -70,7 +69,7 @@ export default function KitchensDashboard() {
               <KitchenIcon sx={{ fontSize: 22, color: "primary.main" }} />
             <Typography fontWeight={600}>{params.value}</Typography>
             {mainKitchen?.id === params.row.id && (
-              <Chip label="⭐ Main" size="small" color="warning" variant="outlined" sx={{ borderRadius: 2, ml: 0.5 }} />
+              <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "warning.main", ml: 0.5, flexShrink: 0 }} />
             )}
           </Stack>
         ),
@@ -87,39 +86,26 @@ export default function KitchensDashboard() {
           </Stack>
         ),
       },
-      {
-        field: "actions",
+      ...(state.isAdmin ? [{
+        field: "actions" as const,
         headerName: "",
-        width: 260,
+        width: 130,
         sortable: false,
         filterable: false,
-        renderCell: (params) => (
+        renderCell: (params: any) => (
           <Stack direction="row" spacing={1} alignItems="center" sx={{ height: "100%" }}>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<OpenInNewIcon />}
-              onClick={(e) => {
-                e.stopPropagation();
-                setMainKitchen(params.row.id, params.row.name);
-                navigate(`/KitchenItems/${params.row.id}`);
-              }}
-            >
-              Details
-            </Button>
             <Button
               size="small"
               variant="outlined"
               color="error"
               startIcon={<DeleteIcon />}
-              disabled={!state.isAdmin}
-              onClick={() => handleDelete(params.row.id)}
+              onClick={(e: React.MouseEvent) => { e.stopPropagation(); handleDelete(params.row.id); }}
             >
               Remove
             </Button>
           </Stack>
         ),
-      },
+      }] : []),
     ],
     [state.isAdmin, mainKitchen],
   );

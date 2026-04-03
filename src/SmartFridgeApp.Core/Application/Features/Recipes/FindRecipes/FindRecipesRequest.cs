@@ -6,6 +6,7 @@ namespace SmartFridgeApp.Core.Application.Features;
 public class FindRecipesRequest
 {
     public List<short> SelectedFoodProductIds { get; set; } = [];
+    public int? MemberId { get; set; }
 }
 
 public record MissingProductDto(short FoodProductId, string FoodProductName);
