@@ -37,7 +37,6 @@ import StarIcon from "@mui/icons-material/Star";
 import GroupIcon from "@mui/icons-material/Group";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { useParams } from "react-router-dom";
@@ -49,6 +48,7 @@ import { STORAGE_LOCATIONS, ITEM_TAGS } from "@/types";
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
+import { setMainKitchen } from "@/hooks/useMainKitchen";
 import ShoppingListPanel from "@/components/ShoppingListPanel";
 
 /* ── Helpers ── */
@@ -116,6 +116,17 @@ export default function KitchenItemsDashboard() {
   const [inviting, setInviting] = useState(false);
 
   const { submit } = useSubmit();
+
+  // Fetch kitchens to resolve kitchen name for "main kitchen" feature
+  const kitchensEndpoint = authState.isAdmin ? "/api/Kitchens/all" : "/api/Kitchens";
+  const { data: kitchensData } = useFetch<Kitchen[]>(kitchensEndpoint, true);
+
+  // Set this kitchen as the main kitchen when entering
+  useEffect(() => {
+    if (!kitchenId || !kitchensData) return;
+    const kitchen = kitchensData.find((k) => k.id === kitchenId);
+    if (kitchen) setMainKitchen(kitchen.id, kitchen.name);
+  }, [kitchenId, kitchensData]);
 
   // Fetch members from the correct endpoint
   const { data: membersData, loading: membersLoading, refetch: refetchMembers } =
@@ -273,14 +284,11 @@ export default function KitchenItemsDashboard() {
   }, [wasteItemId, wasteReason, kitchenId, selectedUserId, submit, refetchItems, refetchExpiring, refetchScore, refetchShopping]);
 
   const handleFindRecipes = async () => {
-    if (selectedItems.length === 0) {
-      toast.error("Select items first!", { position: "bottom-center", autoClose: 1500 });
-      return;
-    }
     try {
-      const found = await api.post<Recipe[]>("/api/recipes/find", {
-        foodProducts: selectedItems,
-      });
+      const found = await api.post<Recipe[]>(`/api/recipes/kitchens/${kitchenId}/find`, {
+        selectedFoodProductIds: selectedItems,
+        memberId: selectedUserId ? Number(selectedUserId) : undefined,
+      }, true);
       if (found.length > 0) {
         setRecipes(found);
         setCarouselOpen(true);
@@ -518,36 +526,29 @@ export default function KitchenItemsDashboard() {
       <Paper
         elevation={0}
         sx={{
-          p: 3,
-          mb: 3,
-          borderRadius: 4,
+          px: 2.5, py: 1.5,
+          mb: 2,
+          borderRadius: 3,
           background: "linear-gradient(135deg, #e0f7fa 0%, #e8f5f3 50%, #fff3e0 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: 2,
+          gap: 1.5,
         }}
       >
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Box sx={{ fontSize: 48, lineHeight: 1 }}>🍱</Box>
+        <Stack direction="row" alignItems="center" gap={1.5}>
+          <Box sx={{ fontSize: 32, lineHeight: 1 }}>🍱</Box>
           <Box>
-            <Typography variant="h4" fontWeight={700} color="primary.dark">
+            <Typography variant="h6" fontWeight={700} color="primary.dark" lineHeight={1.3}>
               {kitchen?.name ?? "Kitchen Items"}
             </Typography>
-            {kitchen?.address && (
-              <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.7 }}>
-                📍 {kitchen.address}
-              </Typography>
-            )}
-            {kitchen?.desc && (
-              <Typography variant="caption" color="text.secondary" sx={{ opacity: 0.55, display: "block" }}>
-                {kitchen.desc}
-              </Typography>
-            )}
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }}>
-              {items?.length
-                ? `${items.length} item${items.length !== 1 ? "s" : ""} stored`
-                : "No items yet — add something!"}
+            <Typography variant="caption" color="text.secondary">
+              {[
+                kitchen?.address && `📍 ${kitchen.address}`,
+                items?.length
+                  ? `${items.length} item${items.length !== 1 ? "s" : ""}`
+                  : "No items yet",
+              ].filter(Boolean).join(" · ")}
             </Typography>
           </Box>
         </Stack>
@@ -558,11 +559,11 @@ export default function KitchenItemsDashboard() {
             <Paper
               elevation={2}
               sx={{
-                px: 2, py: 1, borderRadius: 3,
+                px: 1.5, py: 0.5, borderRadius: 2,
                 display: "flex", alignItems: "center", gap: 0.5,
               }}
             >
-              <Typography variant="h5" fontWeight={700} lineHeight={1} sx={{ color: scoreColor(KitchenScore.wasteScore) }}>
+              <Typography variant="h6" fontWeight={700} lineHeight={1} sx={{ color: scoreColor(KitchenScore.wasteScore) }}>
                 {KitchenScore.wasteScore}
               </Typography>
               <Typography variant="caption" color="text.secondary">{KitchenScore.rank}</Typography>
@@ -572,76 +573,48 @@ export default function KitchenItemsDashboard() {
       </Paper>
 
       {/* Expiring items warning + shopping low banner */}
-      {(expiringItems && expiringItems.length > 0 || shoppingStatus?.isShoppingNeeded) && (
-        <Stack spacing={1} sx={{ mb: 2 }}>
-          {expiringItems && expiringItems.length > 0 && (
-            <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ borderRadius: 3 }}>
-              <AlertTitle>Items expiring soon!</AlertTitle>
-              {expiringItems.slice(0, 5).map((ei) => (
-                <Typography key={ei.stockItemId} variant="body2">
-                  <strong>{foodProductMap.get(ei.foodProductId)?.foodProductName ?? `Product #${ei.foodProductId}`}</strong> — {ei.daysUntilExpiry <= 0 ? "EXPIRED" : `${ei.daysUntilExpiry} day(s) left`}
-                  {memberMap.get(ei.memberId)?.name ? ` (${memberMap.get(ei.memberId)?.name})` : ""}
-                </Typography>
-              ))}
-              {expiringItems.length > 5 && (
-                <Typography variant="body2" color="text.secondary">
-                  ...and {expiringItems.length - 5} more
-                </Typography>
-              )}
-            </Alert>
-          )}
-          {shoppingStatus?.isShoppingNeeded && (
-            <Alert severity="error" sx={{ borderRadius: 3 }}>
-              <AlertTitle>🛒 Kitchen is running low!</AlertTitle>
-              <Typography variant="body2">
-                Only <strong>{shoppingStatus.activeItemCount}</strong> item{shoppingStatus.activeItemCount !== 1 ? "s" : ""} left
-                {" "}(average is <strong>{shoppingStatus.averageItemCount.toFixed(1)}</strong>). Time to go shopping!
-              </Typography>
-            </Alert>
-          )}
-        </Stack>
+      {shoppingStatus?.isShoppingNeeded && (
+        <Alert severity="error" sx={{ borderRadius: 3, mb: 2 }}>
+          <AlertTitle>🛒 Kitchen is running low!</AlertTitle>
+          <Typography variant="body2">
+            Only <strong>{shoppingStatus.activeItemCount}</strong> item{shoppingStatus.activeItemCount !== 1 ? "s" : ""} left
+            {" "}(average is <strong>{shoppingStatus.averageItemCount.toFixed(1)}</strong>). Time to go shopping!
+          </Typography>
+        </Alert>
       )}
 
-      {/* User selector + Show all checkbox */}
-      <Paper sx={{ p: 2, mb: 2, borderRadius: 3 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
-          <Typography variant="subtitle2" color="text.secondary">
-            Select User
-          </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showAll}
-                onChange={(e) => setShowAll(e.target.checked)}
-                size="small"
-              />
-            }
-            label={<Typography variant="body2">Show all products</Typography>}
-          />
-        </Stack>
+      {/* User selector */}
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2, flexWrap: "wrap" }}>
         {membersLoading ? (
-          <CircularProgress size={24} />
-        ) : acceptedMembers.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            No members yet — invite someone to your Kitchen!
-          </Typography>
-        ) : (
+          <CircularProgress size={18} />
+        ) : acceptedMembers.length > 0 && (
           <ToggleButtonGroup
             value={selectedUserId}
             exclusive
             onChange={(_, val) => val && setSelectedUserId(val)}
             size="small"
-            sx={{ flexWrap: "wrap", gap: 0.5 }}
+            sx={{ gap: 0.5 }}
           >
             {acceptedMembers.map((m) => (
-              <ToggleButton key={m.id} value={String(m.id)} sx={{ borderRadius: 2 }}>
-                <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: m.color, mr: 1 }} />
+              <ToggleButton key={m.id} value={String(m.id)} sx={{ borderRadius: 2, py: 0.25, px: 1.5, textTransform: "none", fontSize: "0.8rem" }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: m.color, mr: 0.75 }} />
                 {m.name || m.email}
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
         )}
-      </Paper>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showAll}
+              onChange={(e) => setShowAll(e.target.checked)}
+              size="small"
+            />
+          }
+          label={<Typography variant="body2" color="text.secondary">Show all</Typography>}
+          sx={{ ml: "auto" }}
+        />
+      </Stack>
 
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 2, borderRadius: 3 }}>

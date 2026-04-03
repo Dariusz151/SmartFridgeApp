@@ -23,11 +23,15 @@ namespace SmartFridgeApp.API.Auth
     {
         private readonly IConfiguration _configuration;
         private readonly IAppUserService _appUserService;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public AuthController(IConfiguration config, IAppUserService appUserService)
+        private const string RefreshTokenCookie = "refreshToken";
+
+        public AuthController(IConfiguration config, IAppUserService appUserService, IRefreshTokenService refreshTokenService)
         {
             _configuration = config;
             _appUserService = appUserService;
+            _refreshTokenService = refreshTokenService;
         }
 
         // ──────────────────────────────────────────────
@@ -89,6 +93,8 @@ namespace SmartFridgeApp.API.Auth
             }
 
             var token = GenerateJSONWebToken(request.Email, name, role);
+            var refreshToken = await _refreshTokenService.CreateTokenAsync(request.Email);
+            SetRefreshTokenCookie(refreshToken);
 
             return Ok(new AuthResponse
             {
@@ -147,6 +153,8 @@ namespace SmartFridgeApp.API.Auth
 
             var role = await _appUserService.GetRoleAsync(email);
             var token = GenerateJSONWebToken(email, name, role);
+            var refreshToken = await _refreshTokenService.CreateTokenAsync(email);
+            SetRefreshTokenCookie(refreshToken);
 
             var frontendUrl = _configuration["FrontendUrl"] ?? "http://localhost:3000";
             var redirectUrl = $"{frontendUrl}/auth/google-callback" +
@@ -163,15 +171,77 @@ namespace SmartFridgeApp.API.Auth
         // ──────────────────────────────────────────────
 
         /// <summary>
-        /// Logs the user out.
+        /// Logs the user out and revokes all refresh tokens.
         /// </summary>
         [HttpPost("logout")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
+            // Revoke refresh tokens if the user has a valid JWT
+            var email = User?.FindFirst(ClaimTypes.Email)?.Value;
+            if (!string.IsNullOrEmpty(email))
+            {
+                await _refreshTokenService.RevokeAllAsync(email);
+            }
+
+            // Clear the cookie
+            Response.Cookies.Delete(RefreshTokenCookie, new CookieOptions
+            {
+                Path = "/api/auth",
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
             await HttpContext.SignOutAsync(GoogleDefaults.AuthenticationScheme);
             return Ok("Logged out successfully.");
+        }
+
+        // ──────────────────────────────────────────────
+        //  Token refresh
+        // ──────────────────────────────────────────────
+
+        /// <summary>
+        /// Uses the httpOnly refresh-token cookie to issue a new JWT + rotated refresh token.
+        /// </summary>
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Refresh()
+        {
+            if (!Request.Cookies.TryGetValue(RefreshTokenCookie, out var rawToken) || string.IsNullOrEmpty(rawToken))
+            {
+                return Unauthorized("No refresh token.");
+            }
+
+            var result = await _refreshTokenService.RotateTokenAsync(rawToken);
+            if (result is null)
+            {
+                Response.Cookies.Delete(RefreshTokenCookie, new CookieOptions
+                {
+                    Path = "/api/auth",
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict
+                });
+                return Unauthorized("Invalid or expired refresh token.");
+            }
+
+            var (email, newRefreshToken) = result.Value;
+            var role = await _appUserService.GetRoleAsync(email);
+            var name = User?.FindFirst(ClaimTypes.Name)?.Value;
+            var accessToken = GenerateJSONWebToken(email, name, role);
+            SetRefreshTokenCookie(newRefreshToken);
+
+            return Ok(new AuthResponse
+            {
+                Token = accessToken,
+                Email = email,
+                Name = name,
+                Role = role
+            });
         }
 
         // ──────────────────────────────────────────────
@@ -199,10 +269,22 @@ namespace SmartFridgeApp.API.Auth
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(4),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private void SetRefreshTokenCookie(string token)
+        {
+            Response.Cookies.Append(RefreshTokenCookie, token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/api/auth",
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
         }
     }
 }

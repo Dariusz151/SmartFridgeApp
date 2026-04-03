@@ -21,6 +21,7 @@ public class RecipeService(
     IRecipeRepository recipeRepository,
     IFoodProductRepository foodProductRepository,
     IRecipeFinderService recipeFinderService,
+    IShoppingListService shoppingListService,
     IUnitOfWork unitOfWork,
     ISqlConnectionFactory sqlConnectionFactory) : IRecipeService
 {
@@ -106,10 +107,24 @@ public class RecipeService(
         await unitOfWork.CommitAsync(ct);
     }
 
-    public async Task<IEnumerable<Recipe>> FindRecipesAsync(List<short> foodProducts, CancellationToken ct = default)
+    public async Task<IEnumerable<Recipe>> FindRecipesForKitchenAsync(Guid kitchenId, List<short> selectedFoodProductIds, int? memberId = null, CancellationToken ct = default)
     {
-        var recipes = await recipeFinderService.FindMatchingRecipes(foodProducts);
+        var recipes = await recipeFinderService.FindAvailableRecipes(kitchenId, selectedFoodProductIds, memberId);
         return recipes.AsEnumerable();
+    }
+
+    public async Task<List<FoodProductDetails>> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, int? memberId = null, CancellationToken ct = default)
+    {
+        return await recipeFinderService.GetMissingProducts(kitchenId, recipeId, memberId);
+    }
+
+    public async Task AddMissingProductsToShoppingListAsync(Guid kitchenId, Guid recipeId, string userEmail, CancellationToken ct = default)
+    {
+        var missingProducts = await recipeFinderService.GetMissingProducts(kitchenId, recipeId);
+        if (missingProducts.Count == 0) return;
+
+        var productNames = missingProducts.Select(p => p.FoodProductName).ToList();
+        await shoppingListService.AddItemsAsync(kitchenId, productNames, userEmail, ct);
     }
 
     public async Task<IEnumerable<RecipeCategory>> GetRecipeCategoriesAsync(CancellationToken ct = default)

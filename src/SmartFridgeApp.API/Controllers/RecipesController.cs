@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartFridgeApp.Core.Application.Features;
 using SmartFridgeApp.Core.Application.Services;
 using SmartFridgeApp.Core.Domain.Entities;
+using SmartFridgeApp.Core.Domain.Shared;
 using SmartFridgeApp.Core.Domain.ValueObjects;
 
 namespace SmartFridgeApp.API.Controllers
@@ -16,9 +20,9 @@ namespace SmartFridgeApp.API.Controllers
     [ApiController]
     public class RecipesController(IRecipeService recipeService) : Controller
     {
-        /// <summary>
-        /// Get all available recipes.
-        /// </summary>
+        private string GetUserEmail() =>
+            User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
         [Route("")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RecipeDto>), (int)HttpStatusCode.OK)]
@@ -29,9 +33,6 @@ namespace SmartFridgeApp.API.Controllers
             return Ok(await recipeService.GetRecipesAsync(ct));
         }
 
-        /// <summary>
-        /// Add new recipe.
-        /// </summary>
         [Authorize(Roles = "Admin")]
         [Route("")]
         [HttpPost]
@@ -52,22 +53,37 @@ namespace SmartFridgeApp.API.Controllers
             return Created(string.Empty, recipe);
         }
 
-        /// <summary>
-        /// Get list of matching recipes.
-        /// </summary>
-        [Route("find")]
+        [Route("kitchens/{kitchenId}/find")]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(IEnumerable<Recipe>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> FindMatchingRecipesAsync([FromBody] FindRecipesRequest request, CancellationToken ct)
+        public async Task<IActionResult> FindRecipesAsync(Guid kitchenId, [FromBody] FindRecipesRequest request, CancellationToken ct)
         {
-            return Ok(await recipeService.FindRecipesAsync(request.FoodProducts, ct));
+            return Ok(await recipeService.FindRecipesForKitchenAsync(kitchenId, request.SelectedFoodProductIds, request.MemberId, ct));
         }
 
-        /// <summary>
-        /// Update recipe details by given id.
-        /// </summary>
+        [Route("kitchens/{kitchenId}/{recipeId:guid}/missing-products")]
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<MissingProductDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetMissingProductsAsync(Guid kitchenId, Guid recipeId, [FromQuery] int? memberId, CancellationToken ct)
+        {
+            var missing = await recipeService.GetMissingProductsAsync(kitchenId, recipeId, memberId, ct);
+            return Ok(missing.Select(p => new MissingProductDto(p.FoodProductId, p.FoodProductName)).ToList());
+        }
+
+        [Route("kitchens/{kitchenId}/{recipeId:guid}/add-missing-to-shopping-list")]
+        [Authorize]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddMissingToShoppingListAsync(Guid kitchenId, Guid recipeId, CancellationToken ct)
+        {
+            var email = GetUserEmail();
+            await recipeService.AddMissingProductsToShoppingListAsync(kitchenId, recipeId, email, ct);
+            return Ok();
+        }
+
         [Authorize(Roles = "Admin")]
         [Route("")]
         [HttpPut]
@@ -88,9 +104,6 @@ namespace SmartFridgeApp.API.Controllers
             return Ok();
         }
 
-        /// <summary>
-        /// Delete recipe by given id.
-        /// </summary>
         [Route("")]
         [HttpDelete]
         [Authorize(Roles = "Admin")]
@@ -104,9 +117,6 @@ namespace SmartFridgeApp.API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Get all available recipe categories.
-        /// </summary>
         [Route("/api/recipes/categories")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RecipeCategory>), (int)HttpStatusCode.OK)]
@@ -117,9 +127,6 @@ namespace SmartFridgeApp.API.Controllers
             return Ok(await recipeService.GetRecipeCategoriesAsync(ct));
         }
 
-        /// <summary>
-        /// Create new recipe category.
-        /// </summary>
         [Route("/api/recipes/categories")]
         [HttpPost]
         [Authorize(Roles = "Admin")]

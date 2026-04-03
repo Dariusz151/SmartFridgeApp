@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import { useAuth } from "@/context/AuthContext";
+import { useMainKitchen } from "@/hooks/useMainKitchen";
 import { useFetch, useSubmit } from "@/hooks/useApi";
 import RecipeDetailsDialog from "@/components/dialogs/RecipeDetailsDialog";
 import type { Recipe } from "@/types";
@@ -59,6 +60,7 @@ export default function Recipes() {
   const { data: rawRecipes, loading, refetch } = useFetch<Recipe[]>("/api/recipes");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const { submit, loading: importing } = useSubmit();
+  const mainKitchen = useMainKitchen();
 
   const handleImport = async () => {
     const result = await submit<{ importedCount: number; skippedCount: number; errors: string[] }>(
@@ -186,7 +188,16 @@ export default function Recipes() {
         </Box>
       </Paper>
 
-      <Box sx={{ mb: 3, display: "flex", alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap", gap: 1 }}>
+      <Box sx={{ mb: 3, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
+        {mainKitchen && (
+          <Chip
+            label={`🏠 Kitchen: ${mainKitchen.name}`}
+            size="small"
+            color="primary"
+            variant="outlined"
+            sx={{ borderRadius: 2 }}
+          />
+        )}
         <Stack direction="row" spacing={1}>
           {state.isAdmin && (
             <Button
@@ -254,6 +265,7 @@ export default function Recipes() {
           open={Boolean(selectedRecipe)}
           onClose={() => setSelectedRecipe(null)}
           recipe={selectedRecipe}
+          kitchenId={mainKitchen?.id}
         />
       )}
     </Container>

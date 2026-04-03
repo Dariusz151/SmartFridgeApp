@@ -18,25 +18,74 @@ class ApiError extends Error {
   }
 }
 
+// ── Refresh-token machinery ──
+let refreshPromise: Promise<boolean> | null = null;
+let logoutCallback: (() => void) | null = null;
+
+/** Call once from App.tsx to wire up the auto-logout on refresh failure. */
+export function setApiLogoutCallback(cb: () => void) {
+  logoutCallback = cb;
+}
+
+async function tryRefreshToken(): Promise<boolean> {
+  try {
+    const res = await fetch(`${config.SERVER_URL}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include",           // sends httpOnly cookie
+    });
+    if (!res.ok) return false;
+
+    const data = await res.json();
+    sessionStorage.setItem("token", data.token);
+    if (data.role)  sessionStorage.setItem("role", data.role);
+    if (data.name)  sessionStorage.setItem("name", data.name);
+    if (data.email) sessionStorage.setItem("email", data.email);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, auth = false } = options;
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+  const buildHeaders = (): Record<string, string> => {
+    const h: Record<string, string> = { "Content-Type": "application/json" };
+    if (auth) {
+      const token = sessionStorage.getItem("token");
+      if (token) h["Authorization"] = `Bearer ${token}`;
+    }
+    return h;
   };
 
-  if (auth) {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-  }
-
-  const response = await fetch(`${config.SERVER_URL}${endpoint}`, {
+  let response = await fetch(`${config.SERVER_URL}${endpoint}`, {
     method,
-    headers,
+    headers: buildHeaders(),
+    credentials: "include",
     body: body ? JSON.stringify(body) : undefined,
   });
+
+  // On 401 with auth, attempt a silent refresh then retry once
+  if (response.status === 401 && auth) {
+    // Coalesce concurrent refreshes into a single call
+    if (!refreshPromise) {
+      refreshPromise = tryRefreshToken().finally(() => { refreshPromise = null; });
+    }
+    const refreshed = await refreshPromise;
+
+    if (refreshed) {
+      response = await fetch(`${config.SERVER_URL}${endpoint}`, {
+        method,
+        headers: buildHeaders(),
+        credentials: "include",
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } else {
+      logoutCallback?.();
+      toast.error("Session expired. Please sign in again.", { position: "bottom-center", autoClose: 2500 });
+      throw new ApiError("Session expired", 401);
+    }
+  }
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -45,7 +94,6 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     throw new ApiError(response.statusText, response.status);
   }
 
-  // Some endpoints return 204 No Content
   const text = await response.text();
   return text ? (JSON.parse(text) as T) : (undefined as unknown as T);
 }
@@ -64,7 +112,7 @@ export const api = {
   delete: <T>(endpoint: string, body?: unknown, auth = false) =>
     request<T>(endpoint, { method: "DELETE", body, auth }),
 
-  logout: () => request<void>("/api/auth/logout", { method: "POST" }),
+  logout: () => request<void>("/api/auth/logout", { method: "POST", auth: true }),
 
   login: (email: string, password: string) =>
     request<{ token: string; email: string; name: string; role: string }>("/api/auth/login", {

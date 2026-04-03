@@ -163,6 +163,11 @@ export interface RecipeCreatePayload {
   }[];
 }
 
+export interface MissingProduct {
+  foodProductId: number;
+  foodProductName: string;
+}
+
 /* ── Auth ── */
 
 export interface AuthState {

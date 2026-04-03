@@ -11,6 +11,7 @@ import {
   Divider,
   InputAdornment,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
@@ -65,16 +66,20 @@ export default function LoginPage() {
         </Box>
 
         {/* ── Google ── */}
-        <Button
-          fullWidth
-          variant="outlined"
-          size="large"
-          startIcon={<GoogleIcon />}
-          onClick={() => { window.location.href = `${config.SERVER_URL}/api/auth/google-login`; }}
-          sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600, mb: 2 }}
-        >
-          Continue with Google
-        </Button>
+        <Tooltip title="Google login is not available yet" arrow>
+          <span>
+            <Button
+              fullWidth
+              variant="outlined"
+              size="large"
+              startIcon={<GoogleIcon />}
+              disabled
+              sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600, mb: 2 }}
+            >
+              Continue with Google
+            </Button>
+          </span>
+        </Tooltip>
 
         <Divider sx={{ my: 2, fontSize: 13 }}>or sign in with email</Divider>
 

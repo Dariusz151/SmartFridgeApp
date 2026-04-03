@@ -2,6 +2,7 @@ import { useReducer, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { AuthContext, authReducer, initialAuthState } from "@/context/AuthContext";
+import { setApiLogoutCallback } from "@/services/api";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import KitchensDashboard from "@/pages/KitchensDashboard";
@@ -30,6 +31,11 @@ export default function App() {
     if (token) {
       dispatch({ type: "LOGIN_ADMIN", payload: { token, role, name, email } });
     }
+  }, []);
+
+  // Wire up automatic logout when refresh token fails
+  useEffect(() => {
+    setApiLogoutCallback(() => dispatch({ type: "LOGOUT_ADMIN" }));
   }, []);
 
   return (
