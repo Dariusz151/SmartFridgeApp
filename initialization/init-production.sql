@@ -38,11 +38,13 @@ CREATE TABLE IF NOT EXISTS app."Categories" (
 );
 
 CREATE TABLE IF NOT EXISTS app."FoodProducts" (
-    "FoodProductId" SMALLSERIAL PRIMARY KEY,
-    "Name" VARCHAR(40) NOT NULL,
-    "CategoryId" SMALLINT NOT NULL,
-    "InsertedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-    "UpdatedAt"  TIMESTAMP,
+    "FoodProductId"          SMALLSERIAL PRIMARY KEY,
+    "Name"                   VARCHAR(40) NOT NULL,
+    "CategoryId"             SMALLINT    NOT NULL,
+    "DefaultStorageLocation" INTEGER,
+    "DefaultUnit"            INTEGER,
+    "InsertedAt"             TIMESTAMP   NOT NULL DEFAULT NOW(),
+    "UpdatedAt"              TIMESTAMP,
     CONSTRAINT "FK_FoodProducts_Categories" FOREIGN KEY ("CategoryId")
         REFERENCES app."Categories"("CategoryId") ON DELETE CASCADE
 );
